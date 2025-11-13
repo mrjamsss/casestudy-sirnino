@@ -1,27 +1,154 @@
-#container {
+.gradient-background {
+  --background: linear-gradient(180deg, #2563eb 0%, #0d9488 100%);
+  background: linear-gradient(180deg, #2563eb 0%, #0d9488 100%);
+}
+
+.main-container {
+  padding: 2rem 1rem;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-section {
   text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-bottom: 2rem;
+  padding: 1rem 0;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.main-title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
+.subtitle {
+  color: white;
+  font-size: 1rem;
   margin: 0;
+  opacity: 0.95;
 }
 
-#container a {
-  text-decoration: none;
+.portals-container {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.portal-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin: 0;
+  padding: 0;
+}
+
+.portal-card ion-card-content {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.icon-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  
+  ion-icon {
+    font-size: 40px;
+    color: white;
+  }
+}
+
+.citizen-icon {
+  background-color: #2563eb;
+}
+
+.admin-icon {
+  background-color: #10b981;
+}
+
+.portal-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0 0 0.75rem 0;
+}
+
+.portal-description {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.citizen-button {
+  --background: #2563eb;
+  --background-activated: #1d4ed8;
+  --color: white;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  height: 48px;
+}
+
+.admin-button {
+  --background: #10b981;
+  --background-activated: #059669;
+  --color: white;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  height: 48px;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+  
+  li {
+    color: #4b5563;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    
+    &::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #6b7280;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (min-width: 768px) {
+  .portals-container {
+    flex-direction: row;
+    max-width: 1000px;
+    gap: 2rem;
+  }
+  
+  .portal-card {
+    flex: 1;
+  }
+  
+  .main-title {
+    font-size: 3rem;
+  }
 }
