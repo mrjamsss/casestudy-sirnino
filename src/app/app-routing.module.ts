@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
+    path: 'citizen-portal',
+    loadChildren: () => import('./citizen-portal/citizen-portal.module').then( m => m.CitizenPortalPageModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

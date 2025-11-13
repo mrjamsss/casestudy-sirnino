@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +9,16 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  constructor(private router: Router) {}
+
+  navigateToCitizenPortal() {
+    this.router.navigate(['/citizen-portal']);
+  }
+
+  navigateToAdminPortal() {
+    // TODO: Navigate to admin portal when route is created
+    // this.router.navigate(['/admin']);
+    console.log('Navigate to Admin Portal');
+  }
 
 }
