@@ -62,6 +62,9 @@
             <ion-icon name="cloud-outline" class="header-icon blue-icon"></ion-icon>
             <span class="header-text">Cabanatuan City Hall - Citizen Portal</span>
           </div>
+          <button class="theme-toggle" (click)="toggleDarkMode()" [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+            <ion-icon [name]="isDarkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+          </button>
         </div>
       </div>
       
@@ -642,6 +645,366 @@
                 </div>
               </ion-card-content>
             </ion-card>
+          </div>
+        </div>
+
+        <!-- Transaction History View -->
+        <div *ngIf="activeRoute === 'transaction-history'" class="transaction-history-view">
+          <div class="page-header-section">
+            <h1 class="request-page-title">Transaction History</h1>
+            <p class="request-page-subtitle">View all your document requests and transactions</p>
+          </div>
+
+          <!-- Tab Navigation -->
+          <div class="tabs-container">
+            <ion-segment [(ngModel)]="transactionTab" class="custom-segment">
+              <ion-segment-button value="documents">
+                <ion-label>Document Requests</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="all">
+                <ion-label>All Transactions</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+          </div>
+
+          <!-- Document Requests Tab -->
+          <div *ngIf="transactionTab === 'documents'" class="transaction-tab-content">
+            <ion-card class="table-card">
+              <ion-card-content>
+                <table class="transactions-table" *ngIf="documentRequestsList.length > 0">
+                  <thead>
+                    <tr>
+                      <th>Request ID</th>
+                      <th>Document Type</th>
+                      <th>Department</th>
+                      <th>Request Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let req of documentRequestsList" class="clickable-row" (click)="showTransactionDetail(req)">
+                      <td class="id-cell">{{ req.id }}</td>
+                      <td>{{ req.documentType }}</td>
+                      <td>{{ req.department }}</td>
+                      <td>{{ req.requestDate | date: 'MMM dd, yyyy' }}</td>
+                      <td>
+                        <span class="status" [ngClass]="req.status.toLowerCase()">
+                          {{ req.status }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="empty-message" *ngIf="documentRequestsList.length === 0">No document requests found.</p>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <!-- All Transactions Tab -->
+          <div *ngIf="transactionTab === 'all'" class="transaction-tab-content">
+            <ion-card class="table-card">
+              <ion-card-content>
+                <table class="transactions-table" *ngIf="allTransactionsList.length > 0">
+                  <thead>
+                    <tr>
+                      <th>Transaction ID</th>
+                      <th>Type</th>
+                      <th>Title</th>
+                      <th>Department</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let t of allTransactionsList" class="clickable-row" (click)="showTransactionDetail(t)">
+                      <td class="id-cell">{{ t.id }}</td>
+                      <td>{{ t.type }}</td>
+                      <td>{{ t.title }}</td>
+                      <td>{{ t.department }}</td>
+                      <td>{{ t.date | date: 'MMM dd, yyyy' }}</td>
+                      <td>
+                        <span class="status" [ngClass]="t.status.toLowerCase()">
+                          {{ t.status }}
+                        </span>
+                      </td>
+                      <td class="amount-cell">₱{{ t.amount | number:'1.2-2' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="empty-message" *ngIf="allTransactionsList.length === 0">No transactions found.</p>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <!-- Transaction Detail Modal -->
+          <div *ngIf="selectedTransactionDetail" class="transaction-detail-overlay" (click)="closeTransactionDetail()">
+            <ion-card class="transaction-detail-card" (click)="$event.stopPropagation()">
+              <ion-card-content>
+                <div class="detail-header">
+                  <h2 class="detail-title">{{ selectedTransactionDetail.title || selectedTransactionDetail.documentType }}</h2>
+                  <span class="status-badge" [ngClass]="selectedTransactionDetail.status.toLowerCase()">
+                    {{ selectedTransactionDetail.status }}
+                  </span>
+                  <button class="close-button" (click)="closeTransactionDetail()">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </button>
+                </div>
+
+                <div class="detail-divider"></div>
+
+                <!-- Transaction Details -->
+                <div class="detail-section">
+                  <div class="detail-grid">
+                    <div class="detail-item">
+                      <span class="detail-label">Transaction ID:</span>
+                      <span class="detail-value">{{ selectedTransactionDetail.id }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Type:</span>
+                      <span class="detail-value">{{ selectedTransactionDetail.type || selectedTransactionDetail.documentType }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Department:</span>
+                      <span class="detail-value">{{ selectedTransactionDetail.department }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Date:</span>
+                      <span class="detail-value">{{ selectedTransactionDetail.date | date: 'MMM dd, yyyy hh:mm a' }}</span>
+                    </div>
+                    <div class="detail-item" *ngIf="selectedTransactionDetail.amount">
+                      <span class="detail-label">Amount:</span>
+                      <span class="detail-value">₱{{ selectedTransactionDetail.amount | number:'1.2-2' }}</span>
+                    </div>
+                    <div class="detail-item" *ngIf="selectedTransactionDetail.requestDate">
+                      <span class="detail-label">Request Date:</span>
+                      <span class="detail-value">{{ selectedTransactionDetail.requestDate | date: 'MMM dd, yyyy' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="detail-divider" *ngIf="selectedTransactionDetail.notes"></div>
+
+                <!-- Notes Section -->
+                <div class="detail-section" *ngIf="selectedTransactionDetail.notes">
+                  <h3 class="section-title">Notes</h3>
+                  <p class="section-content">{{ selectedTransactionDetail.notes }}</p>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </div>
+
+        <!-- Help/FAQs View -->
+        <div *ngIf="activeRoute === 'help'" class="help-view">
+          <div class="page-header-section">
+            <h1 class="request-page-title">Help & FAQs</h1>
+            <p class="request-page-subtitle">Find answers to commonly asked questions</p>
+          </div>
+
+          <!-- Search FAQs -->
+          <ion-card class="search-card">
+            <ion-card-content>
+              <div class="search-container">
+                <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                <input 
+                  type="text" 
+                  class="search-input" 
+                  placeholder="Search FAQs..."
+                  [(ngModel)]="faqSearchQuery"
+                  (input)="filterFAQs()">
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- FAQ Items -->
+          <div class="faq-items">
+            <ion-card class="faq-card" *ngFor="let faq of filteredFAQs">
+              <ion-card-content>
+                <div class="faq-header">
+                  <h3 class="faq-question">{{ faq.question }}</h3>
+                </div>
+                <p class="faq-answer">{{ faq.answer }}</p>
+                <span class="faq-category">{{ faq.category }}</span>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <!-- Contact Support Card -->
+          <ion-card class="contact-support-card">
+            <ion-card-content>
+              <h2 class="contact-title">Still Need Help?</h2>
+              <p class="contact-subtitle">Get in touch with our support team</p>
+              
+              <div class="contact-grid">
+                <div class="contact-item">
+                  <div class="contact-icon phone-icon">
+                    <ion-icon name="call-outline"></ion-icon>
+                  </div>
+                  <h4 class="contact-label">Call Us</h4>
+                  <p class="contact-value">(044) 463-1751</p>
+                </div>
+
+                <div class="contact-item">
+                  <div class="contact-icon email-icon">
+                    <ion-icon name="mail-outline"></ion-icon>
+                  </div>
+                  <h4 class="contact-label">Email</h4>
+                  <p class="contact-value">info@cabanatuan.gov.ph</p>
+                </div>
+
+                <div class="contact-item">
+                  <div class="contact-icon hours-icon">
+                    <ion-icon name="time-outline"></ion-icon>
+                  </div>
+                  <h4 class="contact-label">Office Hours</h4>
+                  <p class="contact-value">Mon-Fri, 8:00 AM - 5:00 PM</p>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+
+        <!-- Notifications View -->
+        <div *ngIf="activeRoute === 'notifications'" class="notifications-view">
+          <div class="page-header-section">
+            <h1 class="request-page-title">Notifications</h1>
+            <p class="request-page-subtitle">Stay updated on your requests</p>
+          </div>
+          <p class="empty-state">No notifications at the moment.</p>
+        </div>
+
+        <!-- Account Settings View -->
+        <div *ngIf="activeRoute === 'account-settings'" class="account-settings-view">
+          <div class="page-header-section">
+            <h1 class="request-page-title">Account Settings</h1>
+            <p class="request-page-subtitle">Manage your profile and account preferences</p>
+          </div>
+
+          <div class="account-grid">
+            <!-- Personal Information Form -->
+            <div class="account-section">
+              <ion-card class="form-card">
+                <ion-card-header>
+                  <ion-card-title>Personal Information</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <form [formGroup]="accountForm" (ngSubmit)="saveAccountChanges()">
+                    <ion-item class="form-item">
+                      <ion-label position="stacked">Full Name</ion-label>
+                      <ion-input 
+                        formControlName="fullName" 
+                        placeholder="Enter your full name"
+                        type="text">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item class="form-item">
+                      <ion-label position="stacked">Email Address</ion-label>
+                      <ion-input 
+                        formControlName="email" 
+                        placeholder="Enter your email"
+                        type="email">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item class="form-item">
+                      <ion-label position="stacked">Contact Number</ion-label>
+                      <ion-input 
+                        formControlName="contactNumber" 
+                        placeholder="Enter your contact number"
+                        type="tel">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item class="form-item">
+                      <ion-label position="stacked">Address</ion-label>
+                      <ion-textarea 
+                        formControlName="address" 
+                        placeholder="Enter your address"
+                        rows="3"
+                        autoGrow="true">
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div class="form-actions">
+                      <ion-button expand="block" type="submit" class="save-button">
+                        <ion-icon name="save-outline" slot="start"></ion-icon>
+                        Save Changes
+                      </ion-button>
+                    </div>
+                  </form>
+                </ion-card-content>
+              </ion-card>
+            </div>
+
+            <!-- Account Status and Security -->
+            <div class="account-sidebar">
+              <!-- Account Status Card -->
+              <ion-card class="status-card">
+                <ion-card-header>
+                  <ion-card-title>Account Status</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <div class="status-item">
+                    <span class="status-label">Account Type:</span>
+                    <span class="status-value">{{ accountStatus.type }}</span>
+                  </div>
+                  <div class="status-item">
+                    <span class="status-label">Member Since:</span>
+                    <span class="status-value">{{ accountStatus.memberSince | date: 'MMM yyyy' }}</span>
+                  </div>
+                  <div class="status-item">
+                    <span class="status-label">Status:</span>
+                    <span class="status-value active">Active</span>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+
+              <!-- Security Card -->
+              <ion-card class="security-card">
+                <ion-card-header>
+                  <ion-card-title>Security</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <div class="security-item">
+                    <div class="security-info">
+                      <h4 class="security-label">Change Password</h4>
+                      <p class="security-description">Update your password regularly for security</p>
+                    </div>
+                    <ion-button size="small" class="security-button" (click)="changePassword()">
+                      Change
+                    </ion-button>
+                  </div>
+
+                  <div class="security-divider"></div>
+
+                  <div class="security-item">
+                    <div class="security-info">
+                      <h4 class="security-label">Two-Factor Authentication</h4>
+                      <p class="security-description">Add extra layer of security to your account</p>
+                    </div>
+                    <ion-button size="small" class="security-button" (click)="toggleTwoFactor()">
+                      Enable
+                    </ion-button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+
+              <!-- Danger Zone -->
+              <ion-card class="danger-zone">
+                <ion-card-header>
+                  <ion-card-title class="danger-title">Danger Zone</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <p class="danger-warning">Deactivating your account will disable all services. This action cannot be undone.</p>
+                  <ion-button expand="block" color="danger" (click)="deactivateAccount()">
+                    <ion-icon name="warning-outline" slot="start"></ion-icon>
+                    Deactivate Account
+                  </ion-button>
+                </ion-card-content>
+              </ion-card>
+            </div>
           </div>
         </div>
       </div>

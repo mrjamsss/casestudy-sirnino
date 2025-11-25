@@ -34,11 +34,24 @@ interface CommunityProgram {
 export class CitizenPortalPage implements OnInit {
   activeRoute: string = 'dashboard';
   isSidebarCollapsed: boolean = false;
+  isDarkMode: boolean = false;
   requestForm!: FormGroup;
   feeCalculatorForm!: FormGroup;
   calculatedFee: number | null = null;
   feeBreakdown: string = '';
   selectedService: ServiceDetail | null = null;
+  selectedTransactionDetail: any = null;
+  transactionTab: string = 'documents';
+  faqSearchQuery: string = '';
+  filteredFAQs: any[] = [];
+  accountForm!: FormGroup;
+  accountStatus = {
+    type: 'Citizen',
+    memberSince: new Date('2023-01-15'),
+  };
+  documentRequestsList: any[] = [];
+  allTransactionsList: any[] = [];
+  faqs: any[] = [];
   communityPrograms: {
     active: CommunityProgram[];
     upcoming: CommunityProgram[];
@@ -207,6 +220,102 @@ export class CitizenPortalPage implements OnInit {
       permitType: ['', Validators.required],
       cost: ['', [Validators.required, Validators.min(0)]],
     });
+
+    this.accountForm = this.formBuilder.group({
+      fullName: ['Juan Dela Cruz', Validators.required],
+      email: ['juan@example.com', [Validators.required, Validators.email]],
+      contactNumber: ['+63 9XX XXX XXXX', Validators.required],
+      address: ['123 Cabanatuan St., City, Nueva Ecija', Validators.required],
+    });
+
+    // Initialize transaction data
+    this.documentRequestsList = [
+      {
+        id: 'REQ-001',
+        documentType: 'Birth Certificate',
+        department: 'Civil Registry',
+        requestDate: new Date('2024-11-01'),
+        status: 'processing',
+        notes: 'Awaiting verification of documents',
+      },
+      {
+        id: 'REQ-002',
+        documentType: 'Business Permit',
+        department: 'Business Permits Office',
+        requestDate: new Date('2024-10-15'),
+        status: 'completed',
+        notes: 'Ready for pickup at City Hall',
+      },
+    ];
+
+    this.allTransactionsList = [
+      {
+        id: 'TRX-001',
+        type: 'Document Request',
+        title: 'Birth Certificate',
+        department: 'Civil Registry',
+        date: new Date('2024-11-01'),
+        status: 'processing',
+        amount: 150.00,
+        notes: 'Awaiting verification of documents',
+      },
+      {
+        id: 'TRX-002',
+        type: 'Document Request',
+        title: 'Business Permit',
+        department: 'Business Permits Office',
+        date: new Date('2024-10-15'),
+        status: 'completed',
+        amount: 5000.00,
+        notes: 'Ready for pickup at City Hall',
+      },
+      {
+        id: 'TRX-003',
+        type: 'Fee Payment',
+        title: 'Permit Fee',
+        department: 'Treasurer Office',
+        date: new Date('2024-10-14'),
+        status: 'completed',
+        amount: 5000.00,
+        notes: 'Payment for business permit application',
+      },
+    ];
+
+    // Initialize FAQs
+    this.faqs = [
+      {
+        question: 'How long does it take to process a birth certificate?',
+        answer: 'Birth certificates typically take 3-5 business days to process. You will receive a notification when your document is ready for pickup.',
+        category: 'Documents',
+      },
+      {
+        question: 'What documents do I need to apply for a business permit?',
+        answer: 'You will need DTI/SEC Registration, Barangay Clearance, Mayor\'s Permit Application, and Tax Identification Number.',
+        category: 'Business',
+      },
+      {
+        question: 'Can I renew my business permit online?',
+        answer: 'Currently, all permit renewals must be done in person at City Hall. Visit our office during business hours (Mon-Fri, 8:00 AM - 5:00 PM).',
+        category: 'Business',
+      },
+      {
+        question: 'What is the fee for a community tax certificate?',
+        answer: 'A community tax certificate costs ₱100 and can be processed in just 1 business day.',
+        category: 'Fees',
+      },
+      {
+        question: 'How do I track my document request?',
+        answer: 'You can track your request in the Transaction History section of your dashboard. You will also receive email notifications for status updates.',
+        category: 'Documents',
+      },
+      {
+        question: 'What payment methods do you accept?',
+        answer: 'We accept cash and bank transfers. Please visit the Treasurer\'s Office for payment details.',
+        category: 'Payments',
+      },
+    ];
+
+    this.filteredFAQs = this.faqs;
   }
 
   toggleSidebar() {
@@ -274,8 +383,57 @@ export class CitizenPortalPage implements OnInit {
     this.selectedService = null;
   }
 
+  filterFAQs() {
+    const query = this.faqSearchQuery.toLowerCase();
+    if (!query) {
+      this.filteredFAQs = this.faqs;
+    } else {
+      this.filteredFAQs = this.faqs.filter(faq =>
+        faq.question.toLowerCase().includes(query) ||
+        faq.answer.toLowerCase().includes(query) ||
+        faq.category.toLowerCase().includes(query)
+      );
+    }
+  }
+
+  saveAccountChanges() {
+    if (this.accountForm.valid) {
+      const formData = this.accountForm.value;
+      console.log('Saving account changes:', formData);
+      // Implement actual save logic here
+    }
+  }
+
+  changePassword() {
+    console.log('Change password initiated');
+    // Implement password change logic
+  }
+
+  toggleTwoFactor() {
+    console.log('Two-factor authentication toggled');
+    // Implement 2FA logic
+  }
+
+  deactivateAccount() {
+    console.log('Account deactivation initiated');
+    // Implement account deactivation logic
+  }
+
   logout() {
     this.router.navigate(['/home']);
+  }
+
+  showTransactionDetail(transaction: any) {
+    this.selectedTransactionDetail = transaction;
+  }
+
+  closeTransactionDetail() {
+    this.selectedTransactionDetail = null;
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark-theme', this.isDarkMode);
   }
 }
 
