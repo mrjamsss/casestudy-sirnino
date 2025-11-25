@@ -297,3 +297,61 @@
     </ion-footer>
   </ion-content>
 </ion-app>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Cabanatuan City Hall
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="gradient-background">
+  <div class="main-container">
+    <div class="header-section">
+      <h1 class="main-title">Cabanatuan City Hall</h1>
+      <p class="subtitle">Your digital gateway to city services and transactions.</p>
+    </div>
+
+    <div class="portals-container">
+      <!-- Citizen Portal Card -->
+      <ion-card class="portal-card citizen-card">
+        <ion-card-content>
+          <div class="icon-container citizen-icon">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <h2 class="portal-title">Citizen Portal</h2>
+          <p class="portal-description">Access city services, request documents, and track your transactions.</p>
+          <ion-button expand="block" class="citizen-button" (click)="navigateToCitizenPortal()">
+            Enter Citizen Portal
+          </ion-button>
+          <ul class="features-list">
+            <li>Request official documents</li>
+            <li>Calculate permit fees</li>
+            <li>View community programs</li>
+            <li>Track transaction history</li>
+          </ul>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Admin Portal Card -->
+      <ion-card class="portal-card admin-card">
+        <ion-card-content>
+          <div class="icon-container admin-icon">
+            <ion-icon name="shield-outline"></ion-icon>
+          </div>
+          <h2 class="portal-title">Admin Portal</h2>
+          <p class="portal-description">Manage user requests, update content, and oversee city services.</p>
+          <ion-button expand="block" class="admin-button" (click)="navigateToAdminPortal()">
+            Enter Admin Portal
+          </ion-button>
+          <ul class="features-list">
+            <li>Manage document requests</li>
+            <li>Update fee calculators</li>
+            <li>Post announcements</li>
+            <li>View transaction logs</li>
+          </ul>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

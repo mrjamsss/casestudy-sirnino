@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { SignUpModalComponent } from '../modals/signup-modal/signup-modal.component';
 import { SignInModalComponent } from '../modals/signin-modal/signin-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,17 @@ export class HomePage {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController
   ) {}
+  constructor(private router: Router) {}
+
+  navigateToCitizenPortal() {
+    this.router.navigate(['/citizen-portal']);
+  }
+
+  navigateToAdminPortal() {
+    // TODO: Navigate to admin portal when route is created
+    // this.router.navigate(['/admin']);
+    console.log('Navigate to Admin Portal');
+  }
 
   async openSignIn() {
   const modal = await this.modalCtrl.create({
