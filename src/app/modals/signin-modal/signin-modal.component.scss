@@ -1,0 +1,327 @@
+// Colors
+$cbn-primary: #0F4C81;
+$cbn-secondary: #FFC300;
+$cbn-accent: #f5b300;
+
+:host {
+  ion-modal {
+    --width: 420px;
+    --max-width: 420px;
+    --height: auto;
+    --max-height: 85vh;
+    --border-radius: 16px;
+    --box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
+    
+    @media (max-width: 576px) {
+      --width: 90vw;
+      --max-width: 90vw;
+    }
+  }
+}
+
+.signin-container {
+  max-width: 100%;
+  width: 100%;
+  padding: 24px;
+}
+
+
+.modal-header {
+  ion-toolbar {
+    --background: #{$cbn-accent};
+    --color: #07203a;
+    --min-height: 56px;
+  }
+
+  ion-title {
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+  }
+
+  .close-btn {
+    --color: #07203a;
+    
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.modal-content {
+  --background: #fafbfc;
+}
+
+.signin-container {
+  max-width: 100%; // ✅ Let it fill the entire modal!
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+
+// Header Section
+.header-section {
+  text-align: center;
+  margin-bottom: 16px; // ✅ Reduced
+}
+
+.header-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #{$cbn-accent} 0%, darken($cbn-accent, 10%) 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  box-shadow: 0 4px 16px rgba($cbn-accent, 0.25);
+
+  ion-icon {
+    font-size: 22px;
+    color: #07203a;
+  }
+}
+
+.header-section h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+
+.header-section p {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin: 0;
+}
+
+// ✅ Single form style - no duplicates
+.signin-form {
+  background: white;
+  padding: 16px; // ✅ Less padding
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  margin-bottom: 12px;
+}
+
+.form-group {
+  margin-bottom: 12px; // ✅ Reduced
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 5px;
+  letter-spacing: 0.01em;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0 10px;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: $cbn-accent;
+    background: white;
+    box-shadow: 0 0 0 3px rgba($cbn-accent, 0.15);
+  }
+}
+
+.input-icon {
+  font-size: 1.125rem;
+  color: #94a3b8;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.custom-input {
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --placeholder-color: #94a3b8;
+  --color: #0f172a;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+// Role Selection
+.role-option {
+  position: relative;
+  cursor: pointer;
+
+  input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .role-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+
+    ion-icon {
+      font-size: 1.5rem;
+      color: #64748b;
+    }
+
+    span {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #64748b;
+    }
+  }
+
+  &.selected .role-content,
+  &:hover .role-content {
+    background: rgba($cbn-accent, 0.1);
+    border-color: $cbn-accent;
+
+    ion-icon, span {
+      color: darken($cbn-accent, 15%);
+    }
+  }
+
+  &.selected .role-content {
+    box-shadow: 0 4px 12px rgba($cbn-accent, 0.2);
+  }
+}
+
+// Submit Button
+.submit-btn {
+  --background: #{$cbn-accent};
+  --background-hover: #{darken($cbn-accent, 8%)};
+  --background-activated: #{darken($cbn-accent, 12%)};
+  --color: #07203a;
+  --border-radius: 10px;
+  --box-shadow: 0 4px 14px rgba($cbn-accent, 0.35);
+  height: 44px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+  margin-top: 6px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.forgot-link {
+  display: block;
+  text-align: center;
+  margin-top: 12px; // ✅ Reduced
+  font-size: 0.875rem;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $cbn-accent;
+  }
+}
+
+// Credentials Card
+.credentials-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 16px; // ✅ Reduced
+}
+
+.credentials-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+
+  ion-icon {
+    font-size: 1.125rem;
+    color: $cbn-primary;
+  }
+
+  span {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #374151;
+  }
+}
+
+.credentials-body {
+  padding: 12px; // ✅ Reduced
+}
+
+.credential-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0; // ✅ Reduced
+
+  &:not(:last-child) {
+    border-bottom: 1px dashed #e2e8f0;
+  }
+}
+
+.credential-label {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.credential-value {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 0.8125rem;
+  background: rgba($cbn-accent, 0.15);
+  color: darken($cbn-accent, 20%);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+// Footer
+.modal-footer {
+  text-align: center;
+  padding: 12px; // ✅ Reduced
+  background: white;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  p {
+    font-size: 0.8125rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  a {
+    color: $cbn-accent;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: darken($cbn-accent, 10%);
+    }
+  }
+}
