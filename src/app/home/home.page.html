@@ -1,58 +1,299 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Cabanatuan City Hall
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-app>
+  <ion-content [fullscreen]="true" class="ion-no-padding">
+    <!-- Header / Navigation -->
+    <ion-header class="ion-no-border header-sticky">
+      <ion-toolbar class="header-toolbar">
+        <div class="header-container">
+          <div class="header-content">
+            <!-- Logo/Title -->
+            <div class="logo-section">
+              <a href="#" class="logo-link">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="logo-text">Cabanatuan Hall</span>
+              </a>
+            </div>
+            <nav class="desktop-nav">
+              <a class="nav-link" (click)="scrollToSection('home')" [class.active]="activeSection === 'home'">Home</a>
+              <a class="nav-link" (click)="scrollToSection('features')" [class.active]="activeSection === 'features'">Features</a>
+              <a class="nav-link" (click)="scrollToSection('services')" [class.active]="activeSection === 'services'">Services</a>
+              <a class="nav-link" (click)="scrollToSection('contact')" [class.active]="activeSection === 'contact'">Contact</a>
+              
+              <div class="nav-divider"></div>
+              
+              <ion-button fill="clear" class="auth-button" (click)="openSignIn()">
+                Sign In
+              </ion-button>
+              <ion-button class="auth-button-primary" (click)="openSignUp()">
+                Get Started
+              </ion-button>
+            </nav>
 
-<ion-content [fullscreen]="true" class="gradient-background">
-  <div class="main-container">
-    <div class="header-section">
-      <h1 class="main-title">Cabanatuan City</h1>
-      <p class="subtitle">Your digital gateway to city services and transactions.</p>
-    </div>
-
-    <div class="portals-container">
-      <!-- Citizen Portal Card -->
-      <ion-card class="portal-card citizen-card">
-        <ion-card-content>
-          <div class="icon-container citizen-icon">
-            <ion-icon name="person-outline"></ion-icon>
           </div>
-          <h2 class="portal-title">Citizen Portal</h2>
-          <p class="portal-description">Access city services, request documents, and track your transactions.</p>
-          <ion-button expand="block" class="citizen-button" (click)="navigateToCitizenPortal()">
-            Enter Citizen Portal
-          </ion-button>
-          <ul class="features-list">
-            <li>Request official documents</li>
-            <li>Calculate permit fees</li>
-            <li>View community programs</li>
-            <li>Track transaction history</li>
-          </ul>
-        </ion-card-content>
-      </ion-card>
+        </div>
+      </ion-toolbar>
+    </ion-header>
 
-      <!-- Admin Portal Card -->
-      <ion-card class="portal-card admin-card">
-        <ion-card-content>
-          <div class="icon-container admin-icon">
-            <ion-icon name="shield-outline"></ion-icon>
+    <main>
+      <!-- Hero Section -->
+      <section class="hero-section" id="home">
+        <div class="section-container">
+          <div class="hero-content">
+            <!-- Text Content -->
+            <div class="hero-text">
+              <span class="hero-badge">
+                <span class="badge-dot"></span>
+                City Hall Services Made Easy
+              </span>
+              <h1 class="hero-title">
+                Your Cabanatuan City Hall,
+                <span class="title-highlight">In Your Pocket.</span>
+              </h1>
+              <p class="hero-description">
+                Access essential municipal services, pay taxes, and stay updated on city news seamlessly from your mobile device.
+              </p>
+              <div class="hero-buttons">
+                <ion-button class="cta-primary" shape="round" size="large" (click)="scrollToFeatures()">
+                  <span>Explore Services</span>
+                  <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+                </ion-button>
+                <ion-button class="cta-secondary" shape="round" size="large" fill="outline" (click)="scrollToFeatures()">
+                  <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+                  <span>See Features</span>
+                </ion-button>
+              </div>
+            </div>
+
+            <!-- Phone Mockup -->
+            <div class="hero-image">
+              <div class="phone-wrapper">
+                <div class="phone-glow"></div>
+                <div class="phone-mockup">
+                  <div class="phone-notch"></div>
+                  <div class="phone-screen">
+                    <div class="screen-header">
+                      <span class="app-logo">🏛️</span>
+                      <span class="app-title">Cabanatuan E-Gov</span>
+                    </div>
+                    <p class="app-subtitle">Fast, Simple, and Secure</p>
+                    <img src="https://placehold.co/200x280/0F4C81/FFFFFF?text=App+Preview" alt="App Preview" class="screen-image">
+                  </div>
+                  <div class="phone-indicator"></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <h2 class="portal-title">Admin Portal</h2>
-          <p class="portal-description">Manage user requests, update content, and oversee city services.</p>
-          <ion-button expand="block" class="admin-button" (click)="navigateToAdminPortal()">
-            Enter Admin Portal
-          </ion-button>
-          <ul class="features-list">
-            <li>Manage document requests</li>
-            <li>Update fee calculators</li>
-            <li>Post announcements</li>
-            <li>View transaction logs</li>
-          </ul>
-        </ion-card-content>
-      </ion-card>
-    </div>
-  </div>
-</ion-content>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features" class="features-section" id="features">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-badge">What We Offer</span>
+            <h2 class="section-title">Core Features</h2>
+            <p class="section-subtitle">Designed to streamline your transactions with the city government.</p>
+          </div>
+          
+          <div class="features-grid">
+            <!-- Feature Card 1 -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <div class="feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="feature-title">Online Business Permits</h3>
+              <p class="feature-description">Apply for, renew, and track your business permits instantly without visiting City Hall.</p>
+              <a href="#" class="feature-link">
+                Learn more
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+              </a>
+            </div>
+
+            <!-- Feature Card 2 -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <div class="feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="feature-title">Secure Tax Payments</h3>
+              <p class="feature-description">Pay your Real Property Tax and other fees securely using various online payment methods.</p>
+              <a href="#" class="feature-link">
+                Learn more
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+              </a>
+            </div>
+
+            <!-- Feature Card 3 -->
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <div class="feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="feature-title">Real-Time Announcements</h3>
+              <p class="feature-description">Get instant notifications about city events, public service advisories, and emergency alerts.</p>
+              <a href="#" class="feature-link">
+                Learn more
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- City Services -->
+      <section id="services" class="services-section" id="services">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-badge">Quick Access</span>
+            <h2 class="section-title">City Departments</h2>
+            <p class="section-subtitle">Find the service you need right now.</p>
+          </div>
+          
+          <div class="services-grid">
+            <!-- Service Card 1 -->
+            <div class="service-card" button>
+              <div class="service-icon">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+              <div class="service-content">
+                <h4 class="service-title">Civil Registry</h4>
+                <p class="service-description">Birth, Marriage, and Death certificates.</p>
+              </div>
+              <ion-icon name="chevron-forward-outline" class="service-arrow"></ion-icon>
+            </div>
+
+            <!-- Service Card 2 -->
+            <div class="service-card" button>
+              <div class="service-icon">
+                <ion-icon name="medical-outline"></ion-icon>
+              </div>
+              <div class="service-content">
+                <h4 class="service-title">Health Services</h4>
+                <p class="service-description">Health permits and community health schedules.</p>
+              </div>
+              <ion-icon name="chevron-forward-outline" class="service-arrow"></ion-icon>
+            </div>
+
+            <!-- Service Card 3 -->
+            <div class="service-card" button>
+              <div class="service-icon">
+                <ion-icon name="car-outline"></ion-icon>
+              </div>
+              <div class="service-content">
+                <h4 class="service-title">Traffic & Safety</h4>
+                <p class="service-description">Report traffic incidents and view road advisories.</p>
+              </div>
+              <ion-icon name="chevron-forward-outline" class="service-arrow"></ion-icon>
+            </div>
+
+            <!-- Service Card 4 -->
+            <div class="service-card" button>
+              <div class="service-icon">
+                <ion-icon name="chatbubbles-outline"></ion-icon>
+              </div>
+              <div class="service-content">
+                <h4 class="service-title">LGU Feedback</h4>
+                <p class="service-description">Submit suggestions or complaints to the city.</p>
+              </div>
+              <ion-icon name="chevron-forward-outline" class="service-arrow"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Download Banner / Final CTA -->
+      <section class="download-section" id="contact">
+        <div class="download-container">
+          <div class="download-content">
+            <h3 class="download-title">Ready to simplify your city transactions?</h3>
+            <p class="download-description">Download the Cabanatuan City Hall App today and experience true digital governance.</p>
+            <div class="download-buttons">
+              <ion-button class="store-button google-play" size="large">
+                <div class="store-content">
+                  <ion-icon name="logo-google-playstore"></ion-icon>
+                  <div class="store-text">
+                    <span class="store-label">GET IT ON</span>
+                    <span class="store-name">Google Play</span>
+                  </div>
+                </div>
+              </ion-button>
+              <ion-button class="store-button app-store" size="large">
+                <div class="store-content">
+                  <ion-icon name="logo-apple"></ion-icon>
+                  <div class="store-text">
+                    <span class="store-label">Download on the</span>
+                    <span class="store-name">App Store</span>
+                  </div>
+                </div>
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <ion-footer id="contact" class="footer">
+      <div class="footer-container">
+        <div class="footer-main">
+          <!-- Brand Section -->
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <svg class="footer-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              <span class="footer-logo-text">Cabanatuan E-Gov</span>
+            </div>
+            <p class="footer-tagline">Your gateway to efficient city services.</p>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="footer-section">
+            <h5 class="footer-heading">Contact Us</h5>
+            <div class="footer-contact">
+              <p><ion-icon name="location-outline"></ion-icon> Zulueta St., Cabanatuan City, Nueva Ecija</p>
+              <p><ion-icon name="mail-outline"></ion-icon> official@cabanatuan.gov.ph</p>
+              <p><ion-icon name="call-outline"></ion-icon> (044) 123-4567</p>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="footer-section">
+            <h5 class="footer-heading">Quick Links</h5>
+            <nav class="footer-nav">
+              <a href="#features">Features</a>
+              <a href="#services">Services</a>
+              <a href="#contact">Contact</a>
+              <a href="#">Privacy Policy</a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="copyright">© 2024 Cabanatuan City Local Government Unit. All rights reserved.</p>
+          <div class="footer-social">
+            <a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a>
+            <a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a>
+            <a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a>
+          </div>
+        </div>
+      </div>
+    </ion-footer>
+  </ion-content>
+</ion-app>

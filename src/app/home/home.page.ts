@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ModalController, AlertController } from '@ionic/angular';
+import { SignUpModalComponent } from '../modals/signup-modal/signup-modal.component';
+import { SignInModalComponent } from '../modals/signin-modal/signin-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -8,17 +10,66 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class HomePage {
+  activeSection = 'home'; // Track active section
 
-  constructor(private router: Router) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController
+  ) {}
 
-  navigateToCitizenPortal() {
-    this.router.navigate(['/citizen-portal']);
+  async openSignIn() {
+  const modal = await this.modalCtrl.create({
+    component: SignInModalComponent,
+    cssClass: 'auth-modal',
+    mode: 'ios',
+    initialBreakpoint: undefined,
+    breakpoints: undefined,
+  });
+  
+  // ✅ Modal itself is the element - no getElement() needed
+  modal.style.setProperty('--width', '420px');
+  modal.style.setProperty('--max-width', '420px');
+  modal.style.setProperty('--height', 'auto');
+  
+  await modal.present();
+  return modal;
+}
+
+async openSignUp() {
+  const modal = await this.modalCtrl.create({
+    component: SignUpModalComponent,
+    cssClass: 'auth-modal signup-modal',
+    mode: 'ios',
+    initialBreakpoint: undefined,
+    breakpoints: undefined,
+  });
+  
+  // ✅ Modal itself is the element
+  modal.style.setProperty('--width', '480px');
+  modal.style.setProperty('--max-width', '480px');
+  modal.style.setProperty('--height', 'auto');
+  
+  await modal.present();
+  return modal;
+}
+
+
+
+
+  scrollToSection(sectionId: string) {
+    this.activeSection = sectionId; // Update active section
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
   }
 
-  navigateToAdminPortal() {
-    // TODO: Navigate to admin portal when route is created
-    // this.router.navigate(['/admin']);
-    console.log('Navigate to Admin Portal');
+  // Add this function for your buttons
+  scrollToFeatures() {
+    this.scrollToSection('features');
   }
-
 }
