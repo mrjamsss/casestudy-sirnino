@@ -14,7 +14,15 @@ const routes: Routes = [
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
+  },  {
+    path: 'admin-dashboard',
+    loadChildren: () => import('./pages/admin-dashboard/admin-dashboard.module').then( m => m.AdminDashboardPageModule)
   },
+  {
+    path: 'reports',
+    loadChildren: () => import('./pages/reports/reports.module').then( m => m.ReportsPageModule)
+  },
+
 ];
 
 @NgModule({
