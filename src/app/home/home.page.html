@@ -8,21 +8,25 @@
             <!-- Logo/Title -->
             <div class="logo-section">
               <a href="#" class="logo-link">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                   <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
                 </svg>
-                <span class="logo-text">Cabanatuan E-Gov</span>
+                <span class="logo-text">Cabanatuan City E-Gov</span>
               </a>
             </div>
             <nav class="desktop-nav">
               <a class="nav-link" (click)="scrollToSection('home')" [class.active]="activeSection === 'home'">Home</a>
-              <a class="nav-link" (click)="scrollToSection('features')" [class.active]="activeSection === 'features'">Features</a>
-              <a class="nav-link" (click)="scrollToSection('services')" [class.active]="activeSection === 'services'">Services</a>
-              <a class="nav-link" (click)="scrollToSection('contact')" [class.active]="activeSection === 'contact'">Contact</a>
-              
+              <a class="nav-link" (click)="scrollToSection('features')"
+                [class.active]="activeSection === 'features'">Features</a>
+              <a class="nav-link" (click)="scrollToSection('services')"
+                [class.active]="activeSection === 'services'">Services</a>
+              <a class="nav-link" (click)="scrollToSection('contact')"
+                [class.active]="activeSection === 'contact'">Contact</a>
+
               <div class="nav-divider"></div>
-              
+
               <ion-button fill="clear" class="auth-button" (click)="openSignIn()">
                 Sign In
               </ion-button>
@@ -52,14 +56,16 @@
                 <span class="title-highlight">In Your Pocket.</span>
               </h1>
               <p class="hero-description">
-                Access essential municipal services, pay taxes, and stay updated on city news seamlessly from your mobile device.
+                Access essential municipal services, pay taxes, and stay updated on city news seamlessly from your
+                mobile device.
               </p>
               <div class="hero-buttons">
                 <ion-button class="cta-primary" shape="round" size="large" (click)="scrollToFeatures()">
                   <span>Explore Services</span>
                   <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
                 </ion-button>
-                <ion-button class="cta-secondary" shape="round" size="large" fill="outline" (click)="scrollToFeatures()">
+                <ion-button class="cta-secondary" shape="round" size="large" fill="outline"
+                  (click)="scrollToFeatures()">
                   <ion-icon name="play-circle-outline" slot="start"></ion-icon>
                   <span>See Features</span>
                 </ion-button>
@@ -78,7 +84,8 @@
                       <span class="app-title">Cabanatuan E-Gov</span>
                     </div>
                     <p class="app-subtitle">Fast, Simple, and Secure</p>
-                    <img src="https://placehold.co/200x280/0F4C81/FFFFFF?text=App+Preview" alt="App Preview" class="screen-image">
+                    <img src="https://placehold.co/200x280/0F4C81/FFFFFF?text=App+Preview" alt="App Preview"
+                      class="screen-image">
                   </div>
                   <div class="phone-indicator"></div>
                 </div>
@@ -96,20 +103,22 @@
             <h2 class="section-title">Core Features</h2>
             <p class="section-subtitle">Designed to streamline your transactions with the city government.</p>
           </div>
-          
+
           <div class="features-grid">
             <!-- Feature Card 1 -->
             <div class="feature-card">
               <div class="feature-icon-wrapper">
                 <div class="feature-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                   </svg>
                 </div>
               </div>
               <h3 class="feature-title">Online Business Permits</h3>
-              <p class="feature-description">Apply for, renew, and track your business permits instantly without visiting City Hall.</p>
+              <p class="feature-description">Apply for, renew, and track your business permits instantly without
+                visiting City Hall.</p>
               <a href="#" class="feature-link">
                 Learn more
                 <ion-icon name="arrow-forward-outline"></ion-icon>
@@ -120,14 +129,16 @@
             <div class="feature-card">
               <div class="feature-icon-wrapper">
                 <div class="feature-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                     <line x1="1" y1="10" x2="23" y2="10"></line>
                   </svg>
                 </div>
               </div>
               <h3 class="feature-title">Secure Tax Payments</h3>
-              <p class="feature-description">Pay your Real Property Tax and other fees securely using various online payment methods.</p>
+              <p class="feature-description">Pay your Real Property Tax and other fees securely using various online
+                payment methods.</p>
               <a href="#" class="feature-link">
                 Learn more
                 <ion-icon name="arrow-forward-outline"></ion-icon>
@@ -138,14 +149,16 @@
             <div class="feature-card">
               <div class="feature-icon-wrapper">
                 <div class="feature-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                   </svg>
                 </div>
               </div>
               <h3 class="feature-title">Real-Time Announcements</h3>
-              <p class="feature-description">Get instant notifications about city events, public service advisories, and emergency alerts.</p>
+              <p class="feature-description">Get instant notifications about city events, public service advisories, and
+                emergency alerts.</p>
               <a href="#" class="feature-link">
                 Learn more
                 <ion-icon name="arrow-forward-outline"></ion-icon>
@@ -163,7 +176,7 @@
             <h2 class="section-title">City Departments</h2>
             <p class="section-subtitle">Find the service you need right now.</p>
           </div>
-          
+
           <div class="services-grid">
             <!-- Service Card 1 -->
             <div class="service-card" button>
@@ -221,7 +234,8 @@
         <div class="download-container">
           <div class="download-content">
             <h3 class="download-title">Ready to simplify your city transactions?</h3>
-            <p class="download-description">Download the Cabanatuan City Hall App today and experience true digital governance.</p>
+            <p class="download-description">Download the Cabanatuan City Hall App today and experience true digital
+              governance.</p>
             <div class="download-buttons">
               <ion-button class="store-button google-play" size="large">
                 <div class="store-content">
@@ -254,7 +268,8 @@
           <!-- Brand Section -->
           <div class="footer-brand">
             <div class="footer-logo">
-              <svg class="footer-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="footer-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                 <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
               </svg>
