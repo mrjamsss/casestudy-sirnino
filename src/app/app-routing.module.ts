@@ -8,21 +8,21 @@ const routes: Routes = [
   },
   {
     path: 'citizen-portal',
-    loadChildren: () => import('./citizen-portal/citizen-portal.module').then( m => m.CitizenPortalPageModule)
+    loadChildren: () => import('./user/user.module').then( m => m.UserModule)
   },
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
-  },  {
-    path: 'admin-dashboard',
-    loadChildren: () => import('./pages/admin-dashboard/admin-dashboard.module').then( m => m.AdminDashboardPageModule)
   },
   {
-    path: 'reports',
-    loadChildren: () => import('./pages/reports/reports.module').then( m => m.ReportsPageModule)
+    path: 'admin-dashboard',
+    loadChildren: () => import('./admin/admin.module').then( m => m.AdminModule)
   },
-
+  // {
+  //   path: 'reports',
+  //   loadChildren: () => import('./pages/reports/reports.module').then( m => m.ReportsPageModule)
+  // },
 ];
 
 @NgModule({
