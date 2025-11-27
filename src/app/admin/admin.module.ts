@@ -5,6 +5,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardPage } from './dashboard/dashboard.page';
+import { AdminLayoutPage } from './layout/admin-layout.page';
+import { AdminSidebarComponent } from '../shared/components/admin-sidebar.component/admin-sidebar.component';
 
 @NgModule({
   imports: [
@@ -13,6 +15,10 @@ import { DashboardPage } from './dashboard/dashboard.page';
     IonicModule,
     AdminRoutingModule
   ],
-  declarations: [DashboardPage]
+  declarations: [
+    DashboardPage,
+    AdminLayoutPage,
+    AdminSidebarComponent
+  ]
 })
-export class AdminModule {}
+export class AdminModule { }

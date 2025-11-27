@@ -1,0 +1,126 @@
+.admin-layout {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.sidebar-container {
+    width: 280px;
+    height: 100%;
+    flex-shrink: 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+    transition: width 0.4s ease-in-out;
+
+    &:has(.sidebar.collapsed) {
+        width: 70px;
+    }
+}
+
+.content-container {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+    transition: margin-left 0.4s ease-in-out;
+}
+
+.admin-header {
+    height: 64px;
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    flex-shrink: 0;
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .sidebar-toggle-btn {
+        background: transparent;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        color: #5f6368;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        ion-icon {
+            font-size: 24px;
+        }
+    }
+
+    .brand-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .brand-icon {
+        font-size: 24px;
+        color: #28a745;
+        /* Green shield color */
+    }
+
+    .brand-text {
+        font-size: 16px;
+        font-weight: 500;
+        color: #1a1a1a;
+        letter-spacing: -0.2px;
+    }
+}
+
+.page-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .sidebar-container {
+        width: 240px;
+
+        &:has(.sidebar.collapsed) {
+            width: 70px;
+        }
+    }
+
+    .admin-header {
+        padding: 0 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .sidebar-container {
+        width: 100%;
+        height: auto;
+        max-height: 60vh;
+
+        &:has(.sidebar.collapsed) {
+            width: 100%;
+            max-height: 80px;
+        }
+    }
+
+    .content-container {
+        flex: 1;
+    }
+}
