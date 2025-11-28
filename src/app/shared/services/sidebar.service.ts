@@ -15,4 +15,8 @@ export class SidebarService {
     getSidebarState(): boolean {
         return this.isCollapsedSubject.value;
     }
+
+    setSidebarState(isCollapsed: boolean) {
+        this.isCollapsedSubject.next(isCollapsed);
+    }
 }
