@@ -4,11 +4,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
   {
     path: 'citizen-portal',
-    loadChildren: () => import('./user/user.module').then( m => m.UserModule)
+    loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
   {
     path: '',
@@ -16,8 +16,8 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'admin-dashboard',
-    loadChildren: () => import('./admin/admin.module').then( m => m.AdminModule)
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
   // {
   //   path: 'reports',
