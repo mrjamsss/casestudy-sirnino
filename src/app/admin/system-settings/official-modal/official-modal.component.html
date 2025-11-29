@@ -1,0 +1,54 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-title>{{ official ? 'Edit Official' : 'Add Official' }}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="cancel()">CLOSE</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <form [formGroup]="officialForm" (ngSubmit)="save()">
+
+        <!-- Image Upload Section -->
+        <div class="image-upload-container">
+            <div class="image-preview" (click)="fileInput.click()">
+                <img *ngIf="previewImage" [src]="previewImage" alt="Official Preview">
+                <div *ngIf="!previewImage" class="placeholder">
+                    <ion-icon name="camera-outline"></ion-icon>
+                    <span>Tap to upload photo</span>
+                </div>
+            </div>
+            <input #fileInput type="file" accept="image/jpeg,image/png" (change)="onFileSelected($event)"
+                style="display: none;">
+            <ion-button class="upload-btn" fill="clear" size="small" (click)="fileInput.click()">
+                {{ previewImage ? 'CHANGE PHOTO' : 'UPLOAD PHOTO' }}
+            </ion-button>
+        </div>
+
+        <ion-item class="input-item" lines="full">
+            <ion-label position="stacked">Full Name</ion-label>
+            <ion-input formControlName="name" placeholder="Enter full name"></ion-input>
+        </ion-item>
+
+        <div class="error-msg" *ngIf="officialForm.get('name')?.touched && officialForm.get('name')?.invalid">
+            Name is required
+        </div>
+
+        <ion-item class="input-item" lines="full">
+            <ion-label position="stacked">Position</ion-label>
+            <ion-input formControlName="position" placeholder="Enter position (e.g. Secretary)"></ion-input>
+        </ion-item>
+
+        <div class="error-msg" *ngIf="officialForm.get('position')?.touched && officialForm.get('position')?.invalid">
+            Position is required
+        </div>
+
+        <div class="actions">
+            <ion-button expand="block" type="submit" [disabled]="officialForm.invalid">
+                {{ official ? 'UPDATE OFFICIAL' : 'ADD OFFICIAL' }}
+            </ion-button>
+        </div>
+
+    </form>
+</ion-content>
