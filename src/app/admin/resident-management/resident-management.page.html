@@ -1,143 +1,183 @@
-<ion-content class="resident-page">
-    <div class="page-header">
-        <div>
-            <h1>Resident Management</h1>
-            <p>Manage barangay resident records.</p>
+<ion-content class="ion-no-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1>Resident Management</h1>
+                <p class="subtitle">Manage barangay resident records</p>
+            </div>
+            <ion-button class="add-btn">
+                <ion-icon name="add-outline" slot="start"></ion-icon>
+                Add New Resident
+            </ion-button>
         </div>
 
-        <ion-button color="primary" class="add-btn">
-            <ion-icon name="add-outline" slot="start"></ion-icon>
-            Add New Resident
-        </ion-button>
+        <div class="content-wrapper">
+            <!-- Search / Filters Section -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>Search Residents</h2>
+                    <p class="section-subtitle">Filter residents by location, status, or name</p>
+                </div>
+
+                <div class="filters-wrapper">
+                    <div class="filter-row">
+                        <ion-select class="custom-select" placeholder="All Barangay" interface="popover" fill="outline"
+                            [(ngModel)]="selectedBarangay" (ionChange)="filterResidents()">
+                            <ion-select-option value="">All Barangay</ion-select-option>
+                            <ion-select-option value="Aduas Centro">Aduas Centro</ion-select-option>
+                            <ion-select-option value="Bagong Buhay">Bagong Buhay</ion-select-option>
+                            <ion-select-option value="Balite">Balite</ion-select-option>
+                            <ion-select-option value="Sangitan">Sangitan</ion-select-option>
+                            <ion-select-option value="Sumacab Norte">Sumacab Norte</ion-select-option>
+                        </ion-select>
+
+                        <ion-select class="custom-select" placeholder="All Voter Status" interface="popover"
+                            fill="outline" [(ngModel)]="selectedVoterStatus" (ionChange)="filterResidents()">
+                            <ion-select-option value="">All Voter Status</ion-select-option>
+                            <ion-select-option value="Registered">Registered</ion-select-option>
+                            <ion-select-option value="Not Registered">Not Registered</ion-select-option>
+                        </ion-select>
+
+                        <ion-select class="custom-select" placeholder="All Life Status" interface="popover"
+                            fill="outline" [(ngModel)]="selectedLifeStatus" (ionChange)="filterResidents()">
+                            <ion-select-option value="">All Life Status</ion-select-option>
+                            <ion-select-option value="Alive">Alive</ion-select-option>
+                            <ion-select-option value="Deceased">Deceased</ion-select-option>
+                        </ion-select>
+
+                        <ion-searchbar class="custom-searchbar" placeholder="Search by name, address..."
+                            show-clear-button="always" [(ngModel)]="searchText" (ionClear)="filterResidents()"
+                            (ionInput)="onSearchInput()"></ion-searchbar>
+
+                        <ion-button class="search-btn" color="success" (click)="filterResidents()">
+                            Search
+                        </ion-button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resident List Section -->
+            <div class="section-card">
+                <div class="section-header">
+                    <div>
+                        <h2>Resident List ({{ residents.length }})</h2>
+                        <p class="section-subtitle">Select a row to manage</p>
+                    </div>
+                    <div class="header-actions">
+                        <ion-button fill="clear" class="action-btn import-btn" (click)="importFile()">
+                            <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+                            Import File
+                        </ion-button>
+                        <ion-button fill="clear" class="action-btn view-btn" [disabled]="!selectedResident"
+                            (click)="openModal('view')">
+                            <ion-icon name="eye-outline" slot="start"></ion-icon>
+                            View
+                        </ion-button>
+                        <ion-button fill="clear" class="action-btn edit-btn" [disabled]="!selectedResident"
+                            (click)="openModal('edit')">
+                            <ion-icon name="create-outline" slot="start"></ion-icon>
+                            Edit
+                        </ion-button>
+                        <ion-button fill="clear" class="action-btn delete-btn" [disabled]="!selectedResident"
+                            (click)="deleteSelectedResident()">
+                            <ion-icon name="trash-outline" slot="start"></ion-icon>
+                            Delete
+                        </ion-button>
+                    </div>
+                </div>
+
+                <div class="user-table-wrapper">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Address</th>
+                                <th>Voter Status</th>
+                                <th>Life Status</th>
+                                <th>Date Registered</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let resident of residents" (click)="selectResident(resident)"
+                                [class.selected]="selectedResident === resident" class="user-row">
+                                <td>{{ resident.id }}</td>
+                                <td>
+                                    <div class="user-name">{{ resident.name }}</div>
+                                </td>
+                                <td>{{ resident.age }}</td>
+                                <td>
+                                    <div class="user-address">{{ resident.address }}</div>
+                                </td>
+                                <td>
+                                    <span class="status-badge" [attr.data-status]="resident.voterStatus">{{
+                                        resident.voterStatus }}</span>
+                                </td>
+                                <td>
+                                    <span class="status-badge" [attr.data-status]="resident.lifeStatus">{{
+                                        resident.lifeStatus }}</span>
+                                </td>
+                                <td>{{ resident.dateRegistered }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Search / Filters Card -->
-    <ion-card class="search-card">
-        <ion-card-content>
-            <div class="filters-row">
-                <ion-item lines="none" class="filter-item">
-                    <ion-label position="stacked">Purok</ion-label>
-                    <ion-select placeholder="All Purok">
-                        <ion-select-option value="all">All Purok</ion-select-option>
-                        <ion-select-option value="1">Purok 1</ion-select-option>
-                        <ion-select-option value="2">Purok 2</ion-select-option>
-                    </ion-select>
-                </ion-item>
-
-                <ion-item lines="none" class="filter-item">
-                    <ion-label position="stacked">Voter Status</ion-label>
-                    <ion-select placeholder="All Voter Status">
-                        <ion-select-option value="all">All Voter Status</ion-select-option>
-                        <ion-select-option value="registered">Registered</ion-select-option>
-                        <ion-select-option value="not-registered">Not Registered</ion-select-option>
-                    </ion-select>
-                </ion-item>
-
-                <ion-item lines="none" class="filter-item">
-                    <ion-label position="stacked">Life Status</ion-label>
-                    <ion-select placeholder="All Life Status">
-                        <ion-select-option value="all">All Life Status</ion-select-option>
-                        <ion-select-option value="alive">Alive</ion-select-option>
-                        <ion-select-option value="deceased">Deceased</ion-select-option>
-                    </ion-select>
-                </ion-item>
-
-                <div class="search-group">
-                    <ion-searchbar placeholder="Search by name, address..." class="resident-search"
-                        show-clear-button="always">
-                    </ion-searchbar>
-                    <ion-button color="success" class="search-btn">
-                        Search
-                    </ion-button>
-                </div>
-            </div>
-        </ion-card-content>
-    </ion-card>
-
-    <!-- Resident List Card -->
-    <ion-card class="list-card">
-        <ion-card-header class="list-header">
-            <ion-card-title>Resident List</ion-card-title>
-            <div class="list-actions">
-                <ion-button fill="outline" size="small">
-                    <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
-                    Import File
-                </ion-button>
-                <ion-button fill="outline" size="small" color="medium">
-                    <ion-icon name="eye-outline" slot="start"></ion-icon>
-                    View
-                </ion-button>
-                <ion-button fill="outline" size="small" color="tertiary">
-                    <ion-icon name="create-outline" slot="start"></ion-icon>
-                    Edit
-                </ion-button>
-                <ion-button fill="outline" size="small" color="danger">
-                    <ion-icon name="trash-outline" slot="start"></ion-icon>
-                    Delete
-                </ion-button>
-            </div>
-        </ion-card-header>
-
-        <ion-card-content class="table-wrapper">
-            <!-- Table header -->
-            <div class="table-row table-header">
-                <div class="col-id">ID</div>
-                <div class="col-name">Name</div>
-                <div class="col-age">Age</div>
-                <div class="col-address">Address</div>
-                <div class="col-voter">Voter Status</div>
-                <div class="col-life">Life Status</div>
-                <div class="col-date">Date Registered</div>
-            </div>
-
-            <!-- Example table rows (static demo data) -->
-            <div class="table-row">
-                <div class="col-id">187</div>
-                <div class="col-name">Grace Amor Cortez</div>
-                <div class="col-age">33</div>
-                <div class="col-address">
-                    54, Sarmiento St, Purok 3, Mambangan, San Leonardo, Nueva Ecija
-                </div>
-                <div class="col-voter">
-                    <span class="badge badge-danger">Not Registered</span>
-                </div>
-                <div class="col-life">
-                    <span class="badge badge-success">Alive</span>
-                </div>
-                <div class="col-date">2025-01-10</div>
-            </div>
-
-            <div class="table-row">
-                <div class="col-id">186</div>
-                <div class="col-name">Jose Medina</div>
-                <div class="col-age">37</div>
-                <div class="col-address">
-                    16, Romero St, Purok 2, Mambangan, San Leonardo, Nueva Ecija
-                </div>
-                <div class="col-voter">
-                    <span class="badge badge-success-soft">Registered</span>
-                </div>
-                <div class="col-life">
-                    <span class="badge badge-success">Alive</span>
-                </div>
-                <div class="col-date">2025-01-09</div>
-            </div>
-
-            <div class="table-row">
-                <div class="col-id">185</div>
-                <div class="col-name">Elena R. Fajardo</div>
-                <div class="col-age">22</div>
-                <div class="col-address">
-                    67, Mabini St, Purok 1, Mambangan, San Leonardo, Nueva Ecija
-                </div>
-                <div class="col-voter">
-                    <span class="badge badge-danger">Not Registered</span>
-                </div>
-                <div class="col-life">
-                    <span class="badge badge-success">Alive</span>
-                </div>
-                <div class="col-date">2025-01-08</div>
-            </div>
-        </ion-card-content>
-    </ion-card>
 </ion-content>
+
+<!-- Custom Modal (Outside ion-content for proper z-index) -->
+<div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()"></div>
+<div class="resident-modal" *ngIf="isModalOpen">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ modalMode === 'edit' ? 'Edit Resident' : 'View Resident' }}</h2>
+            <button class="close-btn" (click)="closeModal()">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" [(ngModel)]="modalName" [disabled]="modalMode === 'view'" placeholder="Full Name">
+            </div>
+
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" [(ngModel)]="modalAge" [disabled]="modalMode === 'view'" placeholder="Age">
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>
+                <textarea rows="3" [(ngModel)]="modalAddress" [disabled]="modalMode === 'view'"
+                    placeholder="Complete Address"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Voter Status</label>
+                <div class="custom-select">
+                    <select [(ngModel)]="modalVoterStatus" [disabled]="modalMode === 'view'">
+                        <option value="Registered">Registered</option>
+                        <option value="Not Registered">Not Registered</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Life Status</label>
+                <div class="custom-select">
+                    <select [(ngModel)]="modalLifeStatus" [disabled]="modalMode === 'view'">
+                        <option value="Alive">Alive</option>
+                        <option value="Deceased">Deceased</option>
+                    </select>
+                </div>
+            </div>
+
+            <button *ngIf="modalMode === 'edit'" class="save-btn" (click)="updateResident()">Save Changes</button>
+        </div>
+    </div>
+</div>
