@@ -1,11 +1,169 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Request Management</ion-title>
-    </ion-toolbar>
-</ion-header>
-
-<ion-content>
-    <div class="ion-padding">
-        <h2>Request Management Content</h2>
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <div class="page-container" [class.modal-open]="showTemplateModal">
+    <!-- Header Section with Create Template Button -->
+    <div class="header-section">
+      <div class="header-content">
+        <div>
+          <h1>Request Management</h1>
+          <p class="subtitle">Review and process document requests</p>
+        </div>
+        <ion-button class="create-template-btn" (click)="openTemplateModal()">
+          <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+          Create Template
+        </ion-button>
+      </div>
     </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-container">
+      <div class="stat-card pending">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value">{{ pendingCount }}</div>
+      </div>
+
+      <div class="stat-card approved">
+        <div class="stat-label">Approved</div>
+        <div class="stat-value">{{ approvedCount }}</div>
+      </div>
+
+      <div class="stat-card ready">
+        <div class="stat-label">Ready for Pickup</div>
+        <div class="stat-value">{{ readyCount }}</div>
+      </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <h2>Search Request</h2>
+      
+      <div class="search-filters">
+        <ion-item class="filter-item" lines="none">
+          <ion-select [(ngModel)]="selectedDocumentType" placeholder="All Document Types" interface="popover" (ionChange)="searchRequests()">
+            <ion-select-option value="">All Document Types</ion-select-option>
+            <ion-select-option *ngFor="let type of documentTypes" [value]="type">
+              {{ type }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="filter-item" lines="none">
+          <ion-select [(ngModel)]="selectedDepartment" placeholder="All Status" interface="popover" (ionChange)="searchRequests()">
+            <ion-select-option value="">All Status</ion-select-option>
+            <ion-select-option *ngFor="let dept of departments" [value]="dept">
+              {{ dept }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="filter-item date-picker" lines="none">
+          <ion-input 
+            type="date" 
+            [(ngModel)]="selectedDate"
+            placeholder="dd/mm/yyyy"
+            (ionChange)="searchRequests()">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="filter-item search-input" lines="none">
+          <ion-input 
+            [(ngModel)]="searchId" 
+            placeholder="Search by Request ID..."
+            (ionInput)="searchRequests()">
+          </ion-input>
+        </ion-item>
+
+        <ion-button class="search-btn" color="success" (click)="searchRequests()">
+          Search
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Requests Table -->
+    <div class="requests-section">
+      <h2>Document Requests ({{ filteredRequests.length }})</h2>
+      <p class="section-subtitle">All submissions requiring review</p>
+
+      <div class="table-container">
+        <table class="requests-table">
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>User</th>
+              <th>Document Type</th>
+              <th>Department</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of filteredRequests">
+              <td class="request-id">{{ request.id }}</td>
+              <td>{{ request.user }}</td>
+              <td>{{ request.documentType }}</td>
+              <td>{{ request.department }}</td>
+              <td>{{ request.date }}</td>
+              <td>
+                <ion-badge [color]="getStatusColor(request.status)">
+                  {{ request.status }}
+                </ion-badge>
+              </td>
+              <td>
+                <ion-button fill="clear" size="small" (click)="viewRequest(request)">
+                  <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </ion-content>
+
+<!-- Template Selection Modal (Outside ion-content for proper z-index) -->
+<div class="modal-backdrop" *ngIf="showTemplateModal" (click)="closeTemplateModal()"></div>
+<div class="template-modal" *ngIf="showTemplateModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create New Template</h2>
+      <ion-button fill="clear" (click)="closeTemplateModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="modal-body">
+      <div class="office-selector-container">
+        <label>Select Office</label>
+        <ion-item class="office-selector" lines="none">
+          <ion-select [(ngModel)]="selectedOffice" interface="popover">
+            <ion-select-option *ngFor="let office of offices" [value]="office">
+              {{ office }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <div class="templates-grid">
+        <div *ngFor="let template of getDisplayedTemplates()" class="template-card" [ngClass]="template.color">
+          <div class="template-icon">
+            <ion-icon name="document-text"></ion-icon>
+          </div>
+          <div class="template-content">
+            <h3>{{ template.name }}</h3>
+            <div class="template-actions">
+              <button class="template-btn" (click)="createNewCertificate(template.name)">
+                <ion-icon name="add"></ion-icon>
+                Create New
+              </button>
+              <button class="template-btn view-btn" (click)="viewTemplate(template.name)">
+                <ion-icon name="eye-outline"></ion-icon>
+                View Template
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
