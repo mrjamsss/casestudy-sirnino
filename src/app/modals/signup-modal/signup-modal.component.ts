@@ -35,7 +35,9 @@ export class SignUpModalComponent {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'user'
+    role: 'user',
+    status: 'Pending',
+    dateRegistered: ''
   };
 
   idTypes: string[] = [];
