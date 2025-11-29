@@ -43,6 +43,15 @@ ion-modal {
   --width: 90vw !important;
 }
 
+/* Announcement Modal - Custom sizing */
+ion-modal.announcement-modal {
+  --height: auto;
+  --max-height: 90vh;
+  --width: 600px;
+  --max-width: 90vw;
+  --border-radius: 16px;
+}
+
 ion-modal::part(backdrop) {
   background: rgba(0, 0, 0, 0.5);
 }
@@ -71,20 +80,20 @@ ion-alert.reset-password-alert {
   --background: #ffffff;
   --max-width: 480px;
   --border-radius: 24px;
-  
+
   .alert-wrapper {
     background: white;
     border-radius: 24px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
     overflow: hidden;
   }
-  
+
   .alert-head {
     background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
     padding: 36px 32px;
     text-align: center;
     position: relative;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -94,7 +103,7 @@ ion-alert.reset-password-alert {
       height: 4px;
       background: rgba(255, 255, 255, 0.3);
     }
-    
+
     h2 {
       color: white;
       font-size: 28px;
@@ -104,7 +113,7 @@ ion-alert.reset-password-alert {
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
-  
+
   .alert-message {
     color: #475569;
     font-size: 16px;
@@ -114,10 +123,10 @@ ion-alert.reset-password-alert {
     margin: 0;
     font-weight: 500;
   }
-  
+
   .alert-input-wrapper {
     padding: 0 32px 40px 32px; // ✅ INCREASED bottom padding
-    
+
     .alert-input {
       border: 2px solid #e2e8f0;
       border-radius: 14px;
@@ -129,7 +138,7 @@ ion-alert.reset-password-alert {
       transition: all 0.3s ease;
       text-align: center;
       font-weight: 500;
-      
+
       &:focus {
         border-color: #f59e0b;
         outline: none;
@@ -137,20 +146,20 @@ ion-alert.reset-password-alert {
         box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
         transform: translateY(-2px);
       }
-      
+
       &::placeholder {
         color: #94a3b8;
         text-align: center;
       }
     }
   }
-  
+
   .alert-button-group {
     padding: 0;
     border-top: 2px solid #e5e7eb;
     display: flex;
     background: #f9fafb;
-    
+
     button {
       flex: 1;
       font-weight: 700;
@@ -160,30 +169,30 @@ ion-alert.reset-password-alert {
       transition: all 0.2s ease;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      
+
       &.alert-button-role-cancel {
         color: #64748b;
         border-right: 2px solid #e5e7eb;
-        
+
         &:hover {
           background: #f1f5f9;
           color: #475569;
         }
-        
+
         &:active {
           transform: scale(0.98);
         }
       }
-      
+
       &:not(.alert-button-role-cancel) {
         color: #f59e0b;
         font-weight: 800;
-        
+
         &:hover {
           background: #fff7ed;
           color: #ea580c;
         }
-        
+
         &:active {
           transform: scale(0.98);
         }

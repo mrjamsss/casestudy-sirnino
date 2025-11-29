@@ -16,6 +16,7 @@ import { AnnouncementsPage } from './announcements/announcements.page';
 import { TransactionLogsPage } from './transaction-logs/transaction-logs.page';
 import { HelpPage } from './help/help.page';
 import { SystemSettingsPage } from './system-settings/system-settings.page';
+import { AnnouncementModalComponent } from '../shared/components/announcement-modal/announcement-modal.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { SystemSettingsPage } from './system-settings/system-settings.page';
     AnnouncementsPage,
     TransactionLogsPage,
     HelpPage,
-    SystemSettingsPage
+    SystemSettingsPage,
+    AnnouncementModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
