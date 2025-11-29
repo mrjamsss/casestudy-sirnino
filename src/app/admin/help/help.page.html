@@ -1,11 +1,147 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Help</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
+    <div class="main-container">
+        <div class="page-header">
+            <h1>Help Desk / Support</h1>
+            <p>Manage FAQs and user support content</p>
+        </div>
 
-<ion-content>
-    <div class="ion-padding">
-        <h2>Help Content</h2>
+        <div class="top-section">
+            <!-- Left Column: Add/Edit Form -->
+            <div class="form-card">
+                <div class="card-header">
+                    <h2>Add New FAQ</h2>
+                    <p>Create frequently asked questions</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <div class="custom-select">
+                        <select [(ngModel)]="selectedCategory">
+                            <option value="" disabled selected>Select category</option>
+                            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Question</label>
+                    <textarea rows="3" placeholder="What is the question users are asking?"
+                        [(ngModel)]="question"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea rows="5" placeholder="Provide a clear and helpful answer..."
+                        [(ngModel)]="answer"></textarea>
+                </div>
+
+                <button class="save-btn" (click)="saveFAQ()">Add FAQ</button>
+            </div>
+
+            <!-- Right Column: Guidelines & Stats -->
+            <div class="right-column">
+                <div class="guidelines-card">
+                    <h3>FAQ Guidelines</h3>
+                    <ul>
+                        <li>Keep answers clear and concise</li>
+                        <li>Use simple language that all users can understand</li>
+                        <li>Include relevant links or references when applicable</li>
+                        <li>Update FAQs regularly based on common user questions</li>
+                        <li>Organize by category for easy navigation</li>
+                    </ul>
+                </div>
+
+                <div class="stats-card">
+                    <h3>Support Statistics</h3>
+                    <div class="stat-row">
+                        <span>Total FAQs:</span>
+                        <span class="stat-value">{{ faqs.length }}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Categories:</span>
+                        <span class="stat-value">{{ categories.length }}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Last Updated:</span>
+                        <span class="stat-value">Today</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section: Existing FAQs Table -->
+        <div class="table-card">
+            <div class="card-header">
+                <div class="header-text">
+                    <h2>Existing FAQs ({{ faqs.length }})</h2>
+                    <p>Select a row to manage</p>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn view" [disabled]="!selectedFaq" (click)="openModal('view')">View</button>
+                    <button class="action-btn edit" [disabled]="!selectedFaq" (click)="openModal('edit')">Edit</button>
+                    <button class="action-btn delete" [disabled]="!selectedFaq"
+                        (click)="deleteSelectedFAQ()">Delete</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Question</th>
+                            <th>Answer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let faq of faqs" (click)="selectFaq(faq)" [class.selected]="selectedFaq === faq">
+                            <td class="category-col">{{ faq.category }}</td>
+                            <td class="question-col">{{ faq.question }}</td>
+                            <td class="answer-col">{{ faq.answer | slice:0:100 }}{{ faq.answer.length > 100 ? '...' : ''
+                                }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <!-- Modal -->
+    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+        <ng-template>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>{{ modalMode === 'edit' ? 'Edit FAQ' : 'View FAQ' }}</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button (click)="closeModal()">Close</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <div class="form-group">
+                    <label>Category</label>
+                    <div class="custom-select">
+                        <select [(ngModel)]="modalCategory" [disabled]="modalMode === 'view'">
+                            <option value="" disabled selected>Select category</option>
+                            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Question</label>
+                    <textarea rows="3" placeholder="What is the question users are asking?" [(ngModel)]="modalQuestion"
+                        [disabled]="modalMode === 'view'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea rows="5" placeholder="Provide a clear and helpful answer..." [(ngModel)]="modalAnswer"
+                        [disabled]="modalMode === 'view'"></textarea>
+                </div>
+
+                <button *ngIf="modalMode === 'edit'" class="save-btn" (click)="updateFAQ()">Save Changes</button>
+            </ion-content>
+        </ng-template>
+    </ion-modal>
 </ion-content>
