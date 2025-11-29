@@ -1,0 +1,458 @@
+// Department Information Page Styles
+// Custom Color Palette - Cabanatuan City Hall
+$cbn-primary: #0F4C81; // Deep blue - main branding
+$cbn-secondary: #FFC300; // Bright gold/yellow - accents
+$cbn-background: #F4F7F9; // Light background
+
+// Text colors
+$text-dark: #111827; // text-gray-900
+$text-heading: #1F2937; // text-gray-800
+$text-body: #4B5563; // text-gray-600
+$text-secondary: #6B7280; // text-gray-500
+$text-muted: #9CA3AF; // text-gray-400
+
+// UI colors
+$bg-white: #FFFFFF;
+$border-gray: #374151; // border-gray-700
+
+.page-subtitle {
+    padding: 0 16px;
+
+    p {
+        margin: 0;
+        color: $text-secondary;
+        font-size: 14px;
+    }
+}
+
+.department-container {
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: $cbn-background;
+}
+
+.department-card {
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(15, 76, 129, 0.08);
+    background: $bg-white;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 8px 24px rgba(15, 76, 129, 0.15);
+        transform: translateY(-2px);
+    }
+
+    ion-card-header {
+        background: linear-gradient(135deg, $cbn-primary 0%, darken($cbn-primary, 8%) 100%);
+        color: $bg-white;
+        padding: 20px;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, $cbn-secondary 0%, transparent 100%);
+        }
+
+        ion-card-title {
+            color: $bg-white;
+            font-weight: 600;
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        ion-card-subtitle {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+        }
+    }
+}
+
+.department-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .department-info {
+        flex: 1;
+    }
+
+    ion-button {
+        --color: $bg-white;
+        --background: rgba(255, 255, 255, 0.15);
+        --background-hover: rgba(255, 255, 255, 0.25);
+        --border-radius: 8px;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.services-section {
+    margin-top: 16px;
+}
+
+.services-header {
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, rgba(15, 76, 129, 0.08) 0%, transparent 100%);
+    border-left: 4px solid $cbn-primary;
+    border-radius: 0 8px 8px 0;
+
+    h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: $cbn-primary;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            content: '📋';
+            font-size: 18px;
+        }
+    }
+}
+
+.service-item {
+    --background: $bg-white;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 2px solid rgba(15, 76, 129, 0.12);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $cbn-primary;
+        box-shadow: 0 4px 12px rgba(15, 76, 129, 0.15);
+        transform: translateX(4px);
+    }
+
+    ion-label h2 {
+        font-size: 15px;
+        font-weight: 600;
+        color: $text-heading;
+    }
+
+    ion-badge {
+        margin-right: 8px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    ion-icon {
+        color: $cbn-primary;
+        transition: transform 0.3s ease;
+    }
+}
+
+ion-accordion.accordion-expanded .service-item ion-icon {
+    transform: rotate(180deg);
+}
+
+.service-details {
+    padding: 20px;
+    background: linear-gradient(135deg, $cbn-background 0%, lighten($cbn-background, 2%) 100%);
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 10px;
+    border: 2px solid rgba(15, 76, 129, 0.08);
+    border-top: none;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.requirements-section {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: $bg-white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    h4 {
+        margin: 0 0 12px 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: $cbn-primary;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        &::before {
+            content: '✓';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: $cbn-secondary;
+            color: $text-dark;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    }
+
+    ul {
+        margin: 0;
+        padding-left: 24px;
+        list-style: none;
+
+        li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: $text-body;
+            position: relative;
+            padding-left: 8px;
+            line-height: 1.6;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: -16px;
+                top: 9px;
+                width: 8px;
+                height: 8px;
+                background: $cbn-secondary;
+                border-radius: 50%;
+                box-shadow: 0 0 0 2px rgba(255, 195, 0, 0.2);
+            }
+        }
+    }
+}
+
+.service-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    .meta-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 14px 16px;
+        background: $bg-white;
+        border-radius: 10px;
+        border-left: 4px solid $cbn-primary;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .meta-label {
+            font-size: 11px;
+            color: $text-secondary;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: $cbn-primary;
+        }
+    }
+}
+
+.service-actions {
+    display: flex;
+    gap: 10px;
+
+    ion-button {
+        flex: 1;
+        --border-radius: 8px;
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: 0.3px;
+
+        &[fill="outline"] {
+            --border-color: $cbn-primary;
+            --border-width: 2px;
+            --color: $cbn-primary;
+
+            &:hover {
+                --background: rgba(15, 76, 129, 0.08);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(15, 76, 129, 0.15);
+            }
+        }
+
+        &[color="danger"] {
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(var(--ion-color-danger-rgb), 0.3);
+            }
+        }
+    }
+}
+
+.add-service-btn {
+    margin-top: 16px;
+    --border-color: $cbn-primary;
+    --border-width: 2px;
+    --color: $cbn-primary;
+    --border-radius: 10px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.3px;
+
+    &:hover {
+        --background: rgba(15, 76, 129, 0.08);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15, 76, 129, 0.15);
+    }
+}
+
+.no-services {
+    text-align: center;
+    padding: 32px 24px;
+    color: $text-muted;
+    background: linear-gradient(135deg, rgba(15, 76, 129, 0.03) 0%, transparent 100%);
+    border-radius: 10px;
+    border: 2px dashed rgba(15, 76, 129, 0.15);
+
+    p {
+        margin: 0;
+        font-size: 14px;
+        font-style: italic;
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: $text-muted;
+    background: $bg-white;
+    border-radius: 16px;
+    border: 3px dashed rgba(15, 76, 129, 0.2);
+
+    ion-icon {
+        font-size: 72px;
+        margin-bottom: 20px;
+        color: $cbn-primary;
+        opacity: 0.25;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    h3 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+        color: $text-heading;
+        font-weight: 700;
+    }
+
+    p {
+        margin: 0;
+        font-size: 14px;
+        color: $text-secondary;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.info-card {
+    margin: 24px 16px 16px 16px;
+    background: linear-gradient(135deg, rgba(15, 76, 129, 0.06) 0%, rgba(255, 195, 0, 0.06) 100%);
+    border-left: 5px solid $cbn-secondary;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+    ion-card-header {
+        padding-bottom: 8px;
+    }
+
+    ion-card-title {
+        color: $cbn-primary;
+        font-weight: 700;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            content: 'ℹ️';
+            font-size: 20px;
+        }
+    }
+
+    ion-card-content p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.7;
+        color: $text-body;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .service-meta {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .service-actions {
+        flex-direction: column;
+
+        ion-button {
+            width: 100%;
+        }
+    }
+
+    .department-card {
+        margin-bottom: 16px;
+
+        ion-card-header {
+            padding: 16px;
+
+            ion-card-title {
+                font-size: 18px;
+            }
+        }
+    }
+}
