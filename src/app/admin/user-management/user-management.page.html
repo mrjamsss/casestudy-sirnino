@@ -1,11 +1,279 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>User Management</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-content class="ion-no-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>User Management</h1>
+            <p class="subtitle">Manage citizen registrations, verify accounts, and oversee user activity</p>
+        </div>
 
-<ion-content>
-    <div class="ion-padding">
-        <h2>User Management Content</h2>
+        <!-- Statistics Section -->
+        <div class="content-wrapper">
+            <div class="section-card stats-card">
+                <div class="stats-grid">
+                    <div class="stat-item stat-primary">
+                        <div class="stat-icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Citizens</div>
+                            <div class="stat-value">{{ stats.total }}</div>
+                        </div>
+                    </div>
+                    <div class="stat-item stat-warning">
+                        <div class="stat-icon">
+                            <ion-icon name="time-outline"></ion-icon>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Pending Verifications</div>
+                            <div class="stat-value">{{ stats.pending }}</div>
+                        </div>
+                    </div>
+                    <div class="stat-item stat-success">
+                        <div class="stat-icon">
+                            <ion-icon name="checkmark-circle-outline"></ion-icon>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Active Users</div>
+                            <div class="stat-value">{{ stats.active }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User List Section -->
+        <div class="content-wrapper">
+            <div class="section-card user-list-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Registered Users</h2>
+                        <p class="section-subtitle">View and manage all registered citizens</p>
+                    </div>
+                    <div class="header-actions">
+                        <ion-button fill="clear" (click)="exportData()" class="export-button">
+                            <ion-icon name="download-outline" slot="start"></ion-icon>
+                            Export CSV
+                        </ion-button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs-wrapper">
+                    <ion-segment [(ngModel)]="selectedTab" (ionChange)="onTabChange($event)" class="custom-segment">
+                        <ion-segment-button value="all">
+                            <ion-label>All Users</ion-label>
+                        </ion-segment-button>
+                        <ion-segment-button value="pending">
+                            <ion-label>Pending Approvals</ion-label>
+                            <span class="pending-badge" *ngIf="stats.pending > 0">{{ stats.pending }}</span>
+                        </ion-segment-button>
+                    </ion-segment>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-wrapper">
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="onSearchChange($event)" 
+                                placeholder="Search by name, email, or ID..." class="custom-searchbar"></ion-searchbar>
+                        </div>
+                        <div class="filter-item" *ngIf="selectedTab === 'all'">
+                            <ion-select label="Status" label-placement="floating" fill="outline" 
+                                [(ngModel)]="filterStatus" (ionChange)="onFilterChange()" class="custom-select">
+                                <ion-select-option value="all">All Status</ion-select-option>
+                                <ion-select-option value="Active">Active</ion-select-option>
+                                <ion-select-option value="Rejected">Rejected</ion-select-option>
+                                <ion-select-option value="Suspended">Suspended</ion-select-option>
+                            </ion-select>
+                        </div>
+                        <div class="filter-item">
+                            <ion-select label="Barangay" label-placement="floating" fill="outline" 
+                                [(ngModel)]="filterBarangay" (ionChange)="onFilterChange()" class="custom-select">
+                                <ion-select-option value="all">All Barangays</ion-select-option>
+                                <ion-select-option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</ion-select-option>
+                            </ion-select>
+                        </div>
+                        <div class="filter-item">
+                            <ion-select label="Role" label-placement="floating" fill="outline" 
+                                [(ngModel)]="filterRole" (ionChange)="onFilterChange()" class="custom-select">
+                                <ion-select-option value="all">All Roles</ion-select-option>
+                                <ion-select-option value="user">Citizen</ion-select-option>
+                                <ion-select-option value="admin">Admin Staff</ion-select-option>
+                            </ion-select>
+                        </div>
+                        <div class="filter-item">
+                            <ion-select label="Age Group" label-placement="floating" fill="outline" 
+                                [(ngModel)]="filterAgeGroup" (ionChange)="onFilterChange()" class="custom-select">
+                                <ion-select-option value="all">All Ages</ion-select-option>
+                                <ion-select-option value="youth">Youth (<18)</ion-select-option>
+                                <ion-select-option value="adult">Adult (18-59)</ion-select-option>
+                                <ion-select-option value="senior">Senior (60+)</ion-select-option>
+                            </ion-select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Table -->
+                <div class="user-table-wrapper">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Status</th>
+                                <th>Barangay</th>
+                                <th>Age</th>
+                                <th>Role</th>
+                                <th>ID Type</th>
+                                <th>Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="user-row" *ngFor="let user of filteredUsers">
+                                <td>
+                                    <div class="user-name">{{ getFullName(user) }}</div>
+                                    <div class="user-email">{{ user.email }}</div>
+                                </td>
+                                <td>
+                                    <span class="status-badge" [attr.data-status]="user.status">
+                                        {{ user.status }}
+                                    </span>
+                                </td>
+                                <td>{{ user.address.barangay }}</td>
+                                <td>{{ calculateAge(user.dateOfBirth) }}</td>
+                                <td>{{ user.role | titlecase }}</td>
+                                <td class="id-type-cell">{{ user.idType }}</td>
+                                <td>{{ user.dateRegistered | date:'mediumDate' }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <ion-button fill="clear" size="small" class="view-btn" (click)="openUserDetail(user)">
+                                            <ion-icon name="eye-outline"></ion-icon>
+                                            View
+                                        </ion-button>
+                                        <ion-button fill="clear" size="small" class="delete-btn" (click)="deleteUser(user)">
+                                            <ion-icon name="trash-outline"></ion-icon>
+                                            Delete
+                                        </ion-button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="filteredUsers.length === 0">
+                                <td colspan="8" class="empty-state">
+                                    <div class="empty-content">
+                                        <ion-icon name="people-outline"></ion-icon>
+                                        <p>No users found matching your criteria</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- User Detail Modal -->
+    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+        <ng-template>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>User Details</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button (click)="closeModal()">
+                            <ion-icon name="close-outline"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding" *ngIf="selectedUser">
+                <div class="modal-content">
+                    <div class="detail-section">
+                        <h3>Personal Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <ion-icon name="person-outline"></ion-icon>
+                                <div>
+                                    <div class="detail-label">Full Name</div>
+                                    <div class="detail-value">{{ getFullName(selectedUser) }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <ion-icon name="mail-outline"></ion-icon>
+                                <div>
+                                    <div class="detail-label">Email</div>
+                                    <div class="detail-value">{{ selectedUser.email }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <ion-icon name="call-outline"></ion-icon>
+                                <div>
+                                    <div class="detail-label">Mobile</div>
+                                    <div class="detail-value">{{ selectedUser.mobileNumber }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <ion-icon name="calendar-outline"></ion-icon>
+                                <div>
+                                    <div class="detail-label">Date of Birth</div>
+                                    <div class="detail-value">{{ selectedUser.dateOfBirth | date }} ({{ calculateAge(selectedUser.dateOfBirth) }} yrs)</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <ion-icon name="shield-outline"></ion-icon>
+                                <div>
+                                    <div class="detail-label">Role</div>
+                                    <div class="detail-value">{{ selectedUser.role | titlecase }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <ion-icon name="information-circle-outline"></ion-icon>
+                                <div>
+                                    <div class="detail-label">Status</div>
+                                    <span class="status-badge" [attr.data-status]="selectedUser.status">{{ selectedUser.status }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Address</h3>
+                        <div class="address-box">
+                            <ion-icon name="location-outline"></ion-icon>
+                            <div>
+                                <p>{{ selectedUser.address.houseNo }} {{ selectedUser.address.street }}</p>
+                                <p>Purok {{ selectedUser.address.purok }}, Brgy. {{ selectedUser.address.barangay }}</p>
+                                <p>{{ selectedUser.address.municipality }}, {{ selectedUser.address.province }} {{ selectedUser.address.postalCode }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>ID Verification</h3>
+                        <div class="id-box">
+                            <ion-icon name="card-outline"></ion-icon>
+                            <div>
+                                <div class="id-type">{{ selectedUser.idType }}</div>
+                                <div class="id-number">ID Number: <strong>{{ selectedUser.idNumber }}</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <ion-button expand="block" color="success" *ngIf="selectedUser.status === 'Pending'" (click)="approveUser(selectedUser)">
+                            <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+                            Approve Registration
+                        </ion-button>
+                        <ion-button expand="block" color="danger" *ngIf="selectedUser.status === 'Pending'" (click)="rejectUser(selectedUser)">
+                            <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+                            Reject Registration
+                        </ion-button>
+                        <ion-button expand="block" fill="outline" (click)="resetPassword(selectedUser)">
+                            <ion-icon name="key-outline" slot="start"></ion-icon>
+                            Send Password Reset
+                        </ion-button>
+                    </div>
+                </div>
+            </ion-content>
+        </ng-template>
+    </ion-modal>
 </ion-content>

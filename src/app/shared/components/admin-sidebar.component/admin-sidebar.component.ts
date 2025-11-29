@@ -29,7 +29,7 @@ export class AdminSidebarComponent implements OnInit {
     { label: 'Transaction Logs', icon: 'receipt', route: '/admin/transaction-logs' },
     { label: 'Help', icon: 'help-circle', route: '/admin/help' },
     { label: 'System Settings', icon: 'settings', route: '/admin/system-settings' },
-    { label: 'Logout', icon: 'log-out', route: '/auth/login', isLogout: true }
+    { label: 'Logout', icon: 'log-out', route: '/home', isLogout: true }
   ];
 
   constructor(

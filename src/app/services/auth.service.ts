@@ -25,6 +25,8 @@ export interface UserData {
   password: string;
   confirmPassword: string;
   role: 'user' | 'admin';
+  status: 'Pending' | 'Active' | 'Rejected' | 'Suspended';
+  dateRegistered: string;
 }
 
 export interface LoginData {
@@ -90,6 +92,14 @@ export class AuthService {
     this.loadingSubject.next(false);
 
     if (user) {
+      if (user.status !== 'Active' && user.status !== 'Pending') { // Allow Pending for now or restrict? Usually Pending can't login.
+         // For this case study, maybe we allow login but show restricted view? 
+         // Or strictly:
+         if (user.status === 'Rejected' || user.status === 'Suspended') {
+             return { success: false, message: `Your account is ${user.status}.` };
+         }
+         // If pending, maybe allow or show message. Let's assume Active only for full access, but for now just log it.
+      }
       console.log('User login successful:', user.email);
       return { success: true };
     } else {
@@ -118,14 +128,19 @@ export class AuthService {
       };
     }
 
-    // Add new user
-    users.push(userData);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(users));
+    // Add new user with default status and date
+    const newUser: UserData = {
+      ...userData,
+      status: 'Pending', // Default to Pending
+      dateRegistered: new Date().toISOString()
+    };
+
+    users.push(newUser);
+    this.saveUsers(users);
 
     this.loadingSubject.next(false);
     
-    console.log('Registration successful:', userData.email);
-    console.log('All registered users:', users);
+    console.log('Registration successful:', newUser.email);
     
     return { success: true };
   }
@@ -152,9 +167,23 @@ export class AuthService {
       success: true,
       message: 'Password reset link has been sent to your email.'
     };
-    
-    // TODO: Later connect to real backend API
-    // return this.http.post('/api/auth/reset-password', { email }).toPromise();
+  }
+
+  // Management Methods
+  
+  updateUser(updatedUser: UserData): void {
+    const users = this.getRegisteredUsers();
+    const index = users.findIndex(u => u.email === updatedUser.email);
+    if (index !== -1) {
+      users[index] = updatedUser;
+      this.saveUsers(users);
+    }
+  }
+
+  deleteUser(email: string): void {
+    let users = this.getRegisteredUsers();
+    users = users.filter(u => u.email !== email);
+    this.saveUsers(users);
   }
 
   private getRegisteredUsers(): UserData[] {
@@ -162,7 +191,11 @@ export class AuthService {
     return users ? JSON.parse(users) : [];
   }
 
-  // Get all registered users (for debugging)
+  private saveUsers(users: UserData[]): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(users));
+  }
+
+  // Get all registered users (for debugging/admin)
   getAllUsers(): UserData[] {
     return this.getRegisteredUsers();
   }
