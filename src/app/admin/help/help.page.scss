@@ -263,12 +263,14 @@ ion-content {
     overflow-x: auto;
     border-radius: 12px;
     border: 1px solid $cbn-background;
+    position: relative;
 }
 
 .user-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9375rem;
+    position: relative;
 
     thead {
         background: linear-gradient(135deg, $cbn-primary 0%, color.adjust($cbn-primary, $lightness: -5%) 100%);
@@ -298,21 +300,11 @@ ion-content {
     tbody {
         tr {
             border-bottom: 1px solid $cbn-background;
-            transition: all 0.2s ease;
             cursor: pointer;
 
-            &:hover {
-                background: rgba($cbn-secondary, 0.05);
-            }
-
             &.selected {
-                background: rgba($cbn-primary, 0.05);
-                border-left: 3px solid $cbn-primary;
-
-                td {
-                    color: $cbn-primary;
-                    font-weight: 600;
-                }
+                background: #e8f0f8;
+                box-shadow: inset 4px 0 0 0 $cbn-primary;
             }
 
             &:last-child {
