@@ -1,20 +1,102 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <div class="logo-container" *ngIf="logo">
-        <img [src]="logo" alt="City Hall Logo">
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Admin Dashboard</h1>
+        <p class="subtitle">Overview of system activity and pending tasks</p>
       </div>
-    </ion-buttons>
-    <ion-title>Admin Dashboard</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <div class="ion-padding">
-    <h1>Welcome to Admin Dashboard</h1>
-    <ion-button routerLink="/admin/system-settings" color="primary">
-      <ion-icon name="settings-outline" slot="start"></ion-icon>
-      Go to System Settings
-    </ion-button>
+    </div>
   </div>
-</ion-content>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-content">
+        <div class="stat-info">
+          <h3 class="stat-title">{{ stat.title }}</h3>
+          <div class="stat-value">{{ stat.value }}</div>
+          <p class="stat-subtitle">{{ stat.subtitle }}</p>
+        </div>
+        <div class="stat-icon" [style.color]="stat.color">
+          <ion-icon [name]="stat.icon"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Requests Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <h2>Recent Requests</h2>
+      <p class="section-subtitle">Latest document requests requiring attention</p>
+    </div>
+
+    <div class="table-container">
+      <table class="requests-table">
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>User</th>
+            <th>Document Type</th>
+            <th>Department</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let request of recentRequests">
+            <td class="request-id">{{ request.id }}</td>
+            <td>{{ request.user }}</td>
+            <td>{{ request.documentType }}</td>
+            <td>{{ request.department }}</td>
+            <td>{{ request.date }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(request.status)">
+                {{ request.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bottom Grid: Notifications and Quick Actions -->
+  <div class="bottom-grid">
+    <!-- System Notifications -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>System Notifications</h2>
+      </div>
+
+      <div class="notifications-list">
+        <div class="notification-item" *ngFor="let notification of notifications"
+          [ngClass]="'notification-' + notification.type">
+          <ion-icon [name]="notification.icon" class="notification-icon"></ion-icon>
+          <div class="notification-content">
+            <h4>{{ notification.title }}</h4>
+            <p>{{ notification.message }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Quick Actions</h2>
+      </div>
+
+      <div class="actions-list">
+        <div class="action-item" *ngFor="let action of quickActions">
+          <ion-icon [name]="action.icon" class="action-icon"></ion-icon>
+          <div class="action-content">
+            <h4>{{ action.title }}</h4>
+            <p>{{ action.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

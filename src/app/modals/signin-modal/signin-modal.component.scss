@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // Colors
 $cbn-primary: #0F4C81;
 $cbn-secondary: #FFC300;
@@ -11,7 +13,7 @@ $cbn-accent: #f5b300;
     --max-height: 85vh;
     --border-radius: 16px;
     --box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
-    
+
     @media (max-width: 576px) {
       --width: 90vw;
       --max-width: 90vw;
@@ -41,7 +43,7 @@ $cbn-accent: #f5b300;
 
   .close-btn {
     --color: #07203a;
-    
+
     ion-icon {
       font-size: 1.5rem;
     }
@@ -69,7 +71,7 @@ $cbn-accent: #f5b300;
 .header-icon-wrapper {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #{$cbn-accent} 0%, darken($cbn-accent, 10%) 100%);
+  background: linear-gradient(135deg, #{$cbn-accent} 0%, color.adjust($cbn-accent, $lightness: -10%) 100%);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -195,8 +197,9 @@ $cbn-accent: #f5b300;
     background: rgba($cbn-accent, 0.1);
     border-color: $cbn-accent;
 
-    ion-icon, span {
-      color: darken($cbn-accent, 15%);
+    ion-icon,
+    span {
+      color: color.adjust($cbn-accent, $lightness: -15%);
     }
   }
 
@@ -208,8 +211,8 @@ $cbn-accent: #f5b300;
 // Submit Button
 .submit-btn {
   --background: #{$cbn-accent};
-  --background-hover: #{darken($cbn-accent, 8%)};
-  --background-activated: #{darken($cbn-accent, 12%)};
+  --background-hover: #{color.adjust($cbn-accent, $lightness: -8%)};
+  --background-activated: #{color.adjust($cbn-accent, $lightness: -12%)};
   --color: #07203a;
   --border-radius: 10px;
   --box-shadow: 0 4px 14px rgba($cbn-accent, 0.35);
@@ -219,7 +222,7 @@ $cbn-accent: #f5b300;
   letter-spacing: -0.01em;
   margin-top: 6px;
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-1px);
   }
@@ -293,7 +296,7 @@ $cbn-accent: #f5b300;
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
   font-size: 0.8125rem;
   background: rgba($cbn-accent, 0.15);
-  color: darken($cbn-accent, 20%);
+  color: color.adjust($cbn-accent, $lightness: -20%);
   padding: 4px 10px;
   border-radius: 6px;
   font-weight: 600;
@@ -321,7 +324,7 @@ $cbn-accent: #f5b300;
     transition: color 0.2s ease;
 
     &:hover {
-      color: darken($cbn-accent, 10%);
+      color: color.adjust($cbn-accent, $lightness: -10%);
     }
   }
 }

@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 // Custom Colors (unchanged)
@@ -82,7 +83,7 @@ html {
 
 .desktop-nav {
   display: none;
-  
+
   @media (min-width: 768px) {
     display: flex;
     gap: 8px;
@@ -99,13 +100,13 @@ html {
   border-radius: 8px;
   transition: all 0.2s ease;
   cursor: pointer;
-  
+
   &:hover {
     color: $cbn-secondary; // Yellow on hover
     background: rgba($cbn-secondary, 0.1); // Light yellow background
     transform: translateY(-1px); // Slight lift effect
   }
-  
+
   &.active {
     color: $cbn-primary;
     background: rgba($cbn-primary, 0.08);
@@ -126,7 +127,7 @@ html {
   font-size: 1rem; // Increased from 0.9375rem
   letter-spacing: -0.01em;
   transition: all 0.2s ease;
-  
+
   &:hover {
     --color: #{$cbn-secondary}; // Yellow on hover
     transform: translateY(-1px); // Slight lift effect
@@ -142,7 +143,7 @@ html {
   --padding-end: 24px; // Increased from 20px
   letter-spacing: -0.01em;
   transition: all 0.2s ease;
-  
+
   &:hover {
     --background: darken($cbn-primary, 5%);
     --color: #{$cbn-secondary}; // Yellow text on hover
@@ -157,7 +158,7 @@ html {
   background: linear-gradient(180deg, white 0%, $cbn-background 100%);
   padding: 80px 0 100px;
   overflow: hidden;
-  
+
   @media (min-width: 1024px) {
     padding: 100px 0 120px;
   }
@@ -174,7 +175,7 @@ html {
   flex-direction: column;
   align-items: center;
   gap: 60px;
-  
+
   @media (min-width: 1024px) {
     flex-direction: row;
     align-items: center;
@@ -185,7 +186,7 @@ html {
 .hero-text {
   width: 100%;
   text-align: center;
-  
+
   @media (min-width: 1024px) {
     width: 55%;
     text-align: left;
@@ -197,7 +198,7 @@ html {
   align-items: center;
   gap: 8px;
   background: rgba($cbn-secondary, 0.15);
-  color: darken($cbn-secondary, 20%);
+  color: color.adjust($cbn-secondary, $lightness: -20%);
   font-size: 0.8125rem;
   font-weight: 600;
   padding: 6px 14px;
@@ -221,11 +222,11 @@ html {
   color: #0f172a;
   margin: 0 0 24px;
   letter-spacing: -0.03em;
-  
+
   @media (min-width: 768px) {
     font-size: 3.5rem;
   }
-  
+
   @media (min-width: 1024px) {
     font-size: 4rem;
   }
@@ -242,7 +243,7 @@ html {
   color: #64748b;
   margin: 0 auto 32px;
   max-width: 520px;
-  
+
   @media (min-width: 1024px) {
     margin: 0 0 32px;
   }
@@ -253,65 +254,65 @@ html {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 48px;
-  
+
   @media (min-width: 480px) {
     flex-direction: row;
     justify-content: center;
   }
-  
+
   @media (min-width: 1024px) {
     justify-content: flex-start;
   }
 }
 
-  .cta-primary {
-    --background: #{$cbn-primary};
-    --color: white;
-    font-weight: 600;
-    font-size: 1rem;
-    --padding-start: 28px;
-    --padding-end: 28px;
-    height: 52px;
-    --box-shadow: 0 4px 14px rgba($cbn-primary, 0.35);
-    letter-spacing: -0.01em;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      --background: darken($cbn-primary, 5%);
-      --color: #{$cbn-secondary}; // Text turns yellow on hover
-      transform: translateY(-2px);
-      --box-shadow: 0 6px 20px rgba($cbn-primary, 0.4);
-    }
-    
-    ion-icon {
-      margin-left: 4px;
-    }
+.cta-primary {
+  --background: #{$cbn-primary};
+  --color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  --padding-start: 28px;
+  --padding-end: 28px;
+  height: 52px;
+  --box-shadow: 0 4px 14px rgba($cbn-primary, 0.35);
+  letter-spacing: -0.01em;
+  transition: all 0.2s ease;
+
+  &:hover {
+    --background: darken($cbn-primary, 5%);
+    --color: #{$cbn-secondary}; // Text turns yellow on hover
+    transform: translateY(-2px);
+    --box-shadow: 0 6px 20px rgba($cbn-primary, 0.4);
   }
 
-  .cta-secondary {
-    --background: transparent;
-    --color: #{$cbn-primary};
-    --border-color: #{$cbn-primary};
-    --border-width: 2px;
-    font-weight: 600;
-    font-size: 1rem;
-    --padding-start: 24px;
-    --padding-end: 28px;
-    height: 52px;
-    letter-spacing: -0.01em;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      --background: #{$cbn-primary};
-      --color: white;
-      transform: translateY(-2px);
-    }
-    
-    ion-icon {
-      font-size: 1.25rem;
-      margin-right: 4px;
-    }
+  ion-icon {
+    margin-left: 4px;
   }
+}
+
+.cta-secondary {
+  --background: transparent;
+  --color: #{$cbn-primary};
+  --border-color: #{$cbn-primary};
+  --border-width: 2px;
+  font-weight: 600;
+  font-size: 1rem;
+  --padding-start: 24px;
+  --padding-end: 28px;
+  height: 52px;
+  letter-spacing: -0.01em;
+  transition: all 0.2s ease;
+
+  &:hover {
+    --background: #{$cbn-primary};
+    --color: white;
+    transform: translateY(-2px);
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+    margin-right: 4px;
+  }
+}
 
 // Phone mockup hover effects
 .phone-mockup {
@@ -324,7 +325,7 @@ html {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   z-index: 1;
   transition: all 0.3s ease; // Add smooth transition
-  
+
   &:hover {
     transform: translateY(-10px) scale(1.02); // Move up and slightly scale
     box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
@@ -343,14 +344,14 @@ html {
   --box-shadow: 0 4px 14px rgba($cbn-primary, 0.35);
   letter-spacing: -0.01em;
   transition: all 0.2s ease;
-  
+
   &:hover {
     --background: darken($cbn-primary, 5%);
     --color: #{$cbn-secondary}; // Changes to yellow on hover
     transform: translateY(-2px);
     --box-shadow: 0 6px 20px rgba($cbn-primary, 0.4);
   }
-  
+
   ion-icon {
     margin-left: 4px;
   }
@@ -361,7 +362,7 @@ html {
   width: 100%;
   display: flex;
   justify-content: center;
-  
+
   @media (min-width: 1024px) {
     width: 45%;
     justify-content: flex-end;
@@ -491,7 +492,7 @@ html {
   color: #0f172a;
   margin: 0 0 16px;
   letter-spacing: -0.02em;
-  
+
   @media (min-width: 768px) {
     font-size: 2.75rem;
   }
@@ -509,7 +510,7 @@ html {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  
+
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -522,15 +523,15 @@ html {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.04);
-  
+
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    
+
     .feature-icon-wrapper {
       transform: scale(1.05);
     }
-    
+
     .feature-link {
       color: $cbn-primary;
       gap: 8px;
@@ -546,12 +547,12 @@ html {
 .feature-icon {
   width: 56px;
   height: 56px;
-  background: linear-gradient(135deg, $cbn-primary 0%, darken($cbn-primary, 10%) 100%);
+  background: linear-gradient(135deg, $cbn-primary 0%, color.adjust($cbn-primary, $lightness: -10%) 100%);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   svg {
     width: 28px;
     height: 28px;
@@ -583,7 +584,7 @@ html {
   color: #94a3b8;
   text-decoration: none;
   transition: all 0.2s ease;
-  
+
   ion-icon {
     font-size: 1rem;
   }
@@ -599,11 +600,11 @@ html {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
-  
+
   @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   @media (min-width: 1024px) {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -619,18 +620,18 @@ html {
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
-  
+
   &:hover {
     background: white;
     border-color: rgba($cbn-secondary, 0.3);
     box-shadow: 0 8px 24px rgba($cbn-secondary, 0.15);
     transform: translateY(-2px);
-    
+
     .service-icon {
       background: $cbn-secondary;
       color: $cbn-primary;
     }
-    
+
     .service-arrow {
       opacity: 1;
       transform: translateX(0);
@@ -649,7 +650,7 @@ html {
   color: $cbn-primary;
   flex-shrink: 0;
   transition: all 0.2s ease;
-  
+
   ion-icon {
     font-size: 24px;
   }
@@ -685,11 +686,11 @@ html {
 
 // Download Section
 .download-section {
-  background: linear-gradient(135deg, $cbn-primary 0%, darken($cbn-primary, 15%) 100%);
+  background: linear-gradient(135deg, $cbn-primary 0%, color.adjust($cbn-primary, $lightness: -15%) 100%);
   padding: 80px 0;
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -720,7 +721,7 @@ html {
   color: white;
   margin: 0 0 16px;
   letter-spacing: -0.02em;
-  
+
   @media (min-width: 768px) {
     font-size: 2.5rem;
   }
@@ -751,12 +752,12 @@ html {
   --padding-start: 20px;
   --padding-end: 24px;
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
     --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   }
-  
+
   &.app-store {
     --background: white;
     --color: #0f172a;
@@ -767,7 +768,7 @@ html {
   display: flex;
   align-items: center;
   gap: 12px;
-  
+
   ion-icon {
     font-size: 28px;
   }
@@ -812,7 +813,7 @@ html {
   grid-template-columns: 1fr;
   gap: 40px;
   margin-bottom: 40px;
-  
+
   @media (min-width: 768px) {
     grid-template-columns: 2fr 1fr 1fr;
   }
@@ -872,11 +873,11 @@ html {
     font-size: 0.875rem;
     color: #94a3b8;
     margin: 0 0 12px;
-    
+
     @media (max-width: 767px) {
       justify-content: center;
     }
-    
+
     ion-icon {
       font-size: 1rem;
       color: $cbn-secondary;
@@ -888,17 +889,17 @@ html {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  
+
   @media (max-width: 767px) {
     align-items: center;
   }
-  
+
   a {
     font-size: 0.875rem;
     color: #94a3b8;
     text-decoration: none;
     transition: color 0.2s ease;
-    
+
     &:hover {
       color: $cbn-secondary;
     }
@@ -912,7 +913,7 @@ html {
   gap: 16px;
   padding-top: 24px;
   border-top: 1px solid #1e293b;
-  
+
   @media (min-width: 768px) {
     flex-direction: row;
     justify-content: space-between;
@@ -941,12 +942,12 @@ html {
   color: #94a3b8;
   text-decoration: none;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background: $cbn-secondary;
     color: $cbn-primary;
   }
-  
+
   ion-icon {
     font-size: 1.125rem;
   }

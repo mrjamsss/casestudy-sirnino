@@ -1,0 +1,26 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <!-- Header -->
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <ion-icon name="layers" class="logo-icon"></ion-icon>
+    </div>
+    <div class="header-text" *ngIf="!isCollapsed">
+      <h2>Admin Portal</h2>
+      <p>Cabanatuan City</p>
+    </div>
+  </div>
+
+  <!-- Services Label -->
+  <div class="services-label" *ngIf="!isCollapsed">
+    SERVICES
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <div *ngFor="let item of menuItems" class="nav-item" [class.active]="isActive(item.route)"
+      [class.logout]="item.isLogout" (click)="navigate(item)" [title]="item.label">
+      <ion-icon [name]="item.icon" class="nav-icon"></ion-icon>
+      <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+    </div>
+  </nav>
+</div>

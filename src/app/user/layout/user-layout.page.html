@@ -1,0 +1,27 @@
+<div class="user-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar-container">
+        <app-user-sidebar></app-user-sidebar>
+    </aside>
+
+    <!-- Backdrop for mobile -->
+    <div class="sidebar-backdrop" *ngIf="!isCollapsed" (click)="closeSidebar()"></div>
+
+    <!-- Main Content Area -->
+    <main class="content-container">
+        <header class="user-header">
+            <div class="header-left">
+                <button class="sidebar-toggle-btn" (click)="toggleSidebar()">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+                <div class="brand-container">
+                    <ion-icon name="business-outline" class="brand-icon"></ion-icon>
+                    <span class="brand-text">Cabanatuan City Hall - Citizen Portal</span>
+                </div>
+            </div>
+        </header>
+        <div class="page-content">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+</div>
