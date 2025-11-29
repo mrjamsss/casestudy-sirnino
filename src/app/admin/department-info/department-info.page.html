@@ -1,11 +1,121 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>Department Info</ion-title>
+        <ion-title>Department Information</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="addNewDepartment()" style="--background: #0F4C81; --color: white;" fill="solid">
+                Add New Department
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-toolbar>
+        <div class="page-subtitle">
+            <p>Manage services, requirements, and department details</p>
+        </div>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <div class="ion-padding">
-        <h2>Department Info Content</h2>
+    <div class="department-container">
+        <!-- Department Cards -->
+        <ion-card *ngFor="let dept of departments" class="department-card">
+            <!-- Department Header -->
+            <ion-card-header>
+                <div class="department-header">
+                    <div class="department-info">
+                        <ion-card-title>{{ dept.name }}</ion-card-title>
+                        <ion-card-subtitle>{{ dept.description }}</ion-card-subtitle>
+                    </div>
+                    <ion-button fill="clear" (click)="editDepartment(dept)" size="small">
+                        Edit
+                    </ion-button>
+                </div>
+            </ion-card-header>
+
+            <ion-card-content>
+                <!-- Services Section -->
+                <div class="services-section">
+                    <div class="services-header">
+                        <h3>Services ({{ dept.services.length }})</h3>
+                    </div>
+
+                    <!-- Service Accordion -->
+                    <ion-accordion-group *ngIf="dept.services.length > 0">
+                        <ion-accordion *ngFor="let service of dept.services" [value]="'service-' + service.id">
+                            <!-- Service Header -->
+                            <ion-item slot="header" lines="none" class="service-item">
+                                <ion-label>
+                                    <h2>{{ service.name }}</h2>
+                                </ion-label>
+                                <ion-badge [color]="getServiceTypeBadgeColor(service.type)" slot="end">
+                                    {{ service.type }}
+                                </ion-badge>
+                            </ion-item>
+
+                            <!-- Service Details (Expanded Content) -->
+                            <div slot="content" class="service-details">
+                                <!-- Requirements -->
+                                <div class="requirements-section">
+                                    <h4>Requirements:</h4>
+                                    <ul>
+                                        <li *ngFor="let req of service.requirements">• {{ req }}</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Processing Time and Fee -->
+                                <div class="service-meta">
+                                    <div class="meta-item">
+                                        <span class="meta-label">Processing time:</span>
+                                        <span class="meta-value">{{ service.processingTime }}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">Fee:</span>
+                                        <span class="meta-value">₱{{ service.fee | number:'1.2-2' }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="service-actions">
+                                    <ion-button size="small" fill="outline" (click)="editService(dept, service)">
+                                        Edit Service
+                                    </ion-button>
+                                    <ion-button size="small" fill="solid" color="danger"
+                                        (click)="deleteService(dept, service)">
+                                        Delete
+                                    </ion-button>
+                                </div>
+                            </div>
+                        </ion-accordion>
+                    </ion-accordion-group>
+
+                    <!-- No Services Message -->
+                    <div *ngIf="dept.services.length === 0" class="no-services">
+                        <p>No services added yet.</p>
+                    </div>
+
+                    <!-- Add New Service Button -->
+                    <ion-button expand="block" fill="outline" (click)="addNewService(dept)" class="add-service-btn">
+                        Add New Service
+                    </ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Empty State -->
+        <div *ngIf="departments.length === 0" class="empty-state">
+            <ion-icon name="folder-open-outline" size="large"></ion-icon>
+            <h3>No Departments Yet</h3>
+            <p>Click "Add New Department" to get started</p>
+        </div>
     </div>
+
+    <!-- Department Management Info -->
+    <ion-card class="info-card">
+        <ion-card-header>
+            <ion-card-title>Department Management</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <p>Use this section to add, edit, or remove departments and their associated services. Keep requirements
+                up-to-date to ensure citizens have accurate information.</p>
+        </ion-card-content>
+    </ion-card>
 </ion-content>

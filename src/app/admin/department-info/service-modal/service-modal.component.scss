@@ -1,0 +1,20 @@
+ion-list-header {
+    font-weight: 600;
+    margin-top: 16px;
+}
+
+ion-item-sliding {
+    margin-bottom: 8px;
+}
+
+ion-footer {
+    ion-toolbar {
+        --background: var(--ion-color-light);
+        padding: 8px;
+    }
+}
+
+ion-textarea {
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+}
