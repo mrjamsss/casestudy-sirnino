@@ -11,7 +11,7 @@ import { FeeCalculatorSettingsPage } from './fee-calculator-settings/fee-calcula
 import { AnnouncementsPage } from './announcements/announcements.page';
 import { TransactionLogsPage } from './transaction-logs/transaction-logs.page';
 import { HelpPage } from './help/help.page';
-import { SystemSettingsPage } from './system-settings/system-settings.page';
+
 
 const routes: Routes = [
   {
@@ -61,7 +61,7 @@ const routes: Routes = [
       },
       {
         path: 'system-settings',
-        component: SystemSettingsPage
+        loadChildren: () => import('./system-settings/system-settings.module').then(m => m.SystemSettingsPageModule)
       }
     ]
   }
