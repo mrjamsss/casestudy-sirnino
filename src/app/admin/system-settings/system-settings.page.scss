@@ -1,210 +1,142 @@
-// Settings Content
-.settings-content {
-    --background: #f3f4f6;
+@use 'sass:color';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+// Cabanatuan City Colors
+$cbn-primary: #0F4C81;
+$cbn-secondary: #FFC300;
+$cbn-background: #F4F7F9;
+$cbn-text-dark: #0f172a;
+$cbn-text-light: #64748b;
+
+// Typography
+$font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+// Global Styles
+* {
+    font-family: $font-family;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.settings-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
+ion-content {
+    --background: #{$cbn-background};
+}
+
+.page-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 // Page Header
 .page-header {
-    background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
-    border-radius: 16px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 24px 32px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e8f0;
 
-    .header-content {
-        display: flex;
-        align-items: center;
-        gap: 20px;
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $cbn-text-dark;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.01em;
+    }
 
-        .header-icon {
-            font-size: 48px;
-            color: #f59e0b; // Gold accent
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 32px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .subtitle {
-            margin: 5px 0 0 0;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
-        }
+    .subtitle {
+        font-size: 0.875rem;
+        color: $cbn-text-light;
+        margin: 0;
+        font-weight: 400;
+        line-height: 1.5;
     }
 }
 
-// Settings Card
-.settings-card {
+// Content Wrapper
+.content-wrapper {
+    padding: 24px 32px;
+}
+
+// Section Cards
+.section-card {
     background: white;
     border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 32px;
+    margin-bottom: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid $cbn-background;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .header-left {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $cbn-text-dark;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.01em;
+    }
+
+    .section-subtitle {
+        font-size: 0.9375rem;
+        color: $cbn-text-light;
+        margin: 0;
+        font-weight: 500;
+    }
+}
+
+// Header Actions
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.export-button {
+    --color: white;
+    --background: #{$cbn-primary};
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    --border-radius: 8px;
+    text-transform: none;
+    height: 40px;
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-    }
-}
-
-// Card Header
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #f3f4f6;
-
-    .icon-badge {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        ion-icon {
-            font-size: 24px;
-            color: white;
-        }
-
-        &.blue {
-            background: linear-gradient(135deg, #0f3460 0%, #1a365d 100%);
-        }
-
-        &.orange {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        }
-
-        &.purple {
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-        }
-
-        &.green {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
+        --background: #{color.adjust($cbn-primary, $lightness: -10%)};
     }
 
-    .card-title-section {
-        flex: 1;
-
-        h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        .card-description {
-            margin: 5px 0 0 0;
-            font-size: 14px;
-            color: #6b7280;
-        }
-    }
-}
-
-// Card Content
-.card-content {
-    padding: 10px 0;
-}
-
-// Two Column Grid
-.two-column-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-bottom: 20px;
-
-    @media (max-width: 968px) {
-        grid-template-columns: 1fr;
-    }
-}
-
-// Form Styles
-.form-group {
-    margin-bottom: 20px;
-
-    label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 8px;
-
-        .input-icon {
-            font-size: 18px;
-            color: #f59e0b; // Gold accent
-        }
-    }
-
-    .custom-input,
-    .custom-textarea {
-        --background: #f9fafb;
-        --border-radius: 8px;
-        --padding-start: 15px;
-        --padding-end: 15px;
-        border: 1px solid #e5e7eb;
-        font-size: 14px;
-
-        &:focus-within {
-            --background: white;
-            border-color: #0f3460;
-            box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
-        }
-    }
-
-    .custom-textarea {
-        --padding-top: 12px;
-        --padding-bottom: 12px;
-    }
-}
-
-.two-column-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-
-    @media (max-width: 768px) {
-        grid-template-columns: 1fr;
+    ion-icon {
+        font-size: 18px;
     }
 }
 
 // Officials List
-.add-official-btn {
-    margin-bottom: 20px;
-    --border-radius: 8px;
-    --background: #0f3460;
-    --background-hover: #16213e;
-    text-transform: none;
-    font-weight: 600;
-}
-
 .loading-state {
     text-align: center;
     padding: 40px 20px;
-    color: #6b7280;
+    color: $cbn-text-light;
 
     ion-spinner {
-        margin-bottom: 10px;
-        color: #0f3460;
+        margin-bottom: 12px;
     }
 
     p {
         margin: 0;
-        font-size: 14px;
+        font-size: 0.9375rem;
     }
 }
 
@@ -217,48 +149,39 @@
 .official-item {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background: #f9fafb;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    transition: all 0.2s;
+    gap: 16px;
+    padding: 16px;
+    background: $cbn-background;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    cursor: move;
 
     &:hover {
-        background: #f3f4f6;
-        border-color: #d1d5db;
-    }
-
-    &.cdk-drag-preview {
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        opacity: 0.8;
-    }
-
-    &.cdk-drag-animating {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+        background: rgba($cbn-secondary, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     .drag-handle {
-        cursor: move;
-        color: #9ca3af;
-        display: flex;
-        align-items: center;
+        cursor: grab;
+        color: $cbn-text-light;
+
+        &:active {
+            cursor: grabbing;
+        }
 
         ion-icon {
             font-size: 24px;
         }
-
-        &:hover {
-            color: #f59e0b; // Gold accent
-        }
     }
 
     .official-avatar {
-        width: 50px;
-        height: 50px;
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
         overflow: hidden;
-        background: #e5e7eb;
+        flex-shrink: 0;
+        background: white;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -270,8 +193,8 @@
         }
 
         ion-icon {
-            font-size: 40px;
-            color: #9ca3af;
+            font-size: 56px;
+            color: $cbn-text-light;
         }
     }
 
@@ -279,159 +202,155 @@
         flex: 1;
 
         h3 {
-            margin: 0;
-            font-size: 16px;
+            margin: 0 0 4px 0;
+            font-size: 1rem;
             font-weight: 600;
-            color: #1f2937;
+            color: $cbn-text-dark;
         }
 
         p {
-            margin: 3px 0 0 0;
-            font-size: 14px;
-            color: #6b7280;
+            margin: 0;
+            font-size: 0.875rem;
+            color: $cbn-text-light;
         }
     }
 
     .official-actions {
         display: flex;
-        gap: 5px;
-
-        ion-button {
-            --padding-start: 8px;
-            --padding-end: 8px;
-            --color: #0f3460;
-
-            ion-icon {
-                font-size: 20px;
-            }
-        }
+        gap: 8px;
     }
 }
 
-.cdk-drop-list-dragging .official-item:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
+// Action Buttons
+.view-btn {
+    --color: #{$cbn-primary};
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
 
-// Logo Upload
-.logo-upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-
-    .logo-preview {
-        width: 200px;
-        height: 200px;
-        border-radius: 12px;
-        border: 2px dashed #d1d5db;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        background: #f9fafb;
-
-        &.has-logo {
-            border-style: solid;
-            border-color: #0f3460;
-        }
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+    &:hover {
+        --color: #{$cbn-secondary};
+        --background: rgba($cbn-secondary, 0.1);
     }
-
-    ion-button {
-        --border-radius: 8px;
-        --background: #0f3460;
-        --background-hover: #16213e;
-        text-transform: none;
-        font-weight: 600;
-    }
-}
-
-.no-logo {
-    text-align: center;
-    color: #9ca3af;
 
     ion-icon {
-        font-size: 48px;
-        margin-bottom: 10px;
-        color: #f59e0b; // Gold accent
-    }
-
-    p {
-        margin: 0;
-        font-size: 14px;
+        font-size: 18px;
     }
 }
 
-.upload-hint {
-    margin: 0;
-    font-size: 13px;
-    color: #6b7280;
-    text-align: center;
+.delete-btn {
+    --color: #ef4444;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+        --color: #dc2626;
+        --background: rgba(#ef4444, 0.1);
+    }
+
+    ion-icon {
+        font-size: 18px;
+    }
 }
 
-// Password Input
+// Forms
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $cbn-text-dark;
+        margin-bottom: 8px;
+
+        .input-icon {
+            font-size: 18px;
+            color: $cbn-primary;
+        }
+    }
+
+    .custom-input,
+    .custom-textarea {
+        --background: #{$cbn-background};
+        --border-radius: 8px;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+    }
+
+    .custom-textarea {
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+    }
+}
+
 .password-input-wrapper {
     position: relative;
 
     .password-toggle {
         position: absolute;
-        right: 15px;
+        right: 16px;
         top: 50%;
         transform: translateY(-50%);
         font-size: 20px;
-        color: #9ca3af;
+        color: $cbn-text-light;
         cursor: pointer;
         z-index: 10;
 
         &:hover {
-            color: #0f3460;
+            color: $cbn-primary;
         }
-    }
-
-    .custom-input {
-        --padding-end: 45px;
     }
 }
 
-// Password Strength
 .password-strength {
-    margin-top: 10px;
+    margin-top: 12px;
 
     .strength-bar {
         height: 6px;
-        background: #e5e7eb;
+        background: #e2e8f0;
         border-radius: 3px;
         overflow: hidden;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
 
         .strength-fill {
             height: 100%;
-            transition: width 0.3s, background-color 0.3s;
-            border-radius: 3px;
+            transition: all 0.3s ease;
 
             &[data-strength="weak"] {
-                background: linear-gradient(90deg, #ef4444, #dc2626);
+                background: #ef4444;
             }
 
             &[data-strength="medium"] {
-                background: linear-gradient(90deg, #f59e0b, #d97706);
+                background: #f59e0b;
             }
 
             &[data-strength="strong"] {
-                background: linear-gradient(90deg, #10b981, #059669);
+                background: #10b981;
             }
         }
     }
 
     .strength-text {
-        margin: 0;
-        font-size: 12px;
+        font-size: 0.8125rem;
         font-weight: 600;
+        margin: 0;
 
         &[data-strength="weak"] {
             color: #ef4444;
@@ -447,126 +366,127 @@
     }
 }
 
-// Error Text
 .error-text {
-    margin: 5px 0 0 0;
-    font-size: 12px;
     color: #ef4444;
+    font-size: 0.8125rem;
+    margin: 8px 0 0 0;
+    font-weight: 500;
 }
 
-// Save Button
 .save-btn {
-    margin-top: 10px;
     --border-radius: 8px;
-    --background: #0f3460;
-    --background-hover: #16213e;
-    text-transform: none;
     font-weight: 600;
-    height: 44px;
+    text-transform: none;
+    height: 48px;
+    margin-top: 8px;
+
+    ion-icon {
+        font-size: 20px;
+    }
 }
 
-// Database Actions
-.database-actions {
+// Logo Upload
+.logo-upload-container {
     display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
 
-    ion-button {
-        --border-radius: 8px;
-        text-transform: none;
-        font-weight: 600;
+    .logo-preview {
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        border: 2px dashed #cbd5e1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $cbn-background;
+        overflow: hidden;
 
-        &[color="primary"] {
-            --background: #0f3460;
-            --background-hover: #16213e;
+        &.has-logo {
+            border-style: solid;
+            border-color: $cbn-primary;
         }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .no-logo {
+            text-align: center;
+            color: $cbn-text-light;
+
+            ion-icon {
+                font-size: 64px;
+                margin-bottom: 8px;
+            }
+
+            p {
+                margin: 0;
+                font-size: 0.875rem;
+            }
+        }
+    }
+
+    .upload-btn {
+        --border-radius: 8px;
+        font-weight: 600;
+        text-transform: none;
+        height: 44px;
+    }
+
+    .upload-hint {
+        font-size: 0.8125rem;
+        color: $cbn-text-light;
+        margin: 0;
+        text-align: center;
     }
 }
 
 // Responsive Design
 @media (max-width: 768px) {
-    .settings-container {
-        padding: 15px;
+    .page-container {
+        padding: 0;
     }
 
     .page-header {
-        padding: 20px;
+        padding: 20px 16px;
 
-        .header-content {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
+        h1 {
+            font-size: 1.25rem;
+        }
 
-            .header-icon {
-                font-size: 36px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .subtitle {
-                font-size: 14px;
-            }
+        .subtitle {
+            font-size: 0.8125rem;
         }
     }
 
-    .settings-card {
-        padding: 20px;
+    .content-wrapper {
+        padding: 16px;
     }
 
-    .card-header {
-        h2 {
-            font-size: 18px;
-        }
-
-        .card-description {
-            font-size: 13px;
-        }
+    .section-card {
+        padding: 24px 16px;
     }
 
-    .icon-badge {
-        width: 40px;
-        height: 40px;
-
-        ion-icon {
-            font-size: 20px;
-        }
-    }
-
-    .database-actions {
+    .section-header {
         flex-direction: column;
+        align-items: flex-start;
+    }
 
-        ion-button {
-            width: 100%;
-        }
+    .form-grid {
+        grid-template-columns: 1fr;
     }
 
     .official-item {
-        .official-avatar {
-            width: 40px;
-            height: 40px;
+        flex-wrap: wrap;
 
-            ion-icon {
-                font-size: 32px;
-            }
-        }
-
-        .official-info {
-            h3 {
-                font-size: 14px;
-            }
-
-            p {
-                font-size: 12px;
-            }
-        }
-    }
-
-    .logo-upload-container {
-        .logo-preview {
-            width: 150px;
-            height: 150px;
+        .official-actions {
+            width: 100%;
+            justify-content: flex-end;
         }
     }
 }

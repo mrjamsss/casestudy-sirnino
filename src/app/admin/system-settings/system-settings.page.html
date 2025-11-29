@@ -1,33 +1,26 @@
-<ion-content [fullscreen]="true" class="settings-content">
-    <div class="settings-container">
+<ion-content class="ion-no-padding">
+    <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
-            <div class="header-content">
-                <ion-icon name="settings" class="header-icon"></ion-icon>
-                <div>
-                    <h1>Settings</h1>
-                    <p class="subtitle">Configure app-wide settings and security options</p>
-                </div>
-            </div>
+            <h1>System Settings</h1>
+            <p class="subtitle">Configure app-wide settings and security options</p>
         </div>
 
-        <!-- Section 1: Barangay Officials -->
-        <div class="settings-card">
-            <div class="card-header">
-                <div class="icon-badge blue">
-                    <ion-icon name="people"></ion-icon>
+        <!-- City Hall Officials Section -->
+        <div class="content-wrapper">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>City Hall Officials</h2>
+                        <p class="section-subtitle">Manage city hall officials list (Drag to reorder)</p>
+                    </div>
+                    <div class="header-actions">
+                        <ion-button (click)="addOfficial()" color="success" class="export-button">
+                            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                            Add Official
+                        </ion-button>
+                    </div>
                 </div>
-                <div class="card-title-section">
-                    <h2>City Hall Officials</h2>
-                    <p class="card-description">Manage city hall officials list (Drag to reorder)</p>
-                </div>
-            </div>
-
-            <div class="card-content">
-                <ion-button color="success" (click)="addOfficial()" class="add-official-btn">
-                    <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-                    Add Official
-                </ion-button>
 
                 <div *ngIf="loadingOfficials" class="loading-state">
                     <ion-spinner name="crescent"></ion-spinner>
@@ -49,10 +42,11 @@
                             <p>{{ official.position }}</p>
                         </div>
                         <div class="official-actions">
-                            <ion-button fill="clear" size="small" (click)="editOfficial(official)">
+                            <ion-button fill="clear" size="small" (click)="editOfficial(official)" class="view-btn">
                                 <ion-icon name="create-outline" slot="icon-only"></ion-icon>
                             </ion-button>
-                            <ion-button fill="clear" size="small" color="danger" (click)="deleteOfficial(official)">
+                            <ion-button fill="clear" size="small" color="danger" (click)="deleteOfficial(official)"
+                                class="delete-btn">
                                 <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
                             </ion-button>
                         </div>
@@ -61,129 +55,116 @@
             </div>
         </div>
 
-        <!-- Two Column Layout for Barangay Info and Vision/Mission -->
-        <div class="two-column-grid">
-            <!-- Section 2: Barangay Information -->
-            <div class="settings-card">
-                <div class="card-header">
-                    <div class="icon-badge blue">
-                        <ion-icon name="business"></ion-icon>
-                    </div>
-                    <div class="card-title-section">
+        <!-- City Hall Information & Vision/Mission -->
+        <div class="content-wrapper">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
                         <h2>City Hall Information</h2>
-                        <p class="card-description">Update basic City Hall details</p>
+                        <p class="section-subtitle">Update basic City Hall details</p>
                     </div>
                 </div>
 
-                <div class="card-content">
-                    <form [formGroup]="barangayInfoForm">
-                        <div class="two-column-form">
-                            <div class="form-group">
-                                <label>
-                                    <ion-icon name="location" class="input-icon"></ion-icon>
-                                    City Hall Name
-                                </label>
-                                <ion-input formControlName="name" placeholder="Enter city hall name"
-                                    class="custom-input">
-                                </ion-input>
-                            </div>
-
-                            <div class="form-group">
-                                <label>
-                                    <ion-icon name="person" class="input-icon"></ion-icon>
-                                    City Hall Captain
-                                </label>
-                                <ion-input formControlName="captain" placeholder="Enter captain name"
-                                    class="custom-input">
-                                </ion-input>
-                            </div>
-                        </div>
-
-                        <div class="two-column-form">
-                            <div class="form-group">
-                                <label>
-                                    <ion-icon name="location-outline" class="input-icon"></ion-icon>
-                                    Address
-                                </label>
-                                <ion-input formControlName="address" placeholder="Enter address" class="custom-input">
-                                </ion-input>
-                            </div>
-
-                            <div class="form-group">
-                                <label>
-                                    <ion-icon name="call" class="input-icon"></ion-icon>
-                                    Contact Number
-                                </label>
-                                <ion-input formControlName="contact" type="tel" placeholder="09123456789"
-                                    class="custom-input">
-                                </ion-input>
-                            </div>
-                        </div>
-
-                        <ion-button expand="block" color="primary" (click)="saveBarangayInfo()" class="save-btn">
-                            <ion-icon name="save-outline" slot="start"></ion-icon>
-                            Save Changes
-                        </ion-button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Section 3: Vision & Mission -->
-            <div class="settings-card">
-                <div class="card-header">
-                    <div class="icon-badge orange">
-                        <ion-icon name="eye"></ion-icon>
-                    </div>
-                    <div class="card-title-section">
-                        <h2>Vision & Mission</h2>
-                        <p class="card-description">Define your city hall's vision and mission</p>
-                    </div>
-                </div>
-
-                <div class="card-content">
-                    <form [formGroup]="visionMissionForm">
+                <form [formGroup]="barangayInfoForm">
+                    <div class="form-grid">
                         <div class="form-group">
                             <label>
-                                <ion-icon name="telescope" class="input-icon"></ion-icon>
-                                Vision
+                                <ion-icon name="location" class="input-icon"></ion-icon>
+                                City Hall Name
                             </label>
-                            <ion-textarea formControlName="vision" placeholder="Enter city hall vision statement..."
-                                rows="4" class="custom-textarea">
-                            </ion-textarea>
+                            <ion-input formControlName="name" placeholder="Enter city hall name" fill="outline"
+                                class="custom-input">
+                            </ion-input>
                         </div>
 
                         <div class="form-group">
                             <label>
-                                <ion-icon name="flag" class="input-icon"></ion-icon>
-                                Mission
+                                <ion-icon name="person" class="input-icon"></ion-icon>
+                                City Hall Captain
                             </label>
-                            <ion-textarea formControlName="mission" placeholder="Enter city hall mission statement..."
-                                rows="4" class="custom-textarea">
-                            </ion-textarea>
+                            <ion-input formControlName="captain" placeholder="Enter captain name" fill="outline"
+                                class="custom-input">
+                            </ion-input>
                         </div>
 
-                        <ion-button expand="block" color="primary" (click)="saveVisionMission()" class="save-btn">
-                            <ion-icon name="save-outline" slot="start"></ion-icon>
-                            Save Vision & Mission
-                        </ion-button>
-                    </form>
-                </div>
+                        <div class="form-group">
+                            <label>
+                                <ion-icon name="location-outline" class="input-icon"></ion-icon>
+                                Address
+                            </label>
+                            <ion-input formControlName="address" placeholder="Enter address" fill="outline"
+                                class="custom-input">
+                            </ion-input>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <ion-icon name="call" class="input-icon"></ion-icon>
+                                Contact Number
+                            </label>
+                            <ion-input formControlName="contact" type="tel" placeholder="09123456789" fill="outline"
+                                class="custom-input">
+                            </ion-input>
+                        </div>
+                    </div>
+
+                    <ion-button expand="block" color="primary" (click)="saveBarangayInfo()" class="save-btn">
+                        <ion-icon name="save-outline" slot="start"></ion-icon>
+                        Save Changes
+                    </ion-button>
+                </form>
             </div>
         </div>
 
-        <!-- Section 4: Barangay Logo -->
-        <div class="settings-card">
-            <div class="card-header">
-                <div class="icon-badge purple">
-                    <ion-icon name="image"></ion-icon>
+        <!-- Vision & Mission -->
+        <div class="content-wrapper">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Vision & Mission</h2>
+                        <p class="section-subtitle">Define your city hall's vision and mission</p>
+                    </div>
                 </div>
-                <div class="card-title-section">
-                    <h2>City Hall Logo</h2>
-                    <p class="card-description">Upload your official city hall logo</p>
-                </div>
-            </div>
 
-            <div class="card-content">
+                <form [formGroup]="visionMissionForm">
+                    <div class="form-group">
+                        <label>
+                            <ion-icon name="telescope" class="input-icon"></ion-icon>
+                            Vision
+                        </label>
+                        <ion-textarea formControlName="vision" placeholder="Enter city hall vision statement..."
+                            rows="4" fill="outline" class="custom-textarea">
+                        </ion-textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <ion-icon name="flag" class="input-icon"></ion-icon>
+                            Mission
+                        </label>
+                        <ion-textarea formControlName="mission" placeholder="Enter city hall mission statement..."
+                            rows="4" fill="outline" class="custom-textarea">
+                        </ion-textarea>
+                    </div>
+
+                    <ion-button expand="block" color="primary" (click)="saveVisionMission()" class="save-btn">
+                        <ion-icon name="save-outline" slot="start"></ion-icon>
+                        Save Vision & Mission
+                    </ion-button>
+                </form>
+            </div>
+        </div>
+
+        <!-- City Hall Logo -->
+        <div class="content-wrapper">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>City Hall Logo</h2>
+                        <p class="section-subtitle">Upload your official city hall logo</p>
+                    </div>
+                </div>
+
                 <div class="logo-upload-container">
                     <div class="logo-preview" [class.has-logo]="uploadedLogo">
                         <img *ngIf="uploadedLogo" [src]="uploadedLogo" alt="City Hall Logo" />
@@ -196,7 +177,7 @@
                     <input type="file" #logoInput accept="image/jpeg,image/png" (change)="onLogoSelected($event)"
                         style="display: none;">
 
-                    <ion-button color="secondary" (click)="logoInput.click()">
+                    <ion-button color="secondary" (click)="logoInput.click()" class="upload-btn">
                         <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
                         Choose Logo
                     </ion-button>
@@ -206,19 +187,16 @@
             </div>
         </div>
 
-        <!-- Section 5: Change Password -->
-        <div class="settings-card">
-            <div class="card-header">
-                <div class="icon-badge purple">
-                    <ion-icon name="lock-closed"></ion-icon>
+        <!-- Change Password -->
+        <div class="content-wrapper">
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Change Password</h2>
+                        <p class="section-subtitle">Update your admin account password</p>
+                    </div>
                 </div>
-                <div class="card-title-section">
-                    <h2>Change Password</h2>
-                    <p class="card-description">Update your admin account password</p>
-                </div>
-            </div>
 
-            <div class="card-content">
                 <form [formGroup]="passwordForm">
                     <div class="form-group">
                         <label>
@@ -228,7 +206,7 @@
                         <div class="password-input-wrapper">
                             <ion-input formControlName="currentPassword"
                                 [type]="showCurrentPassword ? 'text' : 'password'" placeholder="Enter current password"
-                                class="custom-input">
+                                fill="outline" class="custom-input">
                             </ion-input>
                             <ion-icon [name]="showCurrentPassword ? 'eye-off-outline' : 'eye-outline'"
                                 class="password-toggle" (click)="togglePasswordVisibility('current')">
@@ -244,7 +222,8 @@
                         <div class="password-input-wrapper">
                             <ion-input formControlName="newPassword" [type]="showNewPassword ? 'text' : 'password'"
                                 placeholder="Enter new password (min. 8 characters)"
-                                (ionInput)="onPasswordInput($any($event.target).value)" class="custom-input">
+                                (ionInput)="onPasswordInput($any($event.target).value)" fill="outline"
+                                class="custom-input">
                             </ion-input>
                             <ion-icon [name]="showNewPassword ? 'eye-off-outline' : 'eye-outline'"
                                 class="password-toggle" (click)="togglePasswordVisibility('new')">
@@ -271,7 +250,7 @@
                         <div class="password-input-wrapper">
                             <ion-input formControlName="confirmPassword"
                                 [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Confirm new password"
-                                class="custom-input">
+                                fill="outline" class="custom-input">
                             </ion-input>
                             <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
                                 class="password-toggle" (click)="togglePasswordVisibility('confirm')">
