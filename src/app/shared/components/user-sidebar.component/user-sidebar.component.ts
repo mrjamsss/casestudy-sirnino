@@ -27,7 +27,7 @@ export class UserSidebarComponent implements OnInit {
         { label: 'Transaction Logs', icon: 'receipt', route: '/citizen-portal/transaction-logs' },
         { label: 'Help', icon: 'help-circle', route: '/citizen-portal/help' },
         { label: 'Account Settings', icon: 'settings', route: '/citizen-portal/account-settings' },
-        { label: 'Logout', icon: 'log-out', route: '/auth/login', isLogout: true }
+        { label: 'Logout', icon: 'log-out', route: '/home', isLogout: true }
     ];
 
     constructor(
