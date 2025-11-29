@@ -1,0 +1,233 @@
+.resident-page {
+    --background: #F4F7F9;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 0;
+    color: #111827;
+
+    h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    p {
+        margin: 4px 0 0;
+        font-size: 14px;
+        color: #6B7280;
+    }
+
+    .add-btn {
+        --background: #0F4C81;
+        --background-hover: #0d416f;
+        --color: #ffffff;
+        --border-radius: 8px; // was 999px
+        font-weight: 600;
+    }
+}
+
+.search-card {
+    margin: 16px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(15, 76, 129, 0.06);
+}
+
+.filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.filter-item {
+    flex: 1 1 140px;
+    --background: transparent;
+
+    ion-label {
+        font-size: 13px;
+        color: #4B5563;
+        font-weight: 600;
+    }
+
+    ion-select {
+        --background: #ffffff;
+        --placeholder-color: #6B7280;
+        --color: #111827;
+        border-radius: 10px;
+        border: 1px solid #E5E7EB;
+        padding-inline-start: 10px;
+        padding-inline-end: 10px;
+    }
+}
+
+.search-group {
+    flex: 2 1 260px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.resident-search {
+    flex: 1;
+    --background: #ffffff;
+    --icon-color: #9CA3AF;
+    --color: #111827;
+    --placeholder-color: #9CA3AF;
+    --border-radius: 10px;
+}
+
+.search-btn {
+    --background: #10B981;
+    --background-hover: #0b8e63;
+    --color: #ffffff;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+/* List card / table */
+
+.list-card {
+    margin: 0 16px 24px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(15, 76, 129, 0.06);
+}
+
+/* Header: title left, buttons right */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 16px 4px;
+}
+
+.list-header ion-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    text-align: left;
+}
+
+.list-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+}
+
+.list-actions ion-button {
+    --border-radius: 8px; // rectangular action buttons
+    --background: #ffffff;
+    --color: #111827;
+    --border-color: #E5E7EB;
+    --box-shadow: none;
+}
+
+.list-actions ion-button[color="danger"] {
+    --color: #DC2626;
+    --border-color: #FECACA;
+}
+
+.list-actions ion-button[color="tertiary"] {
+    --color: #0F4C81;
+    --border-color: #BFDBFE;
+}
+
+.table-wrapper {
+    padding: 0 16px 12px;
+    overflow-x: auto;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 70px 1.2fr 70px 2fr 140px 120px 130px;
+    column-gap: 12px;
+    padding: 10px 0;
+    align-items: center;
+    font-size: 13px;
+    color: #111827;
+    border-bottom: 1px solid #EEF2F7;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.table-header {
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6B7280;
+}
+
+/* Columns */
+
+.col-id {
+    text-align: left;
+}
+
+.col-age {
+    text-align: left;
+}
+
+.col-date {
+    white-space: nowrap;
+}
+
+/* Status badges */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-danger {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+}
+
+.badge-success {
+    background-color: #DCFCE7;
+    color: #15803D;
+}
+
+.badge-success-soft {
+    background-color: #ECFEFF;
+    color: #0F766E;
+}
+
+/* Responsive tweaks */
+
+@media (max-width: 900px) {
+    .table-row {
+        grid-template-columns: 60px 1.1fr 60px 1.8fr 120px 110px 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+
+        .add-btn {
+            align-self: stretch;
+            justify-content: center;
+        }
+    }
+
+    .filters-row {
+        flex-direction: column;
+    }
+
+    .table-row {
+        font-size: 12px;
+    }
+}
