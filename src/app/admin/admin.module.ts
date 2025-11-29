@@ -15,6 +15,7 @@ import { FeeCalculatorSettingsPage } from './fee-calculator-settings/fee-calcula
 import { AnnouncementsPage } from './announcements/announcements.page';
 import { TransactionLogsPage } from './transaction-logs/transaction-logs.page';
 import { HelpPage } from './help/help.page';
+import { AnnouncementModalComponent } from '../shared/components/announcement-modal/announcement-modal.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { HelpPage } from './help/help.page';
     FeeCalculatorSettingsPage,
     AnnouncementsPage,
     TransactionLogsPage,
-    HelpPage
+    HelpPage,
+    AnnouncementModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
