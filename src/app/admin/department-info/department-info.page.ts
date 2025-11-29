@@ -323,6 +323,32 @@ export class DepartmentInfoPage implements OnInit {
         await alert.present();
     }
 
+    async deleteDepartment(dept: Department) {
+        const alert = await this.alertCtrl.create({
+            header: 'Delete Department',
+            message: `Are you sure you want to delete "${dept.name}" and all its services?`,
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Delete',
+                    role: 'destructive',
+                    handler: () => {
+                        this.departments = this.departments.filter(d => d.id !== dept.id);
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
+    }
+
+    getTotalServices(): number {
+        return this.departments.reduce((total, dept) => total + dept.services.length, 0);
+    }
+
     getServiceTypeBadgeColor(type: string): string {
         switch (type) {
             case 'Certificate': return 'primary';
