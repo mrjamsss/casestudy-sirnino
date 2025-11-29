@@ -1,11 +1,103 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Announcements</ion-title>
-    </ion-toolbar>
-</ion-header>
-
 <ion-content>
-    <div class="ion-padding">
-        <h2>Announcements Content</h2>
+    <div class="announcements-container">
+        <!-- Header Section -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1>Manage Announcements</h1>
+                <p class="subtitle">Create and manage announcements visible to selected audiences</p>
+            </div>
+            <ion-button (click)="openCreateModal()" color="primary" fill="solid" class="create-btn">
+                <ion-icon slot="start" name="add-circle"></ion-icon>
+                New Announcement
+            </ion-button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <ion-icon name="megaphone" color="primary"></ion-icon>
+                <div class="stat-info">
+                    <span class="stat-value">{{ announcements.length }}</span>
+                    <span class="stat-label">Total Announcements</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                <div class="stat-info">
+                    <span class="stat-value">{{ getActiveCount() }}</span>
+                    <span class="stat-label">Active</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <ion-icon name="eye-off" color="medium"></ion-icon>
+                <div class="stat-info">
+                    <span class="stat-value">{{ getInactiveCount() }}</span>
+                    <span class="stat-label">Inactive</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Announcements List -->
+        <div class="list-section">
+            <div class="section-header">
+                <h2>All Announcements</h2>
+            </div>
+
+            <div class="announcements-list" *ngIf="announcements.length > 0; else noAnnouncements">
+                <ion-card *ngFor="let announcement of announcements" class="announcement-card">
+                    <ion-card-header>
+                        <div class="card-header-content">
+                            <div class="header-left">
+                                <ion-chip [color]="getTypeColor(announcement.type)">
+                                    <ion-icon [name]="getTypeIcon(announcement.type)"></ion-icon>
+                                    <ion-label>{{ announcement.type | titlecase }}</ion-label>
+                                </ion-chip>
+                                <ion-chip [color]="announcement.isActive ? 'success' : 'medium'" outline="true">
+                                    <ion-label>{{ announcement.isActive ? 'Active' : 'Inactive' }}</ion-label>
+                                </ion-chip>
+                                <ion-chip color="tertiary" outline="true">
+                                    <ion-icon [name]="getAudienceIcon(announcement.audience)"></ion-icon>
+                                    <ion-label>{{ getAudienceLabel(announcement.audience) }}</ion-label>
+                                </ion-chip>
+                            </div>
+                            <div class="header-actions">
+                                <ion-button fill="clear" size="small"
+                                    [color]="announcement.isActive ? 'medium' : 'success'"
+                                    (click)="toggleStatus(announcement)">
+                                    <ion-icon slot="icon-only"
+                                        [name]="announcement.isActive ? 'eye-off' : 'eye'"></ion-icon>
+                                </ion-button>
+                                <ion-button fill="clear" size="small" color="danger"
+                                    (click)="confirmDelete(announcement)">
+                                    <ion-icon slot="icon-only" name="trash"></ion-icon>
+                                </ion-button>
+                            </div>
+                        </div>
+                        <ion-card-title>{{ announcement.title }}</ion-card-title>
+                        <ion-card-subtitle>
+                            <ion-icon name="person"></ion-icon>
+                            {{ announcement.createdBy }} •
+                            <ion-icon name="calendar"></ion-icon>
+                            {{ announcement.createdAt | date:'medium' }}
+                        </ion-card-subtitle>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <p class="announcement-description">{{ announcement.description }}</p>
+                    </ion-card-content>
+                </ion-card>
+            </div>
+
+            <ng-template #noAnnouncements>
+                <div class="empty-state">
+                    <ion-icon name="megaphone-outline"></ion-icon>
+                    <h3>No Announcements Yet</h3>
+                    <p>Create your first announcement to get started</p>
+                    <ion-button (click)="openCreateModal()" color="primary">
+                        <ion-icon slot="start" name="add-circle"></ion-icon>
+                        Create Announcement
+                    </ion-button>
+                </div>
+            </ng-template>
+        </div>
     </div>
 </ion-content>
