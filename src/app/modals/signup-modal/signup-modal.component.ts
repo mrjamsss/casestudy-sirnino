@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController, AlertController, IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService, UserData } from '../../services/auth.service';
 import { SignInModalComponent } from '../signin-modal/signin-modal.component';
 
@@ -15,13 +16,15 @@ import { SignInModalComponent } from '../signin-modal/signin-modal.component';
 export class SignUpModalComponent {
   currentStep = 1;
   loading = false;
-  
+  showPassword = false;
+  showConfirmPassword = false;
+
   // Date picker properties
   showDatePicker = false;
   formattedDate = '';
   maxDate = new Date().toISOString();
   minDate = new Date(1900, 0, 1).toISOString();
-  
+
   formData: UserData = {
     name: { givenName: '', middleInitial: '', lastName: '', extension: '' },
     address: {
@@ -45,7 +48,8 @@ export class SignUpModalComponent {
   constructor(
     private modalCtrl: ModalController,
     private authService: AuthService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private router: Router
   ) {
     this.idTypes = this.authService.idTypes;
   }
@@ -59,20 +63,28 @@ export class SignUpModalComponent {
   onDateChange(event: any) {
     const isoDate = event.detail.value;
     this.formData.dateOfBirth = isoDate;
-    
+
     // Format for display (mm/dd/yyyy)
     const date = new Date(isoDate);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     this.formattedDate = `${month}/${day}/${year}`;
-    
+
     // Close calendar after selection
     this.showDatePicker = false;
   }
 
   dismiss() {
     this.modalCtrl.dismiss();
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   async nextStep() {
@@ -103,7 +115,7 @@ export class SignUpModalComponent {
   validateCurrentStep(): { valid: boolean; message?: string } {
     if (this.currentStep === 1) {
       if (!this.formData.name.givenName || !this.formData.name.lastName ||
-          !this.formData.idNumber || !this.formData.dateOfBirth) {
+        !this.formData.idNumber || !this.formData.dateOfBirth) {
         return {
           valid: false,
           message: 'Please fill out all required fields: Given Name, Last Name, ID Number, and Date of Birth.'
@@ -111,7 +123,7 @@ export class SignUpModalComponent {
       }
     } else if (this.currentStep === 2) {
       if (!this.formData.address.barangay || !this.formData.address.postalCode ||
-          !this.formData.mobileNumber) {
+        !this.formData.mobileNumber) {
         return {
           valid: false,
           message: 'Please complete all required fields: Barangay, Postal Code, and Mobile Number.'
@@ -148,13 +160,16 @@ export class SignUpModalComponent {
     this.loading = false;
 
     if (result.success) {
+      // Show success message
       const alert = await this.alertCtrl.create({
         header: 'Success',
-        message: 'Registration completed successfully!',
+        message: 'Registration completed successfully! Please sign in to continue.',
         buttons: ['OK']
       });
       await alert.present();
-      this.modalCtrl.dismiss({ registered: true });
+
+      // Close modal after user acknowledges
+      await this.modalCtrl.dismiss({ registered: true });
     }
   }
 
@@ -169,19 +184,19 @@ export class SignUpModalComponent {
   }
 
   async switchToSignIn() {
-  await this.modalCtrl.dismiss();
-  const modal = await this.modalCtrl.create({
-    component: SignInModalComponent,
-    cssClass: 'auth-modal'
-  });
-  
-  // ✅ Set width BEFORE presenting to avoid flash
-  modal.style.setProperty('--width', '420px');
-  modal.style.setProperty('--max-width', '420px');
-  modal.style.setProperty('--height', 'auto');
-  
-  await modal.present();
-}
+    await this.modalCtrl.dismiss();
+    const modal = await this.modalCtrl.create({
+      component: SignInModalComponent,
+      cssClass: 'auth-modal'
+    });
+
+    // ✅ Set width BEFORE presenting to avoid flash
+    modal.style.setProperty('--width', '420px');
+    modal.style.setProperty('--max-width', '420px');
+    modal.style.setProperty('--height', 'auto');
+
+    await modal.present();
+  }
 
 
 }

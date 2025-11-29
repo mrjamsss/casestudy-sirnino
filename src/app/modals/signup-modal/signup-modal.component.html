@@ -27,7 +27,8 @@
         <div class="progress-fill" [style.width.%]="((currentStep - 1) / 3) * 100"></div>
       </div>
       <div class="progress-steps">
-        <div class="step" *ngFor="let step of [1,2,3,4]" [class.active]="currentStep >= step" [class.current]="currentStep === step">
+        <div class="step" *ngFor="let step of [1,2,3,4]" [class.active]="currentStep >= step"
+          [class.current]="currentStep === step">
           <div class="step-dot">
             <ion-icon name="checkmark" *ngIf="currentStep > step"></ion-icon>
             <span *ngIf="currentStep <= step">{{step}}</span>
@@ -52,12 +53,8 @@
           </label>
           <div class="input-wrapper">
             <ion-icon name="person-outline" class="input-icon"></ion-icon>
-            <ion-input
-              type="text"
-              class="custom-input"
-              placeholder="Juan"
-              [(ngModel)]="formData.name.givenName"
-            ></ion-input>
+            <ion-input type="text" class="custom-input" placeholder="Juan"
+              [(ngModel)]="formData.name.givenName"></ion-input>
           </div>
         </div>
 
@@ -65,25 +62,16 @@
         <div class="form-group half">
           <label class="form-label">Middle Initial</label>
           <div class="input-wrapper">
-            <ion-input
-              type="text"
-              class="custom-input"
-              placeholder="P"
-              [(ngModel)]="formData.name.middleInitial"
-              maxlength="2"
-            ></ion-input>
+            <ion-input type="text" class="custom-input" placeholder="P" [(ngModel)]="formData.name.middleInitial"
+              maxlength="2"></ion-input>
           </div>
         </div>
 
         <div class="form-group half">
           <label class="form-label">Extension</label>
           <div class="input-wrapper">
-            <ion-input
-              type="text"
-              class="custom-input"
-              placeholder="Jr., Sr."
-              [(ngModel)]="formData.name.extension"
-            ></ion-input>
+            <ion-input type="text" class="custom-input" placeholder="Jr., Sr."
+              [(ngModel)]="formData.name.extension"></ion-input>
           </div>
         </div>
 
@@ -94,12 +82,8 @@
           </label>
           <div class="input-wrapper">
             <ion-icon name="person-outline" class="input-icon"></ion-icon>
-            <ion-input
-              type="text"
-              class="custom-input"
-              placeholder="Dela Cruz"
-              [(ngModel)]="formData.name.lastName"
-            ></ion-input>
+            <ion-input type="text" class="custom-input" placeholder="Dela Cruz"
+              [(ngModel)]="formData.name.lastName"></ion-input>
           </div>
         </div>
 
@@ -108,29 +92,18 @@
           <label class="form-label">
             Date of Birth <span class="required">*</span>
           </label>
-          
+
           <!-- Input field -->
           <div class="input-wrapper" (click)="toggleDatePicker()">
             <ion-icon name="calendar-outline" class="input-icon" style="cursor: pointer;"></ion-icon>
-            <ion-input
-              type="text"
-              class="custom-input"
-              placeholder="mm/dd/yyyy"
-              [value]="formattedDate"
-              readonly
-            ></ion-input>
+            <ion-input type="text" class="custom-input" placeholder="mm/dd/yyyy" [value]="formattedDate"
+              readonly></ion-input>
           </div>
-          
+
           <!-- Inline Calendar -->
           <div class="inline-calendar" *ngIf="showDatePicker">
-            <ion-datetime
-              presentation="date"
-              [value]="formData.dateOfBirth"
-              (ionChange)="onDateChange($event)"
-              [max]="maxDate"
-              [min]="minDate"
-              size="cover"
-            ></ion-datetime>
+            <ion-datetime presentation="date" [value]="formData.dateOfBirth" (ionChange)="onDateChange($event)"
+              [max]="maxDate" [min]="minDate" size="cover"></ion-datetime>
           </div>
         </div>
 
@@ -140,11 +113,7 @@
             ID Type <span class="required">*</span>
           </label>
           <div class="input-wrapper select-wrapper">
-            <ion-select
-              class="custom-input"
-              [(ngModel)]="formData.idType"
-              interface="action-sheet"
-            >
+            <ion-select class="custom-input" [(ngModel)]="formData.idType" interface="action-sheet">
               <ion-select-option *ngFor="let type of idTypes" [value]="type">
                 {{ type }}
               </ion-select-option>
@@ -157,12 +126,8 @@
             ID Number <span class="required">*</span>
           </label>
           <div class="input-wrapper">
-            <ion-input
-              type="text"
-              class="custom-input"
-              placeholder="Enter ID number"
-              [(ngModel)]="formData.idNumber"
-            ></ion-input>
+            <ion-input type="text" class="custom-input" placeholder="Enter ID number"
+              [(ngModel)]="formData.idNumber"></ion-input>
           </div>
         </div>
       </div>
@@ -174,13 +139,14 @@
         <h3>Contact & Address</h3>
         <p>Where can we reach you?</p>
       </div>
-      
+
       <div class="form-grid">
         <div class="form-group full">
           <label class="form-label">Mobile Number <span class="required">*</span></label>
           <div class="input-wrapper">
             <ion-icon name="call-outline" class="input-icon"></ion-icon>
-            <ion-input type="tel" [(ngModel)]="formData.mobileNumber" placeholder="09XX-XXX-XXXX" class="custom-input"></ion-input>
+            <ion-input type="tel" [(ngModel)]="formData.mobileNumber" placeholder="09XX-XXX-XXXX"
+              class="custom-input"></ion-input>
           </div>
         </div>
 
@@ -208,7 +174,8 @@
         <div class="form-group half">
           <label class="form-label">Barangay <span class="required">*</span></label>
           <div class="input-wrapper">
-            <ion-input [(ngModel)]="formData.address.barangay" placeholder="e.g., Pagas" class="custom-input"></ion-input>
+            <ion-input [(ngModel)]="formData.address.barangay" placeholder="e.g., Pagas"
+              class="custom-input"></ion-input>
           </div>
         </div>
 
@@ -241,29 +208,39 @@
         <h3>Account Credentials</h3>
         <p>Set up your login details</p>
       </div>
-      
+
       <div class="form-grid">
         <div class="form-group full">
           <label class="form-label">Email Address <span class="required">*</span></label>
           <div class="input-wrapper">
             <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-            <ion-input type="email" [(ngModel)]="formData.email" placeholder="you@example.com" class="custom-input"></ion-input>
+            <ion-input type="email" [(ngModel)]="formData.email" placeholder="you@example.com"
+              class="custom-input"></ion-input>
           </div>
         </div>
 
         <div class="form-group full">
           <label class="form-label">Password <span class="required">*</span></label>
-          <div class="input-wrapper">
+          <div class="input-wrapper password-wrapper">
             <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-            <ion-input type="password" [(ngModel)]="formData.password" placeholder="Min. 6 characters" class="custom-input"></ion-input>
+            <ion-input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="formData.password"
+              placeholder="Min. 6 characters" class="custom-input"></ion-input>
+            <ion-button fill="clear" class="password-toggle-btn" (click)="togglePasswordVisibility()" type="button">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+            </ion-button>
           </div>
         </div>
 
         <div class="form-group full">
           <label class="form-label">Confirm Password <span class="required">*</span></label>
-          <div class="input-wrapper">
+          <div class="input-wrapper password-wrapper">
             <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-            <ion-input type="password" [(ngModel)]="formData.confirmPassword" placeholder="Re-enter password" class="custom-input"></ion-input>
+            <ion-input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="formData.confirmPassword"
+              placeholder="Re-enter password" class="custom-input"></ion-input>
+            <ion-button fill="clear" class="password-toggle-btn" (click)="toggleConfirmPasswordVisibility()"
+              type="button">
+              <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+            </ion-button>
           </div>
         </div>
 
@@ -367,34 +344,24 @@
 
       <div class="disclaimer">
         <ion-icon name="information-circle-outline"></ion-icon>
-        <span>By clicking 'Complete Registration', you acknowledge this is a UI simulation and data will only be logged to the console.</span>
+        <span>By clicking 'Complete Registration', you acknowledge this is a UI simulation and data will only be
+          logged
+          to the console.</span>
       </div>
     </div>
 
     <!-- Navigation Buttons -->
     <div class="nav-buttons">
-      <ion-button 
-        *ngIf="currentStep > 1"
-        fill="outline"
-        (click)="prevStep()"
-        [disabled]="loading"
-        class="back-btn"
-      >
+      <ion-button *ngIf="currentStep > 1" fill="outline" (click)="prevStep()" [disabled]="loading" class="back-btn">
         <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
         Back
       </ion-button>
 
-      <ion-button 
-        (click)="nextStep()"
-        [disabled]="loading"
-        class="next-btn"
-        [class.full-width]="currentStep === 1"
-      >
+      <ion-button (click)="nextStep()" [disabled]="loading" class="next-btn" [class.full-width]="currentStep === 1">
         <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
         <span *ngIf="!loading">
-          {{currentStep < 4 ? 'Continue' : 'Complete Registration'}}
-        </span>
-        <ion-icon *ngIf="!loading && currentStep < 4" slot="end" name="arrow-forward-outline"></ion-icon>
+          {{currentStep < 4 ? 'Continue' : 'Complete Registration' }} </span>
+            <ion-icon *ngIf="!loading && currentStep < 4" slot="end" name="arrow-forward-outline"></ion-icon>
       </ion-button>
     </div>
 

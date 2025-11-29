@@ -21,6 +21,7 @@ export class SignInModalComponent {
   };
 
   loading = false;
+  showPassword = false;
 
   constructor(
     private modalCtrl: ModalController,
@@ -31,6 +32,10 @@ export class SignInModalComponent {
 
   dismiss() {
     this.modalCtrl.dismiss();
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   async handleSignIn() {
@@ -52,9 +57,11 @@ export class SignInModalComponent {
       // Close the modal first
       await this.modalCtrl.dismiss({ loggedIn: true });
 
-      // Navigate to admin dashboard if admin role
+      // Navigate based on role
       if (this.loginData.role === 'admin') {
         this.router.navigate(['/admin/dashboard']);
+      } else {
+        this.router.navigate(['/citizen-portal/dashboard']);
       }
 
       // Show success message
