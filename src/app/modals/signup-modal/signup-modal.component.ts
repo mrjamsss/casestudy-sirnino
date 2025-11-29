@@ -29,7 +29,7 @@ export class SignUpModalComponent {
     name: { givenName: '', middleInitial: '', lastName: '', extension: '' },
     address: {
       houseNo: '', street: '', purok: '', barangay: '',
-      municipality: 'Cabanatuan City', province: 'Nueva Ecija', postalCode: ''
+      municipality: 'Cabanatuan City', province: 'Nueva Ecija', postalCode: '3100'
     },
     idType: 'Philippine National ID (PhilSys ID)',
     idNumber: '',
@@ -73,6 +73,19 @@ export class SignUpModalComponent {
 
     // Close calendar after selection
     this.showDatePicker = false;
+  }
+
+  // Phone number validation - only allow numbers, max 11 digits
+  onPhoneInput(event: any) {
+    let value = event.target.value;
+    // Remove all non-digit characters
+    value = value.replace(/\D/g, '');
+    // Limit to 11 digits
+    if (value.length > 11) {
+      value = value.substring(0, 11);
+    }
+    this.formData.mobileNumber = value;
+    event.target.value = value;
   }
 
   dismiss() {
@@ -122,11 +135,25 @@ export class SignUpModalComponent {
         };
       }
     } else if (this.currentStep === 2) {
-      if (!this.formData.address.barangay || !this.formData.address.postalCode ||
-        !this.formData.mobileNumber) {
+      if (!this.formData.address.barangay || !this.formData.mobileNumber) {
         return {
           valid: false,
-          message: 'Please complete all required fields: Barangay, Postal Code, and Mobile Number.'
+          message: 'Please complete all required fields: Barangay and Mobile Number.'
+        };
+      }
+      
+      // Validate phone number format
+      if (this.formData.mobileNumber.length !== 11) {
+        return {
+          valid: false,
+          message: 'Mobile number must be exactly 11 digits.'
+        };
+      }
+      
+      if (!this.formData.mobileNumber.startsWith('09')) {
+        return {
+          valid: false,
+          message: 'Mobile number must start with 09.'
         };
       }
     } else if (this.currentStep === 3) {
@@ -160,16 +187,24 @@ export class SignUpModalComponent {
     this.loading = false;
 
     if (result.success) {
-      // Show success message
+      // Show success message with approval requirement
       const alert = await this.alertCtrl.create({
-        header: 'Success',
-        message: 'Registration completed successfully! Please sign in to continue.',
+        header: 'Registration Successful!',
+        message: result.message || 'Your account has been created and is pending admin approval. You will be able to log in once your account is approved.',
         buttons: ['OK']
       });
       await alert.present();
 
       // Close modal after user acknowledges
       await this.modalCtrl.dismiss({ registered: true });
+    } else {
+      // Show error message if registration failed
+      const alert = await this.alertCtrl.create({
+        header: 'Registration Failed',
+        message: result.message || 'An error occurred during registration. Please try again.',
+        buttons: ['OK']
+      });
+      await alert.present();
     }
   }
 
