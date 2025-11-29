@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController, AlertController, IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService, LoginData } from '../../services/auth.service';
 import { SignUpModalComponent } from '../signup-modal/signup-modal.component';
 
@@ -24,8 +25,9 @@ export class SignInModalComponent {
   constructor(
     private modalCtrl: ModalController,
     private authService: AuthService,
-    private alertCtrl: AlertController
-  ) {}
+    private alertCtrl: AlertController,
+    private router: Router
+  ) { }
 
   dismiss() {
     this.modalCtrl.dismiss();
@@ -47,13 +49,21 @@ export class SignInModalComponent {
     this.loading = false;
 
     if (result.success) {
+      // Close the modal first
+      await this.modalCtrl.dismiss({ loggedIn: true });
+
+      // Navigate to admin dashboard if admin role
+      if (this.loginData.role === 'admin') {
+        this.router.navigate(['/admin/dashboard']);
+      }
+
+      // Show success message
       const alert = await this.alertCtrl.create({
         header: 'Success',
         message: 'Sign in successful!',
         buttons: ['OK']
       });
       await alert.present();
-      this.modalCtrl.dismiss({ loggedIn: true });
     } else {
       const alert = await this.alertCtrl.create({
         header: 'Error',
@@ -70,12 +80,12 @@ export class SignInModalComponent {
       component: SignUpModalComponent,
       cssClass: 'auth-modal signup-modal'
     });
-    
+
     // Set width BEFORE presenting
     modal.style.setProperty('--width', '480px');
     modal.style.setProperty('--max-width', '480px');
     modal.style.setProperty('--height', 'auto');
-    
+
     await modal.present();
   }
 

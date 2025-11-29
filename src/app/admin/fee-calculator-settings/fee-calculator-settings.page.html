@@ -1,11 +1,149 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Fee Calculator Settings</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1>🎓 Student Grade Calculator</h1>
+                <p class="subtitle">Enter student score to calculate grade and grade point</p>
+            </div>
+            <div class="decorative-circle"></div>
+        </div>
 
-<ion-content>
-    <div class="ion-padding">
-        <h2>Fee Calculator Settings Content</h2>
+        <!-- Grade Input Section -->
+        <div class="section-card input-card">
+            <div class="section-header">
+                <div>
+                    <h2>📝 Student Score Input</h2>
+                    <p class="section-subtitle">Enter a score between 0 and 100</p>
+                </div>
+            </div>
+
+            <form class="grade-form">
+                <div class="form-group">
+                    <label>Student Score</label>
+                    <div class="input-wrapper">
+                        <ion-input [(ngModel)]="studentScore" name="studentScore" type="number"
+                            placeholder="Enter score (0-100)" class="custom-input" min="0" max="100"
+                            (ionChange)="calculateGrade()">
+                        </ion-input>
+                        <span class="input-icon">📊</span>
+                    </div>
+                </div>
+
+                <ion-button expand="block" class="calculate-button" (click)="calculateGrade()"
+                    [disabled]="!studentScore">
+                    <ion-icon slot="start" name="calculator-outline"></ion-icon>
+                    Calculate Grade
+                </ion-button>
+            </form>
+        </div>
+
+        <div class="section-card result-card" *ngIf="gradeResult">
+            <div class="section-header">
+                <h2>✨ Grade Results</h2>
+            </div>
+
+            <div class="result-display">
+                <div class="result-item score-display">
+                    <div class="result-label">Student Score</div>
+                    <div class="result-value score-value">{{ gradeResult.score }}</div>
+                </div>
+
+                <div class="result-item grade-display" [attr.data-grade]="gradeResult.grade">
+                    <div class="result-label">Grade Category</div>
+                    <div class="result-value grade-value">{{ gradeResult.grade }}</div>
+                </div>
+
+                <div class="result-item gpa-display">
+                    <div class="result-label">Grade Point</div>
+                    <div class="result-value gpa-value">{{ gradeResult.gradePoint }}</div>
+                </div>
+            </div>
+
+            <div class="grade-message" [attr.data-grade]="gradeResult.grade">
+                <ion-icon [name]="gradeResult.icon"></ion-icon>
+                <p>{{ gradeResult.message }}</p>
+            </div>
+        </div>
+
+        <div class="section-card criteria-card">
+            <div class="section-header">
+                <h2>📋 Grading Criteria</h2>
+            </div>
+
+            <div class="criteria-grid">
+                <div class="criteria-item grade-a">
+                    <div class="criteria-header">
+                        <span class="grade-badge">A</span>
+                        <span class="grade-range">90 - 100</span>
+                    </div>
+                    <div class="criteria-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Grade Point:</span>
+                            <span class="detail-value">4.0</span>
+                        </div>
+                        <div class="performance-tag excellent">Excellent</div>
+                    </div>
+                </div>
+
+                <div class="criteria-item grade-b">
+                    <div class="criteria-header">
+                        <span class="grade-badge">B</span>
+                        <span class="grade-range">80 - 89</span>
+                    </div>
+                    <div class="criteria-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Grade Point:</span>
+                            <span class="detail-value">3.0</span>
+                        </div>
+                        <div class="performance-tag good">Good</div>
+                    </div>
+                </div>
+
+                <div class="criteria-item grade-c">
+                    <div class="criteria-header">
+                        <span class="grade-badge">C</span>
+                        <span class="grade-range">70 - 79</span>
+                    </div>
+                    <div class="criteria-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Grade Point:</span>
+                            <span class="detail-value">2.0</span>
+                        </div>
+                        <div class="performance-tag average">Average</div>
+                    </div>
+                </div>
+
+                <div class="criteria-item grade-d">
+                    <div class="criteria-header">
+                        <span class="grade-badge">D</span>
+                        <span class="grade-range">60 - 69</span>
+                    </div>
+                    <div class="criteria-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Grade Point:</span>
+                            <span class="detail-value">1.0</span>
+                        </div>
+                        <div class="performance-tag passing">Passing</div>
+                    </div>
+                </div>
+
+                <div class="criteria-item grade-e">
+                    <div class="criteria-header">
+                        <span class="grade-badge">E</span>
+                        <span class="grade-range">Below 60</span>
+                    </div>
+                    <div class="criteria-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Grade Point:</span>
+                            <span class="detail-value">0.0</span>
+                        </div>
+                        <div class="performance-tag failing">Failing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </ion-content>
