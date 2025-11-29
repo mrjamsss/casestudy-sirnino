@@ -1,1 +1,28 @@
-// Admin Dashboard SCSS
+.logo-container {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid #e5e7eb;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+ion-toolbar {
+    --background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+    --color: white;
+}
+
+ion-title {
+    font-weight: 600;
+    font-size: 18px;
+}

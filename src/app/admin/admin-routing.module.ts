@@ -12,6 +12,10 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardPage
+  },
+  {
+    path: 'system-settings',
+    loadChildren: () => import('./system-settings/system-settings.module').then(m => m.SystemSettingsPageModule)
   }
 ];
 
@@ -19,4 +23,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AdminRoutingModule {}
+export class AdminRoutingModule { }

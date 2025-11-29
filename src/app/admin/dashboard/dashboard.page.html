@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <div class="logo-container" *ngIf="logo">
+        <img [src]="logo" alt="City Hall Logo">
+      </div>
+    </ion-buttons>
     <ion-title>Admin Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -7,5 +12,9 @@
 <ion-content>
   <div class="ion-padding">
     <h1>Welcome to Admin Dashboard</h1>
+    <ion-button routerLink="/admin/system-settings" color="primary">
+      <ion-icon name="settings-outline" slot="start"></ion-icon>
+      Go to System Settings
+    </ion-button>
   </div>
 </ion-content>
