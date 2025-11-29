@@ -100,25 +100,60 @@ export class AuthService {
 
     // Check regular user credentials
     const users = this.getRegisteredUsers();
-    const user = users.find(u =>
-      u.email === credentials.email &&
-      u.password === credentials.password &&
+    
+    // First, find user by email and role only
+    const userByEmail = users.find(u => 
+      u.email === credentials.email && 
       u.role === credentials.role
     );
 
     this.loadingSubject.next(false);
 
-    if (user) {
-      if (user.status !== 'Active' && user.status !== 'Pending') {
-        if (user.status === 'Rejected' || user.status === 'Suspended') {
-          return { success: false, message: `Your account is ${user.status}.` };
+    // If user exists with this email and role
+    if (userByEmail) {
+      // Check account status BEFORE validating password
+      if (userByEmail.status === 'Pending') {
+        return { 
+          success: false, 
+          message: 'Your account is pending approval. Please wait for admin verification.' 
+        };
+      }
+      
+      if (userByEmail.status === 'Rejected') {
+        return { 
+          success: false, 
+          message: 'Your account has been rejected. Please contact the administrator.' 
+        };
+      }
+      
+      if (userByEmail.status === 'Suspended') {
+        return { 
+          success: false, 
+          message: 'Your account has been suspended. Please contact the administrator.' 
+        };
+      }
+      
+      // Now check password for Active users
+      if (userByEmail.status === 'Active') {
+        if (userByEmail.password === credentials.password) {
+          console.log('User login successful:', userByEmail.email);
+          this.setCurrentUser(userByEmail);
+          return { success: true };
+        } else {
+          return {
+            success: false,
+            message: 'Invalid password.'
+          };
         }
       }
-      console.log('User login successful:', user.email);
-      // Store logged-in user
-      this.setCurrentUser(user);
-      return { success: true };
+      
+      // Fallback for any other status
+      return { 
+        success: false, 
+        message: `Your account status is ${userByEmail.status}. Please contact the administrator.` 
+      };
     } else {
+      // User not found with this email and role
       return {
         success: false,
         message: 'Invalid email or password.'
@@ -158,7 +193,10 @@ export class AuthService {
 
     console.log('Registration successful:', newUser.email);
 
-    return { success: true };
+    return { 
+      success: true, 
+      message: 'Registration successful! Your account is pending admin approval. You will be notified once approved.' 
+    };
   }
 
   async resetPassword(email: string): Promise<{ success: boolean; message: string }> {

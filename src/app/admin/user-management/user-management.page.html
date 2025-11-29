@@ -79,7 +79,7 @@
                         </div>
                         <div class="filter-item" *ngIf="selectedTab === 'all'">
                             <ion-select label="Status" label-placement="floating" fill="outline" 
-                                [(ngModel)]="filterStatus" (ionChange)="onFilterChange()" class="custom-select">
+                                [(ngModel)]="filterStatus" (ionChange)="onFilterChange()" class="custom-select" interface="popover">
                                 <ion-select-option value="all">All Status</ion-select-option>
                                 <ion-select-option value="Active">Active</ion-select-option>
                                 <ion-select-option value="Rejected">Rejected</ion-select-option>
@@ -88,14 +88,14 @@
                         </div>
                         <div class="filter-item">
                             <ion-select label="Barangay" label-placement="floating" fill="outline" 
-                                [(ngModel)]="filterBarangay" (ionChange)="onFilterChange()" class="custom-select">
+                                [(ngModel)]="filterBarangay" (ionChange)="onFilterChange()" class="custom-select" interface="popover">
                                 <ion-select-option value="all">All Barangays</ion-select-option>
                                 <ion-select-option *ngFor="let brgy of barangays" [value]="brgy">{{ brgy }}</ion-select-option>
                             </ion-select>
                         </div>
                         <div class="filter-item">
                             <ion-select label="Role" label-placement="floating" fill="outline" 
-                                [(ngModel)]="filterRole" (ionChange)="onFilterChange()" class="custom-select">
+                                [(ngModel)]="filterRole" (ionChange)="onFilterChange()" class="custom-select" interface="popover">
                                 <ion-select-option value="all">All Roles</ion-select-option>
                                 <ion-select-option value="user">Citizen</ion-select-option>
                                 <ion-select-option value="admin">Admin Staff</ion-select-option>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="filter-item">
                             <ion-select label="Age Group" label-placement="floating" fill="outline" 
-                                [(ngModel)]="filterAgeGroup" (ionChange)="onFilterChange()" class="custom-select">
+                                [(ngModel)]="filterAgeGroup" (ionChange)="onFilterChange()" class="custom-select" interface="popover">
                                 <ion-select-option value="all">All Ages</ion-select-option>
                                 <ion-select-option value="youth">Youth (<18)</ion-select-option>
                                 <ion-select-option value="adult">Adult (18-59)</ion-select-option>
