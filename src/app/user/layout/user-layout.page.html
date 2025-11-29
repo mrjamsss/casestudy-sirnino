@@ -1,0 +1,9 @@
+<ion-split-pane [when]="(sidebarService.isSidebarOpen$ | async) ? 'lg' : false" contentId="user-content">
+  <ion-menu contentId="user-content" class="user-sidebar" type="overlay">
+    <app-user-sidebar></app-user-sidebar>
+  </ion-menu>
+
+  <div class="ion-page" id="user-content">
+    <ion-router-outlet></ion-router-outlet>
+  </div>
+</ion-split-pane>

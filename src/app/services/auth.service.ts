@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+export type UserStatus = 'pending' | 'active' | 'rejected' | 'suspended';
+
 export interface UserData {
   name: {
     givenName: string;
@@ -25,6 +27,10 @@ export interface UserData {
   password: string;
   confirmPassword: string;
   role: 'user' | 'admin';
+  status: UserStatus;
+  dateRegistered: string;
+  rejectionReason?: string;
+  lastLogin?: string;
 }
 
 export interface LoginData {
@@ -118,13 +124,20 @@ export class AuthService {
       };
     }
 
+    // Set initial status and registration date
+    const newUser: UserData = {
+      ...userData,
+      status: 'pending',
+      dateRegistered: new Date().toISOString()
+    };
+
     // Add new user
-    users.push(userData);
+    users.push(newUser);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(users));
 
     this.loadingSubject.next(false);
     
-    console.log('Registration successful:', userData.email);
+    console.log('Registration successful:', newUser.email);
     console.log('All registered users:', users);
     
     return { success: true };
@@ -171,5 +184,208 @@ export class AuthService {
   clearAllUsers(): void {
     localStorage.removeItem(this.STORAGE_KEY);
     console.log('All users cleared from storage');
+  }
+
+  // ===== USER MANAGEMENT METHODS =====
+
+  // Update user status (approve, reject, suspend)
+  updateUserStatus(email: string, status: UserStatus, rejectionReason?: string): boolean {
+    const users = this.getRegisteredUsers();
+    const userIndex = users.findIndex(u => u.email === email);
+    
+    if (userIndex === -1) {
+      return false;
+    }
+
+    users[userIndex].status = status;
+    if (status === 'rejected' && rejectionReason) {
+      users[userIndex].rejectionReason = rejectionReason;
+    }
+
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(users));
+    console.log(`User ${email} status updated to ${status}`);
+    return true;
+  }
+
+  // Update user information
+  updateUser(email: string, updatedData: Partial<UserData>): boolean {
+    const users = this.getRegisteredUsers();
+    const userIndex = users.findIndex(u => u.email === email);
+    
+    if (userIndex === -1) {
+      return false;
+    }
+
+    // Merge updated data with existing user data
+    users[userIndex] = { ...users[userIndex], ...updatedData };
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(users));
+    console.log(`User ${email} updated successfully`);
+    return true;
+  }
+
+  // Delete user
+  deleteUser(email: string): boolean {
+    const users = this.getRegisteredUsers();
+    const filteredUsers = users.filter(u => u.email !== email);
+    
+    if (filteredUsers.length === users.length) {
+      return false; // User not found
+    }
+
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filteredUsers));
+    console.log(`User ${email} deleted successfully`);
+    return true;
+  }
+
+  // Bulk delete users
+  bulkDeleteUsers(emails: string[]): number {
+    const users = this.getRegisteredUsers();
+    const filteredUsers = users.filter(u => !emails.includes(u.email));
+    const deletedCount = users.length - filteredUsers.length;
+    
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filteredUsers));
+    console.log(`${deletedCount} users deleted successfully`);
+    return deletedCount;
+  }
+
+  // Get users by status
+  getUsersByStatus(status: UserStatus): UserData[] {
+    return this.getRegisteredUsers().filter(u => u.status === status);
+  }
+
+  // Get users by barangay
+  getUsersByBarangay(barangay: string): UserData[] {
+    return this.getRegisteredUsers().filter(u => 
+      u.address.barangay.toLowerCase() === barangay.toLowerCase()
+    );
+  }
+
+  // Get users by role
+  getUsersByRole(role: 'user' | 'admin'): UserData[] {
+    return this.getRegisteredUsers().filter(u => u.role === role);
+  }
+
+  // Calculate age from date of birth
+  calculateAge(dateOfBirth: string): number {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  }
+
+  // Get statistics
+  getStatistics() {
+    const users = this.getRegisteredUsers();
+    const totalCitizens = users.filter(u => u.role === 'user').length;
+    const pendingVerifications = users.filter(u => u.status === 'pending').length;
+    
+    // Users by barangay
+    const barangayMap = new Map<string, number>();
+    users.forEach(u => {
+      if (u.role === 'user') {
+        const barangay = u.address.barangay;
+        barangayMap.set(barangay, (barangayMap.get(barangay) || 0) + 1);
+      }
+    });
+    
+    const usersByBarangay = Array.from(barangayMap.entries())
+      .map(([barangay, count]) => ({ barangay, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Age distribution
+    const ageGroups = {
+      youth: 0,      // < 18
+      adult: 0,      // 18-59
+      senior: 0      // 60+
+    };
+
+    users.forEach(u => {
+      if (u.role === 'user') {
+        const age = this.calculateAge(u.dateOfBirth);
+        if (age < 18) {
+          ageGroups.youth++;
+        } else if (age < 60) {
+          ageGroups.adult++;
+        } else {
+          ageGroups.senior++;
+        }
+      }
+    });
+
+    return {
+      totalCitizens,
+      pendingVerifications,
+      usersByBarangay,
+      ageGroups,
+      totalUsers: users.length,
+      activeUsers: users.filter(u => u.status === 'active').length,
+      rejectedUsers: users.filter(u => u.status === 'rejected').length,
+      suspendedUsers: users.filter(u => u.status === 'suspended').length
+    };
+  }
+
+  // Get full name from user data
+  getFullName(user: UserData): string {
+    const { givenName, middleInitial, lastName, extension } = user.name;
+    const middle = middleInitial ? `${middleInitial}. ` : '';
+    const ext = extension ? ` ${extension}` : '';
+    return `${givenName} ${middle}${lastName}${ext}`.trim();
+  }
+
+  // Export users to CSV
+  exportToCSV(users: UserData[]): string {
+    const headers = [
+      'Full Name',
+      'Email',
+      'Mobile Number',
+      'Status',
+      'Role',
+      'Barangay',
+      'Age',
+      'ID Type',
+      'ID Number',
+      'Date Registered'
+    ];
+
+    const rows = users.map(user => [
+      this.getFullName(user),
+      user.email,
+      user.mobileNumber,
+      user.status,
+      user.role,
+      user.address.barangay,
+      this.calculateAge(user.dateOfBirth).toString(),
+      user.idType,
+      user.idNumber,
+      new Date(user.dateRegistered).toLocaleDateString()
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    return csvContent;
+  }
+
+  // Download CSV file
+  downloadCSV(users: UserData[], filename: string = 'users-export.csv'): void {
+    const csvContent = this.exportToCSV(users);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

@@ -1,0 +1,39 @@
+<div class="sidebar-header">
+  <div class="sidebar-brand">
+    <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+      <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-title">Admin Portal</span>
+      <span class="brand-subtitle">Cabanatuan City</span>
+    </div>
+  </div>
+</div>
+
+<ion-content class="sidebar-content">
+  <div class="menu-section">
+    <span class="section-label">Main Menu</span>
+    <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+      <div class="menu-item" [routerLink]="[p.url]" routerLinkActive="active">
+        <div class="item-icon">
+          <ion-icon [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+        </div>
+        <span class="item-label">{{ p.title }}</span>
+        <ion-icon name="chevron-forward-outline" class="item-arrow"></ion-icon>
+      </div>
+    </ion-menu-toggle>
+  </div>
+
+  <div class="menu-section logout-section">
+    <ion-menu-toggle auto-hide="false">
+      <div class="menu-item logout-item" (click)="logout()">
+        <div class="item-icon">
+          <ion-icon ios="log-out-outline" md="log-out-sharp"></ion-icon>
+        </div>
+        <span class="item-label">Logout</span>
+      </div>
+    </ion-menu-toggle>
+  </div>
+</ion-content>
+

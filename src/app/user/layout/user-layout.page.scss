@@ -1,0 +1,12 @@
+/* User Layout Styles */
+
+ion-split-pane {
+  --side-width: 280px;
+  --side-max-width: 280px;
+  --side-min-width: 280px;
+}
+
+ion-menu {
+  --width: 280px;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}

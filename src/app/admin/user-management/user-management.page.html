@@ -1,0 +1,574 @@
+<div class="ion-page">
+  <app-header [title]="'User Management'"></app-header>
+
+  <ion-content>
+    <div class="user-management-container">
+      
+      <!-- Statistics Dashboard -->
+      <div class="statistics-section" *ngIf="statistics">
+        <div class="stats-grid">
+          <div class="stat-card primary">
+            <div class="stat-icon">
+              <ion-icon name="people"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{statistics.totalCitizens}}</h3>
+              <p>Total Citizens</p>
+            </div>
+          </div>
+
+          <div class="stat-card warning">
+            <div class="stat-icon">
+              <ion-icon name="hourglass"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{statistics.pendingVerifications}}</h3>
+              <p>Pending Verifications</p>
+            </div>
+          </div>
+
+          <div class="stat-card success">
+            <div class="stat-icon">
+              <ion-icon name="checkmark-circle"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{statistics.activeUsers}}</h3>
+              <p>Active Users</p>
+            </div>
+          </div>
+
+          <div class="stat-card info">
+            <div class="stat-icon">
+              <ion-icon name="location"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{statistics.usersByBarangay.length}}</h3>
+              <p>Barangays</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tabs-section">
+        <div class="tabs">
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'all'"
+            (click)="switchTab('all')">
+            All Users ({{allUsers.length}})
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'pending'"
+            (click)="switchTab('pending')">
+            Pending Approvals
+            <span class="badge" *ngIf="statistics && statistics.pendingVerifications > 0">
+              {{statistics.pendingVerifications}}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search & Filter Bar -->
+      <div class="filter-section">
+        <div class="search-bar">
+          <ion-icon name="search"></ion-icon>
+          <input 
+            type="text" 
+            placeholder="Search by name, email, mobile, or ID number..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="applyFilters()"
+            class="search-input">
+        </div>
+
+        <div class="filters-row">
+          <div class="filter-group">
+            <label>Status</label>
+            <select [(ngModel)]="statusFilter" (ngModelChange)="applyFilters()" class="filter-select">
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="active">Active</option>
+              <option value="rejected">Rejected</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Barangay</label>
+            <select [(ngModel)]="barangayFilter" (ngModelChange)="applyFilters()" class="filter-select">
+              <option value="all">All Barangays</option>
+              <option *ngFor="let barangay of availableBarangays" [value]="barangay">
+                {{barangay}}
+              </option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Role</label>
+            <select [(ngModel)]="roleFilter" (ngModelChange)="applyFilters()" class="filter-select">
+              <option value="all">All Roles</option>
+              <option value="user">Citizens</option>
+              <option value="admin">Admins</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Age Group</label>
+            <select [(ngModel)]="ageGroupFilter" (ngModelChange)="applyFilters()" class="filter-select">
+              <option value="all">All Ages</option>
+              <option value="youth">Youth (&lt;18)</option>
+              <option value="adult">Adult (18-59)</option>
+              <option value="senior">Senior (60+)</option>
+            </select>
+          </div>
+
+          <button class="clear-filters-btn" (click)="clearFilters()">
+            <ion-icon name="close-circle"></ion-icon>
+            Clear Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar" *ngIf="selectedUsers.size > 0 || filteredUsers.length > 0">
+        <div class="bulk-actions" *ngIf="selectedUsers.size > 0">
+          <span class="selection-count">{{selectedUsers.size}} selected</span>
+          <button class="action-btn success" (click)="bulkApprove()" *ngIf="activeTab === 'pending'">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            Approve Selected
+          </button>
+          <button class="action-btn danger" (click)="bulkDelete()">
+            <ion-icon name="trash"></ion-icon>
+            Delete Selected
+          </button>
+        </div>
+
+        <div class="export-actions">
+          <button class="action-btn primary" (click)="exportToCSV()">
+            <ion-icon name="download"></ion-icon>
+            Export to CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- User Data Table -->
+      <div class="table-container">
+        <table class="users-table" *ngIf="displayedUsers.length > 0">
+          <thead>
+            <tr>
+              <th class="checkbox-col">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="selectAll"
+                  (change)="toggleSelectAll()">
+              </th>
+              <th (click)="sortBy('name')" class="sortable">
+                Full Name
+                <ion-icon 
+                  *ngIf="sortColumn === 'name'" 
+                  [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'">
+                </ion-icon>
+              </th>
+              <th (click)="sortBy('status')" class="sortable">
+                Status
+                <ion-icon 
+                  *ngIf="sortColumn === 'status'" 
+                  [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'">
+                </ion-icon>
+              </th>
+              <th (click)="sortBy('barangay')" class="sortable">
+                Barangay
+                <ion-icon 
+                  *ngIf="sortColumn === 'barangay'" 
+                  [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'">
+                </ion-icon>
+              </th>
+              <th (click)="sortBy('age')" class="sortable">
+                Age
+                <ion-icon 
+                  *ngIf="sortColumn === 'age'" 
+                  [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'">
+                </ion-icon>
+              </th>
+              <th>Role</th>
+              <th>ID Type</th>
+              <th (click)="sortBy('dateRegistered')" class="sortable">
+                Date Registered
+                <ion-icon 
+                  *ngIf="sortColumn === 'dateRegistered'" 
+                  [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'">
+                </ion-icon>
+              </th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of displayedUsers" [class.selected]="selectedUsers.has(user.email)">
+              <td class="checkbox-col">
+                <input 
+                  type="checkbox" 
+                  [checked]="selectedUsers.has(user.email)"
+                  (change)="toggleUserSelection(user.email)">
+              </td>
+              <td class="user-name">
+                <div class="name-cell">
+                  <strong>{{getFullName(user)}}</strong>
+                  <small>{{user.email}}</small>
+                </div>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(user.status)">
+                  {{user.status}}
+                </span>
+              </td>
+              <td>{{user.address.barangay}}</td>
+              <td>{{getAge(user)}}</td>
+              <td>
+                <span class="role-badge" [class.admin]="user.role === 'admin'">
+                  {{user.role}}
+                </span>
+              </td>
+              <td class="id-type">{{user.idType}}</td>
+              <td>{{formatDate(user.dateRegistered)}}</td>
+              <td class="actions-col">
+                <div class="action-buttons">
+                  <button 
+                    class="icon-btn view" 
+                    (click)="viewUserDetails(user)"
+                    title="View Details">
+                    <ion-icon name="eye"></ion-icon>
+                  </button>
+                  <button 
+                    *ngIf="user.status === 'pending'"
+                    class="icon-btn approve" 
+                    (click)="openApprovalModal(user)"
+                    title="Approve/Reject">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                  </button>
+                  <button 
+                    class="icon-btn edit" 
+                    (click)="openEditModal(user)"
+                    title="Edit User">
+                    <ion-icon name="create"></ion-icon>
+                  </button>
+                  <button 
+                    class="icon-btn delete" 
+                    (click)="deleteUser(user)"
+                    title="Delete User">
+                    <ion-icon name="trash"></ion-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="empty-state" *ngIf="displayedUsers.length === 0">
+          <ion-icon name="people-outline"></ion-icon>
+          <h3>No users found</h3>
+          <p>Try adjusting your filters or search terms</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-section" *ngIf="filteredUsers.length > 0">
+        <div class="pagination-info">
+          Showing {{(currentPage - 1) * pageSize + 1}} to {{Math.min(currentPage * pageSize, filteredUsers.length)}} of {{filteredUsers.length}} users
+        </div>
+
+        <div class="pagination-controls">
+          <button 
+            class="page-btn" 
+            [disabled]="currentPage === 1"
+            (click)="goToPage(currentPage - 1)">
+            <ion-icon name="chevron-back"></ion-icon>
+          </button>
+
+          <button 
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            class="page-btn"
+            [class.active]="currentPage === i + 1"
+            (click)="goToPage(i + 1)"
+            [hidden]="totalPages > 7 && (i + 1 < currentPage - 2 || i + 1 > currentPage + 2) && i !== 0 && i !== totalPages - 1">
+            {{i + 1}}
+          </button>
+
+          <button 
+            class="page-btn" 
+            [disabled]="currentPage === totalPages"
+            (click)="goToPage(currentPage + 1)">
+            <ion-icon name="chevron-forward"></ion-icon>
+          </button>
+        </div>
+
+        <div class="page-size-selector">
+          <label>Show:</label>
+          <select [(ngModel)]="pageSize" (ngModelChange)="changePageSize($event)" class="page-size-select">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{size}}</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </ion-content>
+</div>
+
+<!-- User Detail Modal -->
+<div class="modal-overlay" *ngIf="showUserDetailModal" (click)="closeUserDetailModal()">
+  <div class="modal-content large" (click)="$event.stopPropagation()" *ngIf="selectedUser">
+    <div class="modal-header">
+      <h2>User Details</h2>
+      <button class="close-btn" (click)="closeUserDetailModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="detail-section">
+        <h3>Personal Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Full Name</label>
+            <p>{{getFullName(selectedUser)}}</p>
+          </div>
+          <div class="detail-item">
+            <label>Date of Birth</label>
+            <p>{{formatDate(selectedUser.dateOfBirth)}} ({{getAge(selectedUser)}} years old)</p>
+          </div>
+          <div class="detail-item">
+            <label>Email</label>
+            <p>{{selectedUser.email}}</p>
+          </div>
+          <div class="detail-item">
+            <label>Mobile Number</label>
+            <p>{{selectedUser.mobileNumber}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Address</h3>
+        <p class="full-address">{{getFullAddress(selectedUser)}}</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>ID Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>ID Type</label>
+            <p>{{selectedUser.idType}}</p>
+          </div>
+          <div class="detail-item">
+            <label>ID Number</label>
+            <p class="id-number">{{selectedUser.idNumber}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Account Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Status</label>
+            <p>
+              <span class="status-badge" [ngClass]="getStatusClass(selectedUser.status)">
+                {{selectedUser.status}}
+              </span>
+            </p>
+          </div>
+          <div class="detail-item">
+            <label>Role</label>
+            <p>
+              <span class="role-badge" [class.admin]="selectedUser.role === 'admin'">
+                {{selectedUser.role}}
+              </span>
+            </p>
+          </div>
+          <div class="detail-item">
+            <label>Date Registered</label>
+            <p>{{formatDate(selectedUser.dateRegistered)}}</p>
+          </div>
+          <div class="detail-item" *ngIf="selectedUser.rejectionReason">
+            <label>Rejection Reason</label>
+            <p class="rejection-reason">{{selectedUser.rejectionReason}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-btn secondary" (click)="resetPassword(selectedUser)">
+        <ion-icon name="key"></ion-icon>
+        Reset Password
+      </button>
+      <button class="modal-btn primary" (click)="openEditModal(selectedUser)">
+        <ion-icon name="create"></ion-icon>
+        Edit User
+      </button>
+      <button 
+        *ngIf="selectedUser.status === 'suspended' || selectedUser.status === 'rejected'"
+        class="modal-btn success" 
+        (click)="activateUser(selectedUser)">
+        <ion-icon name="checkmark-circle"></ion-icon>
+        Activate
+      </button>
+      <button 
+        *ngIf="selectedUser.status === 'active'"
+        class="modal-btn warning" 
+        (click)="suspendUser(selectedUser)">
+        <ion-icon name="ban"></ion-icon>
+        Suspend
+      </button>
+      <button class="modal-btn danger" (click)="deleteUser(selectedUser)">
+        <ion-icon name="trash"></ion-icon>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Approval Modal -->
+<div class="modal-overlay" *ngIf="showApprovalModal" (click)="closeApprovalModal()">
+  <div class="modal-content medium" (click)="$event.stopPropagation()" *ngIf="selectedUser">
+    <div class="modal-header">
+      <h2>Approve/Reject User</h2>
+      <button class="close-btn" (click)="closeApprovalModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="approval-summary">
+        <h3>{{getFullName(selectedUser)}}</h3>
+        <p>{{selectedUser.email}}</p>
+      </div>
+
+      <div class="id-verification-section">
+        <h4>ID Verification</h4>
+        <div class="id-info">
+          <div class="id-item">
+            <strong>ID Type:</strong>
+            <span>{{selectedUser.idType}}</span>
+          </div>
+          <div class="id-item">
+            <strong>ID Number:</strong>
+            <span class="id-number">{{selectedUser.idNumber}}</span>
+          </div>
+        </div>
+        <p class="verification-note">
+          <ion-icon name="information-circle"></ion-icon>
+          Please verify this information against physical records before approving.
+        </p>
+      </div>
+
+      <div class="rejection-section">
+        <label for="rejectionReason">Rejection Reason (required if rejecting)</label>
+        <textarea 
+          id="rejectionReason"
+          [(ngModel)]="rejectionReason"
+          placeholder="Enter reason for rejection..."
+          rows="4"
+          class="rejection-textarea"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-btn secondary" (click)="closeApprovalModal()">
+        Cancel
+      </button>
+      <button class="modal-btn danger" (click)="rejectUser(selectedUser)">
+        <ion-icon name="close-circle"></ion-icon>
+        Reject
+      </button>
+      <button class="modal-btn success" (click)="approveUser(selectedUser)">
+        <ion-icon name="checkmark-circle"></ion-icon>
+        Approve
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="modal-content large" (click)="$event.stopPropagation()" *ngIf="selectedUser && editFormData">
+    <div class="modal-header">
+      <h2>Edit User</h2>
+      <button class="close-btn" (click)="closeEditModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form class="edit-form">
+        <div class="form-section">
+          <h3>Personal Information</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Given Name</label>
+              <input type="text" [(ngModel)]="editFormData.name!.givenName" name="givenName" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Middle Initial</label>
+              <input type="text" [(ngModel)]="editFormData.name!.middleInitial" name="middleInitial" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" [(ngModel)]="editFormData.name!.lastName" name="lastName" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Extension</label>
+              <input type="text" [(ngModel)]="editFormData.name!.extension" name="extension" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Contact Information</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" [(ngModel)]="editFormData.email" name="email" class="form-input" disabled>
+            </div>
+            <div class="form-group">
+              <label>Mobile Number</label>
+              <input type="text" [(ngModel)]="editFormData.mobileNumber" name="mobileNumber" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Address</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>House No.</label>
+              <input type="text" [(ngModel)]="editFormData.address!.houseNo" name="houseNo" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Street</label>
+              <input type="text" [(ngModel)]="editFormData.address!.street" name="street" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Purok</label>
+              <input type="text" [(ngModel)]="editFormData.address!.purok" name="purok" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Barangay</label>
+              <input type="text" [(ngModel)]="editFormData.address!.barangay" name="barangay" class="form-input">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-btn secondary" (click)="closeEditModal()">
+        Cancel
+      </button>
+      <button class="modal-btn primary" (click)="saveUserEdit()">
+        <ion-icon name="save"></ion-icon>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>

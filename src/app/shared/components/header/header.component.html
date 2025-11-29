@@ -1,0 +1,17 @@
+<ion-header class="app-header">
+  <ion-toolbar class="header-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="toggleSidebar()">
+        <ion-icon slot="icon-only" name="menu-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+    <ion-title class="header-title">{{ title }}</ion-title>
+    
+    <ion-buttons slot="end" *ngIf="showUserMenu">
+      <ion-button class="user-menu-button" (click)="presentUserMenu($event)">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

@@ -5,14 +5,17 @@ import { IonicModule } from '@ionic/angular';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardPage } from './dashboard/dashboard.page';
+import { SharedComponentsModule } from '../shared/components/shared-components.module';
+import { AdminLayoutPage } from './layout/admin-layout.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    SharedComponentsModule
   ],
-  declarations: [DashboardPage]
+  declarations: [DashboardPage, AdminLayoutPage]
 })
 export class AdminModule {}

@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+// Colors from landing page
+$cbn-primary: #0F4C81;
+$cbn-secondary: #FFC300;
+$cbn-background: #F4F7F9;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: white; // Ensure background is set
+}
+
+.user-sidebar {
+  // --width: 280px; // Controlled by ion-menu
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-header {
+  background: linear-gradient(135deg, $cbn-primary 0%, darken($cbn-primary, 10%) 100%);
+  padding: 32px 24px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  color: $cbn-secondary;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-title {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(white, 0.7);
+  letter-spacing: 0.01em;
+}
+
+.sidebar-content {
+  --background: white;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+}
+
+.menu-section {
+  padding: 0 16px 24px;
+
+  &.logout-section {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+.section-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 12px 12px;
+  margin-bottom: 4px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: $cbn-secondary;
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    background: rgba($cbn-secondary, 0.1);
+    color: $cbn-primary;
+    transform: translateX(4px);
+
+    .item-icon {
+      background: $cbn-secondary;
+      color: $cbn-primary;
+      transform: scale(1.05);
+    }
+
+    .item-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &.active {
+    background: linear-gradient(90deg, rgba($cbn-primary, 0.1) 0%, rgba($cbn-primary, 0.05) 100%);
+    color: $cbn-primary;
+    font-weight: 700;
+
+    &::before {
+      transform: scaleY(1);
+    }
+
+    .item-icon {
+      background: $cbn-primary;
+      color: white;
+    }
+
+    .item-arrow {
+      opacity: 1;
+      color: $cbn-primary;
+    }
+  }
+}
+
+.item-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba($cbn-primary, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $cbn-primary;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+.item-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-arrow {
+  font-size: 1.125rem;
+  color: #cbd5e1;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.logout-item {
+  color: #ef4444;
+
+  .item-icon {
+    background: rgba(#ef4444, 0.1);
+    color: #ef4444;
+  }
+
+  &:hover {
+    background: rgba(#ef4444, 0.1);
+    color: darken(#ef4444, 10%);
+
+    .item-icon {
+      background: #ef4444;
+      color: white;
+    }
+  }
+}
+
+// Override Ionic defaults
+// Override Ionic defaults
+// ion-menu.user-sidebar {
+//   ion-content {
+//     --padding-start: 0;
+//     --padding-end: 0;
+//   }
+// }
