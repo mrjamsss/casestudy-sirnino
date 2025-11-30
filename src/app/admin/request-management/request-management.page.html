@@ -1,5 +1,5 @@
 <ion-content class="ion-no-padding">
-  <div class="page-container" [class.modal-open]="showTemplateModal">
+  <div class="page-container" [class.modal-open]="showTemplateModal || showDetailsModal">
     <!-- Page Header -->
     <div class="page-header">
       <div class="header-content">
@@ -89,7 +89,19 @@
         <div class="section-header">
           <div>
             <h2>Document Requests ({{ filteredRequests.length }})</h2>
-            <p class="section-subtitle">All submissions requiring review</p>
+            <p class="section-subtitle">Select a row to manage</p>
+          </div>
+          <div class="header-actions">
+            <ion-button fill="clear" class="action-btn view-btn" [disabled]="!selectedRequest"
+              (click)="viewRequest()">
+              <ion-icon name="eye-outline" slot="start"></ion-icon>
+              View
+            </ion-button>
+            <ion-button fill="clear" class="action-btn delete-btn" [disabled]="!selectedRequest"
+              (click)="deleteRequest()">
+              <ion-icon name="trash-outline" slot="start"></ion-icon>
+              Delete
+            </ion-button>
           </div>
         </div>
 
@@ -103,11 +115,12 @@
                 <th>Department</th>
                 <th>Date</th>
                 <th>Status</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="user-row" *ngFor="let request of filteredRequests">
+              <tr class="user-row" *ngFor="let request of filteredRequests"
+                (click)="selectRequest(request)"
+                [class.selected]="selectedRequest === request">
                 <td class="request-id">{{ request.id }}</td>
                 <td>{{ request.user }}</td>
                 <td>{{ request.documentType }}</td>
@@ -118,11 +131,6 @@
                     {{ request.status }}
                   </span>
                 </td>
-                <td>
-                  <ion-button fill="clear" size="small" (click)="viewRequest(request)">
-                    <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
-                  </ion-button>
-                </td>
               </tr>
             </tbody>
           </table>
@@ -132,7 +140,7 @@
   </div>
 </ion-content>
 
-<!-- Template Selection Modal (Outside ion-content for proper z-index) -->
+<!-- Template Selection Modal -->
 <div class="modal-backdrop" *ngIf="showTemplateModal" (click)="closeTemplateModal()"></div>
 <div class="template-modal" *ngIf="showTemplateModal">
   <div class="modal-content" (click)="$event.stopPropagation()">
@@ -173,6 +181,173 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Request Details Modal -->
+<div class="modal-backdrop" *ngIf="showDetailsModal" (click)="closeDetailsModal()"></div>
+<div class="details-modal" *ngIf="showDetailsModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Request Details</h2>
+      <button class="close-btn" (click)="closeDetailsModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="selectedRequest">
+      <div class="details-section">
+        <div class="section-icon">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </div>
+        <h3>Request Details</h3>
+      </div>
+
+      <div class="form-group">
+        <label>Document Type</label>
+        <input type="text" [value]="selectedRequest.documentType" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Resident</label>
+        <input type="text" [value]="selectedRequest.user" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <div class="status-display">
+          <span class="status-badge" [attr.data-status]="selectedRequest.status">
+            {{ selectedRequest.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Purpose</label>
+        <input type="text" [value]="selectedRequest.purpose || 'N/A'" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Date Requested</label>
+        <input type="text" [value]="selectedRequest.dateRequested || selectedRequest.date" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Details</label>
+        <textarea rows="3" [value]="selectedRequest.details || 'No additional details'" readonly></textarea>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-button approve-btn" (click)="approveRequest()">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          Approve
+        </button>
+        <button class="action-button reject-btn" (click)="rejectRequest()">
+          <ion-icon name="close-circle-outline"></ion-icon>
+          Reject
+        </button>
+        <button class="action-button pickup-btn" (click)="markForPickup()">
+          <ion-icon name="cube-outline"></ion-icon>
+          For Pickup
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Template Modal -->
+<div class="modal-backdrop" *ngIf="showCreateTemplateModal" (click)="closeCreateTemplateModal()"></div>
+<div class="create-template-modal" *ngIf="showCreateTemplateModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create Certificate Template</h2>
+      <button class="close-btn" (click)="closeCreateTemplateModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="details-section">
+        <div class="section-icon">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </div>
+        <h3>Template Details</h3>
+      </div>
+
+      <div class="form-group">
+        <label>Template Name</label>
+        <input type="text" [(ngModel)]="templateName" placeholder="Enter template name">
+      </div>
+
+      <div class="form-group">
+        <label>Logo (Optional)</label>
+        <input type="file" accept="image/*" (change)="onLogoSelected($event)">
+      </div>
+
+      <div class="form-group">
+        <label>Header Text</label>
+        <textarea rows="6" [(ngModel)]="headerText" placeholder="Enter header text"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Body Text</label>
+        <textarea rows="10" [(ngModel)]="bodyText" placeholder="Enter body text"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Footer Text</label>
+        <textarea rows="5" [(ngModel)]="footerText" placeholder="Enter footer text"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Secretary Name</label>
+        <input type="text" [(ngModel)]="secretaryName" placeholder="Enter secretary name">
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-button preview-btn" (click)="downloadPreview()">
+          <ion-icon name="download-outline"></ion-icon>
+          Download Preview
+        </button>
+        <button class="action-button save-btn" (click)="saveTemplate()">
+          <ion-icon name="save-outline"></ion-icon>
+          Save Template
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Template Modal -->
+<div class="modal-backdrop" *ngIf="showViewTemplateModal" (click)="closeViewTemplateModal()"></div>
+<div class="view-template-modal" *ngIf="showViewTemplateModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ currentTemplateName }} - Template Preview</h2>
+      <button class="close-btn" (click)="closeViewTemplateModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="template-preview">
+        <div class="preview-header">
+          <pre>{{ headerText }}</pre>
+        </div>
+
+        <div class="preview-body">
+          <pre>{{ bodyText }}</pre>
+        </div>
+
+        <div class="preview-footer">
+          <pre>{{ footerText }}</pre>
+        </div>
+
+        <div class="preview-secretary" *ngIf="secretaryName">
+          <pre>{{ secretaryName }}</pre>
         </div>
       </div>
     </div>
