@@ -135,7 +135,8 @@ export class RequestManagementPage implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    // Initialize component
+    // Initialize component and display all requests
+    this.filteredRequests = [...this.requests];
   }
 
   openTemplateModal() {
@@ -148,13 +149,48 @@ export class RequestManagementPage implements OnInit {
   }
 
   searchRequests() {
+    // Trim whitespace from search input
+    const trimmedSearch = this.searchId?.trim() || '';
+    
+    // If all filters are empty, show all requests
+    if (!trimmedSearch && !this.selectedDocumentType && !this.selectedDepartment && !this.selectedDate) {
+      this.filteredRequests = [...this.requests];
+      return;
+    }
+
     this.filteredRequests = this.requests.filter(req => {
-      const matchesId = this.searchId ? req.id.toLowerCase().includes(this.searchId.toLowerCase()) : true;
-      const matchesType = this.selectedDocumentType ? req.documentType === this.selectedDocumentType : true;
-      const matchesDept = this.selectedDepartment ? req.department === this.selectedDepartment : true;
+      // Search by ID or Name (only if search text exists)
+      const matchesSearch = !trimmedSearch || 
+        req.id.toLowerCase().includes(trimmedSearch.toLowerCase()) ||
+        req.user.toLowerCase().includes(trimmedSearch.toLowerCase());
       
-      return matchesId && matchesType && matchesDept;
+      // Filter by document type
+      const matchesType = !this.selectedDocumentType || 
+        req.documentType === this.selectedDocumentType;
+      
+      // Filter by department (status)
+      const matchesDept = !this.selectedDepartment || 
+        req.department === this.selectedDepartment;
+      
+      // Filter by date
+      let matchesDate = true;
+      if (this.selectedDate) {
+        // Convert selectedDate (yyyy-mm-dd) to dd/mm/yyyy format for comparison
+        const [year, month, day] = this.selectedDate.split('-');
+        const formattedSearchDate = `${day}/${month}/${year}`;
+        matchesDate = req.date === formattedSearchDate;
+      }
+      
+      return matchesSearch && matchesType && matchesDept && matchesDate;
     });
+  }
+
+  clearSearch() {
+    this.searchId = '';
+    this.selectedDocumentType = '';
+    this.selectedDepartment = '';
+    this.selectedDate = '';
+    this.filteredRequests = [...this.requests];
   }
 
   selectRequest(request: DocumentRequest) {

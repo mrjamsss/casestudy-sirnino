@@ -55,7 +55,7 @@
 
         <div class="filter-row">
           <ion-select class="custom-select" [(ngModel)]="selectedDocumentType" placeholder="All Document Types"
-            interface="popover" (ionChange)="searchRequests()" fill="outline">
+            interface="popover" fill="outline">
             <ion-select-option value="">All Document Types</ion-select-option>
             <ion-select-option *ngFor="let type of documentTypes" [value]="type">
               {{ type }}
@@ -63,19 +63,18 @@
           </ion-select>
 
           <ion-select class="custom-select" [(ngModel)]="selectedDepartment" placeholder="All Status"
-            interface="popover" (ionChange)="searchRequests()" fill="outline">
+            interface="popover" fill="outline">
             <ion-select-option value="">All Status</ion-select-option>
             <ion-select-option *ngFor="let dept of departments" [value]="dept">
               {{ dept }}
             </ion-select-option>
           </ion-select>
 
-          <ion-input class="custom-input" type="date" [(ngModel)]="selectedDate" placeholder="dd/mm/yyyy"
-            (ionChange)="searchRequests()">
+          <ion-input class="custom-input" type="date" [(ngModel)]="selectedDate" placeholder="dd/mm/yyyy">
           </ion-input>
 
-          <ion-input class="custom-input" [(ngModel)]="searchId" placeholder="Search by Request ID..."
-            (ionInput)="searchRequests()">
+          <ion-input class="custom-input" [(ngModel)]="searchId" placeholder="Search by Request ID or Name..."
+            (keyup.enter)="searchRequests()">
           </ion-input>
 
           <ion-button class="search-btn" color="success" (click)="searchRequests()">
