@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
-import { Department, Service } from './department.interface';
+import { Department, Service } from '../../shared/models/department.interface';
 import { ServiceModalComponent } from './service-modal/service-modal.component';
 import { DepartmentModalComponent } from './department-modal/department-modal.component';
+import { DepartmentsService } from '../../services/departments.service';
 
 @Component({
     selector: 'app-department-info',
@@ -15,13 +16,15 @@ export class DepartmentInfoPage implements OnInit {
 
     constructor(
         private modalCtrl: ModalController,
-        private alertCtrl: AlertController
+        private alertCtrl: AlertController,
+        private departmentsService: DepartmentsService
     ) { }
 
     ngOnInit() {
-        this.loadMockData();
+        this.departmentsService.getDepartments().subscribe(data => {
+            this.departments = data;
+        });
     }
-    // ... (keep loadMockData and other methods)
 
     async addNewService(dept: Department) {
         const modal = await this.modalCtrl.create({
@@ -38,7 +41,7 @@ export class DepartmentInfoPage implements OnInit {
                 ...data,
                 id: this.getNextServiceId()
             };
-            dept.services.push(newService);
+            this.departmentsService.addService(dept.id, newService);
         }
     }
 
@@ -56,94 +59,9 @@ export class DepartmentInfoPage implements OnInit {
         const { data, role } = await modal.onWillDismiss();
 
         if (role === 'confirm' && data) {
-            // Update service properties
-            service.name = data.name;
-            service.type = data.type;
-            service.requirements = data.requirements;
-            service.processingTime = data.processingTime;
-            service.fee = data.fee;
+            const updatedService = { ...service, ...data };
+            this.departmentsService.updateService(dept.id, updatedService);
         }
-    }
-
-    loadMockData() {
-        this.departments = [
-            {
-                id: 1,
-                name: 'Civil Registry',
-                description: 'Handles birth, marriage, and death certificates',
-                services: [
-                    {
-                        id: 1,
-                        name: 'Birth Certificate',
-                        type: 'Certificate',
-                        requirements: ['Valid ID', 'Payment Receipt', 'PSA Form'],
-                        processingTime: '3-5 business days',
-                        fee: 150.00
-                    },
-                    {
-                        id: 2,
-                        name: 'Marriage Certificate',
-                        type: 'Certificate',
-                        requirements: ['Valid ID', 'Payment Receipt'],
-                        processingTime: '3-5 business days',
-                        fee: 150.00
-                    }
-                ]
-            },
-            {
-                id: 2,
-                name: 'Business Permits Office',
-                description: 'Issues and renews business permits',
-                services: [
-                    {
-                        id: 3,
-                        name: 'New Business Permit',
-                        type: 'Permit',
-                        requirements: ['DTI Registration', 'Barangay Clearance', 'Fire Safety Certificate'],
-                        processingTime: '7-10 business days',
-                        fee: 500.00
-                    },
-                    {
-                        id: 4,
-                        name: 'Business Permit Renewal',
-                        type: 'Permit',
-                        requirements: ['Previous Permit', 'Updated Documents'],
-                        processingTime: '5-7 business days',
-                        fee: 300.00
-                    }
-                ]
-            },
-            {
-                id: 3,
-                name: 'Treasury Office',
-                description: 'Handles tax payments and assessments',
-                services: [
-                    {
-                        id: 5,
-                        name: 'Real Property Tax Payment',
-                        type: 'Payment',
-                        requirements: ['Tax Declaration', 'Valid ID'],
-                        processingTime: '1-2 business days',
-                        fee: 0
-                    }
-                ]
-            },
-            {
-                id: 4,
-                name: 'Health Office',
-                description: 'Medical certificates and health permits',
-                services: [
-                    {
-                        id: 6,
-                        name: 'Health Certificate',
-                        type: 'Certificate',
-                        requirements: ['Valid ID', '2x2 Photo', 'Medical Exam Results'],
-                        processingTime: '1-2 business days',
-                        fee: 100.00
-                    }
-                ]
-            }
-        ];
     }
 
     async addNewDepartment() {
@@ -163,7 +81,7 @@ export class DepartmentInfoPage implements OnInit {
                 description: data.description,
                 services: []
             };
-            this.departments.push(newDept);
+            this.departmentsService.addDepartment(newDept);
         }
     }
 
@@ -181,8 +99,8 @@ export class DepartmentInfoPage implements OnInit {
         const { data, role } = await modal.onWillDismiss();
 
         if (role === 'confirm' && data) {
-            dept.name = data.name;
-            dept.description = data.description;
+            const updatedDept = { ...dept, name: data.name, description: data.description };
+            this.departmentsService.updateDepartment(updatedDept);
         }
     }
 
@@ -200,7 +118,7 @@ export class DepartmentInfoPage implements OnInit {
                     text: 'Delete',
                     role: 'destructive',
                     handler: () => {
-                        dept.services = dept.services.filter(s => s.id !== service.id);
+                        this.departmentsService.deleteService(dept.id, service.id);
                     }
                 }
             ]
@@ -222,7 +140,7 @@ export class DepartmentInfoPage implements OnInit {
                     text: 'Delete',
                     role: 'destructive',
                     handler: () => {
-                        this.departments = this.departments.filter(d => d.id !== dept.id);
+                        this.departmentsService.deleteDepartment(dept.id);
                     }
                 }
             ]

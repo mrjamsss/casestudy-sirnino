@@ -1,11 +1,58 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Service Requirements</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding-vertical">
+    <div class="main-container">
+        <div class="header-section ion-padding-horizontal">
+            <h1>Service Requirements</h1>
+            <p class="subtitle">Complete checklists for each department's services</p>
+        </div>
 
-<ion-content>
-    <div class="ion-padding">
-        <h1>Service Requirements</h1>
+        <div class="departments-list ion-padding">
+            <ion-card *ngFor="let dept of departments" class="department-card">
+                <ion-card-header>
+                    <ion-card-title>{{ dept.name }}</ion-card-title>
+                    <ion-card-subtitle>{{ dept.description }}</ion-card-subtitle>
+                </ion-card-header>
+
+                <ion-card-content class="ion-no-padding">
+                    <ion-accordion-group>
+                        <ion-accordion *ngFor="let service of dept.services" [value]="service.name">
+                            <ion-item slot="header" lines="none" class="service-header">
+                                <ion-label>
+                                    <h3>{{ service.name }} <span class="badge">{{ service.type }}</span></h3>
+                                </ion-label>
+                            </ion-item>
+
+                            <div class="ion-padding" slot="content">
+                                <div class="requirements-section">
+                                    <div class="section-title">
+                                        <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+                                        <span>Required Documents</span>
+                                    </div>
+                                    <ul class="requirements-list">
+                                        <li *ngFor="let req of service.requirements">
+                                            <span class="bullet">•</span> {{ req }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="details-footer">
+                                    <div class="detail-item">
+                                        <div class="label">
+                                            <ion-icon name="time-outline"></ion-icon> Processing Time
+                                        </div>
+                                        <div class="value">{{ service.processingTime }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="label">
+                                            <ion-icon name="cash-outline"></ion-icon> Fee
+                                        </div>
+                                        <div class="value">₱{{ service.fee }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ion-accordion>
+                    </ion-accordion-group>
+                </ion-card-content>
+            </ion-card>
+        </div>
     </div>
 </ion-content>
