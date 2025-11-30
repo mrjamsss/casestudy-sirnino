@@ -55,7 +55,7 @@ export class SystemSettingsPage implements OnInit {
     initializeForms() {
         // Barangay Info Form
         this.barangayInfoForm = this.fb.group({
-            name: ['Cabanatuan City Hall', Validators.required],
+            name: ['Cabanatuan City ', Validators.required],
             captain: ['', Validators.required],
             address: ['', Validators.required],
             contact: ['', [Validators.required, Validators.pattern(/^09\d{9}$/)]],

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { Department, Service } from './department.interface';
+import { ServiceModalComponent } from './service-modal/service-modal.component';
+import { DepartmentModalComponent } from './department-modal/department-modal.component';
 
 @Component({
     selector: 'app-department-info',
@@ -18,6 +20,49 @@ export class DepartmentInfoPage implements OnInit {
 
     ngOnInit() {
         this.loadMockData();
+    }
+    // ... (keep loadMockData and other methods)
+
+    async addNewService(dept: Department) {
+        const modal = await this.modalCtrl.create({
+            component: ServiceModalComponent,
+            cssClass: 'small-modal'
+        });
+
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            const newService: Service = {
+                ...data,
+                id: this.getNextServiceId()
+            };
+            dept.services.push(newService);
+        }
+    }
+
+    async editService(dept: Department, service: Service) {
+        const modal = await this.modalCtrl.create({
+            component: ServiceModalComponent,
+            componentProps: {
+                serviceData: service
+            },
+            cssClass: 'small-modal'
+        });
+
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            // Update service properties
+            service.name = data.name;
+            service.type = data.type;
+            service.requirements = data.requirements;
+            service.processingTime = data.processingTime;
+            service.fee = data.fee;
+        }
     }
 
     loadMockData() {
@@ -102,204 +147,45 @@ export class DepartmentInfoPage implements OnInit {
     }
 
     async addNewDepartment() {
-        const alert = await this.alertCtrl.create({
-            header: 'Add New Department',
-            inputs: [
-                {
-                    name: 'name',
-                    type: 'text',
-                    placeholder: 'Department Name'
-                },
-                {
-                    name: 'description',
-                    type: 'textarea',
-                    placeholder: 'Description'
-                }
-            ],
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Add',
-                    handler: (data) => {
-                        if (data.name && data.description) {
-                            const newDept: Department = {
-                                id: this.getNextDepartmentId(),
-                                name: data.name,
-                                description: data.description,
-                                services: []
-                            };
-                            this.departments.push(newDept);
-                            return true;
-                        }
-                        return false;
-                    }
-                }
-            ]
+        const modal = await this.modalCtrl.create({
+            component: DepartmentModalComponent,
+            cssClass: 'small-modal'
         });
 
-        await alert.present();
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            const newDept: Department = {
+                id: this.getNextDepartmentId(),
+                name: data.name,
+                description: data.description,
+                services: []
+            };
+            this.departments.push(newDept);
+        }
     }
 
     async editDepartment(dept: Department) {
-        const alert = await this.alertCtrl.create({
-            header: 'Edit Department',
-            inputs: [
-                {
-                    name: 'name',
-                    type: 'text',
-                    placeholder: 'Department Name',
-                    value: dept.name
-                },
-                {
-                    name: 'description',
-                    type: 'textarea',
-                    placeholder: 'Description',
-                    value: dept.description
-                }
-            ],
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Save',
-                    handler: (data) => {
-                        if (data.name && data.description) {
-                            dept.name = data.name;
-                            dept.description = data.description;
-                            return true;
-                        }
-                        return false;
-                    }
-                }
-            ]
+        const modal = await this.modalCtrl.create({
+            component: DepartmentModalComponent,
+            componentProps: {
+                departmentData: dept
+            },
+            cssClass: 'small-modal'
         });
 
-        await alert.present();
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            dept.name = data.name;
+            dept.description = data.description;
+        }
     }
 
-    async addNewService(dept: Department) {
-        const alert = await this.alertCtrl.create({
-            header: 'Add New Service',
-            inputs: [
-                {
-                    name: 'name',
-                    type: 'text',
-                    placeholder: 'Service Name'
-                },
-                {
-                    name: 'type',
-                    type: 'text',
-                    placeholder: 'Type (Certificate/Permit/Payment)'
-                },
-                {
-                    name: 'requirements',
-                    type: 'textarea',
-                    placeholder: 'Requirements (comma-separated)'
-                },
-                {
-                    name: 'processingTime',
-                    type: 'text',
-                    placeholder: 'Processing Time'
-                },
-                {
-                    name: 'fee',
-                    type: 'number',
-                    placeholder: 'Fee'
-                }
-            ],
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Add',
-                    handler: (data) => {
-                        if (data.name && data.type) {
-                            const newService: Service = {
-                                id: this.getNextServiceId(),
-                                name: data.name,
-                                type: data.type as 'Certificate' | 'Permit' | 'Payment',
-                                requirements: data.requirements ? data.requirements.split(',').map((r: string) => r.trim()) : [],
-                                processingTime: data.processingTime || 'N/A',
-                                fee: parseFloat(data.fee) || 0
-                            };
-                            dept.services.push(newService);
-                            return true;
-                        }
-                        return false;
-                    }
-                }
-            ]
-        });
-
-        await alert.present();
-    }
-
-    async editService(dept: Department, service: Service) {
-        const alert = await this.alertCtrl.create({
-            header: 'Edit Service',
-            inputs: [
-                {
-                    name: 'name',
-                    type: 'text',
-                    placeholder: 'Service Name',
-                    value: service.name
-                },
-                {
-                    name: 'type',
-                    type: 'text',
-                    placeholder: 'Type',
-                    value: service.type
-                },
-                {
-                    name: 'requirements',
-                    type: 'textarea',
-                    placeholder: 'Requirements (comma-separated)',
-                    value: service.requirements.join(', ')
-                },
-                {
-                    name: 'processingTime',
-                    type: 'text',
-                    placeholder: 'Processing Time',
-                    value: service.processingTime
-                },
-                {
-                    name: 'fee',
-                    type: 'number',
-                    placeholder: 'Fee',
-                    value: service.fee.toString()
-                }
-            ],
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Save',
-                    handler: (data) => {
-                        if (data.name && data.type) {
-                            service.name = data.name;
-                            service.type = data.type;
-                            service.requirements = data.requirements ? data.requirements.split(',').map((r: string) => r.trim()) : [];
-                            service.processingTime = data.processingTime;
-                            service.fee = parseFloat(data.fee) || 0;
-                            return true;
-                        }
-                        return false;
-                    }
-                }
-            ]
-        });
-
-        await alert.present();
-    }
 
     async deleteService(dept: Department, service: Service) {
         const alert = await this.alertCtrl.create({

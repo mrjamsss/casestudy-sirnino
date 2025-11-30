@@ -9,7 +9,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<div class="ion-padding scrollable-content">
     <form #serviceForm="ngForm">
         <!-- Basic Information -->
         <ion-list>
@@ -24,28 +24,12 @@
             </ion-item>
 
             <ion-item>
-                <ion-label position="stacked">Description</ion-label>
-                <ion-textarea [(ngModel)]="formData.description" name="description"
-                    placeholder="Enter service description" rows="2">
-                </ion-textarea>
-            </ion-item>
-
-            <ion-item>
                 <ion-label position="stacked">Service Type *</ion-label>
-                <ion-select [(ngModel)]="formData.type" name="type" placeholder="Select type" required>
+                <ion-select [(ngModel)]="formData.type" name="type" placeholder="Select type" required
+                    interface="popover" [interfaceOptions]="customPopoverOptions">
                     <ion-select-option value="Certificate">Certificate</ion-select-option>
                     <ion-select-option value="Permit">Permit</ion-select-option>
                     <ion-select-option value="Payment">Payment</ion-select-option>
-                    <ion-select-option value="Clearance">Clearance</ion-select-option>
-                </ion-select>
-            </ion-item>
-
-            <ion-item>
-                <ion-label position="stacked">Category *</ion-label>
-                <ion-select [(ngModel)]="formData.category" name="category" placeholder="Select category" required>
-                    <ion-select-option *ngFor="let cat of categories" [value]="cat.name">
-                        {{ cat.name }}
-                    </ion-select-option>
                 </ion-select>
             </ion-item>
 
@@ -62,47 +46,49 @@
                     required>
                 </ion-input>
             </ion-item>
-
-            <ion-item>
-                <ion-label>Active</ion-label>
-                <ion-toggle [(ngModel)]="formData.isActive" name="isActive" slot="end">
-                </ion-toggle>
-            </ion-item>
         </ion-list>
 
         <!-- Requirements -->
         <ion-list>
             <ion-list-header>
                 <ion-label>Requirements</ion-label>
-                <ion-button slot="end" fill="clear" size="small" (click)="addRequirement()">
-                    <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-                    Add
-                </ion-button>
             </ion-list-header>
 
-            <ion-item *ngIf="formData.requirements.length === 0">
-                <ion-label class="ion-text-wrap">
-                    <p>No requirements added. Click "Add" to add requirements.</p>
+            <ion-item lines="none">
+                <ion-button (click)="addRequirement()" size="small" fill="outline" slot="start">
+                    <ion-icon name="add" slot="start"></ion-icon>
+                    Add Requirement
+                </ion-button>
+            </ion-item>
+
+            <ion-item *ngIf="requirementsList.length === 0">
+                <ion-label class="ion-text-wrap" color="medium">
+                    <p>No requirements added yet.</p>
                 </ion-label>
             </ion-item>
 
-            <ion-item-sliding *ngFor="let req of formData.requirements; let i = index">
-                <ion-item>
-                    <ion-label position="stacked">Requirement {{ i + 1 }}</ion-label>
-                    <ion-input [(ngModel)]="req.name" [name]="'requirement_' + i" placeholder="Enter requirement"
-                        required>
-                    </ion-input>
-                </ion-item>
+            <ion-item *ngFor="let req of requirementsList; let i = index">
+                <ion-label position="stacked">Requirement {{ i + 1 }}</ion-label>
+                <ion-select [(ngModel)]="req.selectValue" [name]="'requirement_select_' + i"
+                    placeholder="Select requirement" required interface="alert">
+                    <ion-select-option *ngFor="let option of predefinedRequirements" [value]="option">
+                        {{ option }}
+                    </ion-select-option>
+                    <ion-select-option value="Other">Other</ion-select-option>
+                </ion-select>
 
-                <ion-item-options side="end">
-                    <ion-item-option color="danger" (click)="removeRequirement(i)">
-                        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-                    </ion-item-option>
-                </ion-item-options>
-            </ion-item-sliding>
+                <ion-input *ngIf="req.selectValue === 'Other'" [(ngModel)]="req.customValue"
+                    [name]="'requirement_custom_' + i" placeholder="Enter specific requirement" class="ion-margin-top"
+                    required>
+                </ion-input>
+
+                <ion-button slot="end" fill="clear" color="danger" (click)="removeRequirement(i)">
+                    <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                </ion-button>
+            </ion-item>
         </ion-list>
     </form>
-</ion-content>
+</div>
 
 <ion-footer>
     <ion-toolbar>

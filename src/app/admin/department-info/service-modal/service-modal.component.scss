@@ -18,3 +18,9 @@ ion-textarea {
     --padding-top: 8px;
     --padding-bottom: 8px;
 }
+
+.scrollable-content {
+    overflow-y: auto;
+    max-height: 60vh;
+    /* Adjust as needed */
+}
