@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { MasterService, DepartmentCategory, Requirement } from '../department.interface';
+import { Service } from '../department.interface';
 
 @Component({
   selector: 'app-service-modal',
@@ -9,50 +9,78 @@ import { MasterService, DepartmentCategory, Requirement } from '../department.in
   standalone: false
 })
 export class ServiceModalComponent implements OnInit {
-  @Input() serviceData?: MasterService;
-  @Input() categories: DepartmentCategory[] = [];
+  @Input() serviceData?: Service;
 
-  formData: MasterService = {
-    id: 0,
+  formData: any = {
     name: '',
     type: 'Certificate',
-    category: '',
-    description: '',
     requirements: [],
     processingTime: '',
-    fee: 0,
-    isActive: true
+    fee: 0
   };
+
+  customPopoverOptions: any = {
+    cssClass: 'smooth-dropdown-popover'
+  };
+
+  // Helper for form array
+  requirementsList: { selectValue: string; customValue: string }[] = [];
+
+  predefinedRequirements: string[] = [
+    'Valid ID',
+    'Barangay Clearance',
+    'Cedula (Community Tax Certificate)',
+    'PSA Birth Certificate',
+    'Marriage Contract',
+    '2x2 Picture',
+    'Application Form',
+    'Official Receipt',
+    'Health Certificate',
+    'Police Clearance',
+    'DTI Registration',
+    'Fire Safety Inspection Certificate',
+    'Sanitary Permit',
+    'Zoning Clearance'
+  ];
 
   constructor(private modalCtrl: ModalController) { }
 
   ngOnInit() {
     if (this.serviceData) {
       this.formData = {
-        ...this.serviceData,
-        requirements: [...this.serviceData.requirements] // Deep copy
+        ...this.serviceData
       };
+
+      // Convert string[] to object array for the form
+      this.requirementsList = this.serviceData.requirements.map(req => {
+        const isPredefined = this.predefinedRequirements.includes(req);
+        return {
+          selectValue: isPredefined ? req : 'Other',
+          customValue: isPredefined ? '' : req
+        };
+      });
     }
   }
 
   addRequirement() {
-    this.formData.requirements.push({
-      id: Date.now(), // Temporary ID
-      name: ''
-    });
+    this.requirementsList.push({ selectValue: '', customValue: '' });
   }
 
   removeRequirement(index: number) {
-    this.formData.requirements.splice(index, 1);
+    this.requirementsList.splice(index, 1);
   }
 
   isFormValid(): boolean {
-    const hasValidRequirements = this.formData.requirements.every(r => r.name.trim() !== '');
+    const hasValidRequirements = this.requirementsList.every(req => {
+      if (req.selectValue === 'Other') {
+        return req.customValue.trim() !== '';
+      }
+      return req.selectValue !== '';
+    });
 
     return !!(
       this.formData.name &&
       this.formData.type &&
-      this.formData.category &&
       this.formData.processingTime &&
       this.formData.fee >= 0 &&
       hasValidRequirements
@@ -68,9 +96,21 @@ export class ServiceModalComponent implements OnInit {
       return;
     }
 
-    // Clean up empty requirements
-    this.formData.requirements = this.formData.requirements.filter(r => r.name.trim() !== '');
+    // Convert object array back to string[]
+    const finalRequirements = this.requirementsList
+      .map(req => {
+        if (req.selectValue === 'Other') {
+          return req.customValue.trim();
+        }
+        return req.selectValue;
+      })
+      .filter(r => r !== '');
 
-    this.modalCtrl.dismiss(this.formData, 'confirm');
+    const result: Service = {
+      ...this.formData,
+      requirements: finalRequirements
+    };
+
+    this.modalCtrl.dismiss(result, 'confirm');
   }
 }

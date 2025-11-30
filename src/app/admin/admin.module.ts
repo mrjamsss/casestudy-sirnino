@@ -16,6 +16,8 @@ import { AnnouncementsPage } from './announcements/announcements.page';
 import { TransactionLogsPage } from './transaction-logs/transaction-logs.page';
 import { HelpPage } from './help/help.page';
 import { AnnouncementModalComponent } from '../shared/components/announcement-modal/announcement-modal.component';
+import { ServiceModalComponent } from './department-info/service-modal/service-modal.component';
+import { DepartmentModalComponent } from './department-info/department-modal/department-modal.component';
 
 @NgModule({
   imports: [
@@ -36,7 +38,9 @@ import { AnnouncementModalComponent } from '../shared/components/announcement-mo
     AnnouncementsPage,
     TransactionLogsPage,
     HelpPage,
-    AnnouncementModalComponent
+    AnnouncementModalComponent,
+    ServiceModalComponent,
+    DepartmentModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

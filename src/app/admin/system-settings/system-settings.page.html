@@ -11,8 +11,8 @@
             <div class="section-card">
                 <div class="section-header">
                     <div class="header-left">
-                        <h2>City Hall Officials</h2>
-                        <p class="section-subtitle">Manage city hall officials list (Drag to reorder)</p>
+                        <h2>City Officials</h2>
+                        <p class="section-subtitle">Manage city officials list (Drag to reorder)</p>
                     </div>
                     <div class="header-actions">
                         <ion-button (click)="addOfficial()" color="success" class="export-button">
@@ -60,8 +60,8 @@
             <div class="section-card">
                 <div class="section-header">
                     <div class="header-left">
-                        <h2>City Hall Information</h2>
-                        <p class="section-subtitle">Update basic City Hall details</p>
+                        <h2>City Information</h2>
+                        <p class="section-subtitle">Update basic City details</p>
                     </div>
                 </div>
 
@@ -70,9 +70,9 @@
                         <div class="form-group">
                             <label>
                                 <ion-icon name="location" class="input-icon"></ion-icon>
-                                City Hall Name
+                                City Name
                             </label>
-                            <ion-input formControlName="name" placeholder="Enter city hall name" fill="outline"
+                            <ion-input formControlName="name" placeholder="Enter city  name" fill="outline"
                                 class="custom-input">
                             </ion-input>
                         </div>
@@ -80,7 +80,7 @@
                         <div class="form-group">
                             <label>
                                 <ion-icon name="person" class="input-icon"></ion-icon>
-                                City Hall Mayor
+                                City Mayor
                             </label>
                             <ion-input formControlName="captain" placeholder="Enter mayor name" fill="outline"
                                 class="custom-input">
@@ -122,7 +122,7 @@
                 <div class="section-header">
                     <div class="header-left">
                         <h2>Vision & Mission</h2>
-                        <p class="section-subtitle">Define your city hall's vision and mission</p>
+                        <p class="section-subtitle">Define your city vision and mission</p>
                     </div>
                 </div>
 
@@ -132,8 +132,8 @@
                             <ion-icon name="telescope" class="input-icon"></ion-icon>
                             Vision
                         </label>
-                        <ion-textarea formControlName="vision" placeholder="Enter city hall vision statement..."
-                            rows="4" fill="outline" class="custom-textarea">
+                        <ion-textarea formControlName="vision" placeholder="Enter city  vision statement..." rows="4"
+                            fill="outline" class="custom-textarea">
                         </ion-textarea>
                     </div>
 
@@ -142,8 +142,8 @@
                             <ion-icon name="flag" class="input-icon"></ion-icon>
                             Mission
                         </label>
-                        <ion-textarea formControlName="mission" placeholder="Enter city hall mission statement..."
-                            rows="4" fill="outline" class="custom-textarea">
+                        <ion-textarea formControlName="mission" placeholder="Enter city  mission statement..." rows="4"
+                            fill="outline" class="custom-textarea">
                         </ion-textarea>
                     </div>
 
@@ -160,14 +160,14 @@
             <div class="section-card">
                 <div class="section-header">
                     <div class="header-left">
-                        <h2>City Hall Logo</h2>
-                        <p class="section-subtitle">Upload your official city hall logo</p>
+                        <h2>City Logo</h2>
+                        <p class="section-subtitle">Upload your official city logo</p>
                     </div>
                 </div>
 
                 <div class="logo-upload-container">
                     <div class="logo-preview" [class.has-logo]="uploadedLogo">
-                        <img *ngIf="uploadedLogo" [src]="uploadedLogo" alt="City Hall Logo" />
+                        <img *ngIf="uploadedLogo" [src]="uploadedLogo" alt="City  Logo" />
                         <div *ngIf="!uploadedLogo" class="no-logo">
                             <ion-icon name="image-outline"></ion-icon>
                             <p>No logo uploaded</p>

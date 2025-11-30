@@ -52,6 +52,15 @@ ion-modal.announcement-modal {
   --border-radius: 16px;
 }
 
+/* Small Modal - Custom sizing */
+ion-modal.small-modal {
+  --height: auto !important;
+  --max-height: 80vh !important;
+  --width: 500px !important;
+  --max-width: 90vw !important;
+  --border-radius: 16px !important;
+}
+
 ion-modal::part(backdrop) {
   background: rgba(0, 0, 0, 0.5);
 }

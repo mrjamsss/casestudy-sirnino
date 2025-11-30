@@ -9,12 +9,11 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-    <form #departmentForm="ngForm">
-        <!-- Basic Information -->
+<div class="ion-padding scrollable-content">
+    <form #deptForm="ngForm">
         <ion-list>
             <ion-list-header>
-                <ion-label>Basic Information</ion-label>
+                <ion-label>Department Information</ion-label>
             </ion-list-header>
 
             <ion-item>
@@ -25,104 +24,13 @@
 
             <ion-item>
                 <ion-label position="stacked">Description *</ion-label>
-                <ion-textarea [(ngModel)]="formData.description" name="description"
-                    placeholder="Enter department description" rows="3" required>
+                <ion-textarea [(ngModel)]="formData.description" name="description" placeholder="Enter description"
+                    rows="4" required>
                 </ion-textarea>
-            </ion-item>
-
-            <ion-item>
-                <ion-label position="stacked">Category *</ion-label>
-                <ion-select [(ngModel)]="formData.category" name="category" placeholder="Select category"
-                    (ionChange)="onCategoryChange()" required>
-                    <ion-select-option *ngFor="let cat of categories" [value]="cat.name">
-                        {{ cat.name }}
-                    </ion-select-option>
-                </ion-select>
-            </ion-item>
-
-            <ion-item>
-                <ion-label position="stacked">Status *</ion-label>
-                <ion-select [(ngModel)]="formData.status" name="status" placeholder="Select status" required>
-                    <ion-select-option value="Active">Active</ion-select-option>
-                    <ion-select-option value="Inactive">Inactive</ion-select-option>
-                    <ion-select-option value="Draft">Draft</ion-select-option>
-                </ion-select>
-            </ion-item>
-        </ion-list>
-
-        <!-- Contact Information -->
-        <ion-list>
-            <ion-list-header>
-                <ion-label>Contact Information</ion-label>
-            </ion-list-header>
-
-            <ion-item>
-                <ion-label position="stacked">Department Head *</ion-label>
-                <ion-input [(ngModel)]="formData.head" name="head" placeholder="Enter department head name" required>
-                </ion-input>
-            </ion-item>
-
-            <ion-item>
-                <ion-label position="stacked">Contact Number *</ion-label>
-                <ion-input [(ngModel)]="formData.contact" name="contact" type="tel" placeholder="Enter contact number"
-                    required>
-                </ion-input>
-            </ion-item>
-
-            <ion-item>
-                <ion-label position="stacked">Location *</ion-label>
-                <ion-input [(ngModel)]="formData.location" name="location" placeholder="Enter office location" required>
-                </ion-input>
-            </ion-item>
-        </ion-list>
-
-        <!-- Service Selection -->
-        <ion-list>
-            <ion-list-header>
-                <ion-label>Services</ion-label>
-                <ion-button slot="end" fill="clear" size="small" (click)="toggleAllServices()">
-                    {{ allServicesSelected ? 'Deselect All' : 'Select All' }}
-                </ion-button>
-            </ion-list-header>
-
-            <ion-item *ngIf="availableServices.length === 0">
-                <ion-label class="ion-text-wrap">
-                    <p>No services available. Create master services first.</p>
-                </ion-label>
-            </ion-item>
-
-            <div *ngFor="let service of availableServices" class="service-checkbox-item">
-                <ion-item>
-                    <ion-checkbox slot="start" [(ngModel)]="service.selected" [ngModelOptions]="{standalone: true}">
-                    </ion-checkbox>
-                    <ion-label class="ion-text-wrap">
-                        <h3>{{ service.name }}</h3>
-                        <p>{{ service.type }} • ₱{{ service.fee | number:'1.2-2' }} • {{ service.processingTime }}</p>
-                        <p class="requirements-preview">
-                            <ion-icon name="document-text-outline" size="small"></ion-icon>
-                            {{ service.requirements.length }} requirement(s)
-                        </p>
-                    </ion-label>
-                    <ion-button slot="end" fill="clear" size="small" (click)="viewServiceDetails(service)">
-                        <ion-icon name="information-circle-outline"></ion-icon>
-                    </ion-button>
-                </ion-item>
-            </div>
-        </ion-list>
-
-        <!-- Selected Services Summary -->
-        <ion-list *ngIf="selectedServicesCount > 0">
-            <ion-list-header>
-                <ion-label>Selected Services ({{ selectedServicesCount }})</ion-label>
-            </ion-list-header>
-            <ion-item>
-                <ion-label class="ion-text-wrap">
-                    <p>{{ getSelectedServiceNames() }}</p>
-                </ion-label>
             </ion-item>
         </ion-list>
     </form>
-</ion-content>
+</div>
 
 <ion-footer>
     <ion-toolbar>
