@@ -1,32 +1,29 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>{{ isEdit ? 'Edit Announcement' : 'Create New Announcement' }}</ion-title>
-        <ion-buttons slot="end">
-            <ion-button (click)="dismiss()">
-                <ion-icon slot="icon-only" name="close"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
-</ion-header>
+<div class="modal-content">
+    <div class="modal-header">
+        <div>
+            <h2>{{ isEdit ? 'Edit Announcement' : 'Create New Announcement' }}</h2>
+            <span class="subtitle">{{ isEdit ? 'Update announcement details' : 'Post updates visible to selected
+                audience' }}</span>
+        </div>
+        <ion-button fill="clear" (click)="dismiss()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+    </div>
 
-<ion-content>
-    <div class="modal-content">
-        <p class="modal-subtitle">{{ isEdit ? 'Update announcement details' : 'Post updates visible to selected
-            audience' }}</p>
-
+    <div class="modal-body">
         <form class="announcement-form">
             <!-- Title Input -->
             <div class="form-group">
-                <label class="form-label">Title <span class="required">*</span></label>
-                <ion-input [(ngModel)]="title" name="title" placeholder="Announcement title"
+                <label>Title <span class="required">*</span></label>
+                <ion-input [(ngModel)]="title" name="title" placeholder="Enter announcement title"
                     class="custom-input"></ion-input>
             </div>
 
             <!-- Type Select -->
             <div class="form-group">
-                <label class="form-label">Type <span class="required">*</span></label>
+                <label>Type <span class="required">*</span></label>
                 <ion-select [(ngModel)]="type" name="type" placeholder="Select type" interface="popover"
-                    class="custom-select">
+                    [interfaceOptions]="customPopoverOptions" class="custom-select">
                     <ion-select-option *ngFor="let typeOption of announcementTypes" [value]="typeOption.value">
                         {{ typeOption.label }}
                     </ion-select-option>
@@ -35,16 +32,15 @@
 
             <!-- Audience Selection -->
             <div class="form-group">
-                <label class="form-label">Audience <span class="required">*</span></label>
+                <label>Audience <span class="required">*</span></label>
                 <div class="audience-options">
                     <div *ngFor="let option of audienceOptions" class="audience-option"
                         [class.selected]="audience === option.value" (click)="audience = option.value">
                         <div class="option-header">
-                            <ion-icon [name]="option.icon"
-                                [color]="audience === option.value ? 'primary' : 'medium'"></ion-icon>
+                            <div class="option-icon">
+                                <ion-icon [name]="option.icon"></ion-icon>
+                            </div>
                             <span class="option-label">{{ option.label }}</span>
-                            <ion-icon *ngIf="audience === option.value" name="checkmark-circle" color="primary"
-                                class="check-icon"></ion-icon>
                         </div>
                         <p class="option-description">{{ option.description }}</p>
                     </div>
@@ -53,24 +49,21 @@
 
             <!-- Description Textarea -->
             <div class="form-group">
-                <label class="form-label">Description <span class="required">*</span></label>
-                <ion-textarea [(ngModel)]="description" name="description" placeholder="Detailed description..."
-                    rows="6" class="custom-textarea"></ion-textarea>
+                <label>Description <span class="required">*</span></label>
+                <ion-textarea [(ngModel)]="description" name="description"
+                    placeholder="Write detailed description here..." class="custom-textarea"
+                    [autoGrow]="true"></ion-textarea>
             </div>
         </form>
     </div>
-</ion-content>
 
-<ion-footer>
-    <ion-toolbar>
-        <div class="footer-actions">
-            <ion-button expand="block" fill="outline" (click)="dismiss()" color="medium">
-                Cancel
-            </ion-button>
-            <ion-button expand="block" (click)="save()" color="primary" [disabled]="!isFormValid()">
-                <ion-icon slot="start" [name]="isEdit ? 'checkmark-circle' : 'add-circle'"></ion-icon>
-                {{ isEdit ? 'Update' : 'Create' }} Announcement
-            </ion-button>
-        </div>
-    </ion-toolbar>
-</ion-footer>
+    <div class="modal-footer">
+        <ion-button class="cancel-btn" fill="outline" (click)="dismiss()">
+            Cancel
+        </ion-button>
+        <ion-button class="save-btn" (click)="save()" [disabled]="!isFormValid()">
+            <ion-icon slot="start" [name]="isEdit ? 'checkmark-circle' : 'add-circle'"></ion-icon>
+            {{ isEdit ? 'Update' : 'Create' }} Announcement
+        </ion-button>
+    </div>
+</div>

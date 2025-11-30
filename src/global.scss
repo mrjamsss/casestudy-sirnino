@@ -200,3 +200,49 @@ ion-alert.reset-password-alert {
     }
   }
 }
+
+/* Fee Structure Modal Popover */
+.fee-structure-popover {
+  --background: white;
+  --color: #0f172a;
+  --min-width: 300px;
+  --max-width: 400px;
+  --width: 100%;
+
+  .popover-wrapper {
+    left: auto !important;
+    right: 32px !important;
+  }
+
+  .popover-content {
+    background: white;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  ion-list {
+    background: white;
+  }
+
+  ion-item {
+    --background: white;
+    --color: #0f172a;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    font-size: 15px;
+
+    &:hover {
+      --background: #f1f5f9;
+    }
+
+    &.item-select-selected {
+      --background: #0F4C81;
+      --color: white;
+      font-weight: 600;
+
+      &:hover {
+        --background: #0d4270;
+      }
+    }
+  }
+}

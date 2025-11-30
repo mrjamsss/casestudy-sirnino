@@ -1,0 +1,51 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div>
+            <h2>Add New Fee Structure</h2>
+            <span class="subtitle">Enter the details for the new fee structure</span>
+        </div>
+        <ion-button fill="clear" (click)="dismiss()">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+    </div>
+
+    <div class="modal-body">
+        <form class="fee-form">
+            <div class="form-group">
+                <label>Permit/Service Type <span class="required">*</span></label>
+                <ion-select [(ngModel)]="permitType" name="permitType" placeholder="Select permit type"
+                    class="custom-input" interface="popover" [interfaceOptions]="{cssClass: 'fee-structure-popover'}">
+                    <ion-select-option *ngFor="let type of permitTypes" [value]="type">{{ type }}</ion-select-option>
+                </ion-select>
+            </div>
+
+            <div class="form-group">
+                <label>Category <span class="required">*</span></label>
+                <ion-input [(ngModel)]="category" name="category" placeholder="Business, Construction, etc."
+                    class="custom-input"></ion-input>
+            </div>
+
+            <div class="form-group">
+                <label>Base Fee (Optional)</label>
+                <ion-input type="number" min="0" [(ngModel)]="baseFee" name="baseFee" placeholder="Enter base fee"
+                    class="custom-input"></ion-input>
+            </div>
+
+            <div class="form-group">
+                <label>Percentage Rate (%)</label>
+                <ion-input type="number" min="0" [(ngModel)]="percentageRate" name="percentageRate" placeholder="0"
+                    class="custom-input"></ion-input>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <ion-button class="cancel-btn" fill="outline" (click)="dismiss()">
+            Cancel
+        </ion-button>
+        <ion-button class="save-btn" (click)="save()" [disabled]="!isFormValid()">
+            <ion-icon slot="start" name="add-circle"></ion-icon>
+            Add Fee Structure
+        </ion-button>
+    </div>
+</div>

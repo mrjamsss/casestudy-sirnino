@@ -46,6 +46,12 @@ export class AnnouncementModalComponent implements OnInit {
         }
     ];
 
+    customPopoverOptions: any = {
+        cssClass: 'announcement-popover',
+        side: 'bottom',
+        alignment: 'start'
+    };
+
     constructor(private modalController: ModalController) { }
 
     ngOnInit() {

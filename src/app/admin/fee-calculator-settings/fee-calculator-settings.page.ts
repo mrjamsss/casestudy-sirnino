@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, ModalController } from '@ionic/angular';
+import { FeeStructureModalComponent } from '../../shared/components/fee-structure-modal/fee-structure-modal.component';
 
 interface FeeStructure {
     id: string;
@@ -52,7 +53,8 @@ export class FeeCalculatorSettingsPage implements OnInit {
 
     constructor(
         private alertCtrl: AlertController,
-        private toastCtrl: ToastController
+        private toastCtrl: ToastController,
+        private modalCtrl: ModalController
     ) { }
 
     ngOnInit() {
@@ -70,62 +72,27 @@ export class FeeCalculatorSettingsPage implements OnInit {
     }
 
     async openAddFeeModal() {
-        const alert = await this.alertCtrl.create({
-            header: 'Add New Fee Structure',
-            message: 'Enter the details for the new fee structure',
-            inputs: [
-                {
-                    name: 'permitType',
-                    type: 'text',
-                    placeholder: 'Permit/Service Type'
-                },
-                {
-                    name: 'category',
-                    type: 'text',
-                    placeholder: 'Category (Business, Construction, etc.)'
-                },
-                {
-                    name: 'baseFee',
-                    type: 'number',
-                    placeholder: 'Base Fee (optional)'
-                },
-                {
-                    name: 'percentageRate',
-                    type: 'number',
-                    placeholder: 'Percentage Rate (%)',
-                    value: '0'
-                }
-            ],
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Add',
-                    handler: (data) => {
-                        if (!data.permitType || !data.category) {
-                            this.showToast('Please fill in all required fields', 'warning');
-                            return false;
-                        }
-
-                        const newFee: FeeStructure = {
-                            id: Date.now().toString(),
-                            permitType: data.permitType,
-                            category: data.category,
-                            baseFee: data.baseFee ? parseFloat(data.baseFee) : null,
-                            percentageRate: parseFloat(data.percentageRate) || 0
-                        };
-
-                        this.feeStructures.push(newFee);
-                        this.showToast('Fee structure added successfully', 'success');
-                        return true;
-                    }
-                }
-            ]
+        const modal = await this.modalCtrl.create({
+            component: FeeStructureModalComponent,
+            cssClass: 'fee-structure-modal' // Use smaller sizing class
         });
 
-        await alert.present();
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+
+        if (data) {
+            const newFee: FeeStructure = {
+                id: Date.now().toString(),
+                permitType: data.permitType,
+                category: data.category,
+                baseFee: data.baseFee ? parseFloat(data.baseFee) : null,
+                percentageRate: parseFloat(data.percentageRate) || 0
+            };
+
+            this.feeStructures.push(newFee);
+            this.showToast('Fee structure added successfully', 'success');
+        }
     }
 
     editFee(fee: FeeStructure) {
