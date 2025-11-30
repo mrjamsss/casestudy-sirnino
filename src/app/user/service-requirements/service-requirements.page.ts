@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DepartmentsService } from '../../services/departments.service';
+import { Department } from '../../shared/models/department.interface';
 
 @Component({
     selector: 'app-service-requirements',
@@ -8,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ServiceRequirementsPage implements OnInit {
 
-    constructor() { }
+    departments: Department[] = [];
+
+    constructor(private departmentsService: DepartmentsService) { }
 
     ngOnInit() {
+        this.departmentsService.getDepartments().subscribe(data => {
+            this.departments = data;
+        });
     }
 
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Service } from '../department.interface';
+import { Service } from '../../../shared/models/department.interface';
 
 @Component({
   selector: 'app-service-modal',

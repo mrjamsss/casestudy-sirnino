@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Department } from '../department.interface';
+import { Department } from '../../../shared/models/department.interface';
 
 @Component({
   selector: 'app-department-modal',
