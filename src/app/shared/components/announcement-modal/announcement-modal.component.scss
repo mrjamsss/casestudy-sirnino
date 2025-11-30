@@ -1,0 +1,223 @@
+// Announcement Modal Styles - White Theme
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 90vh;
+}
+
+ion-header {
+    flex-shrink: 0;
+
+    ion-toolbar {
+        --background: #ffffff;
+        --border-color: #e2e8f0;
+        --color: #2c3e50;
+        --min-height: 64px;
+        padding: 0 8px;
+
+        ion-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #0f172a;
+            padding-left: 16px;
+        }
+
+        ion-button {
+            --color: #64748b;
+            --padding-start: 12px;
+            --padding-end: 12px;
+
+            &:hover {
+                --color: #0f172a;
+            }
+
+            ion-icon {
+                font-size: 24px;
+            }
+        }
+    }
+}
+
+ion-content {
+    --background: #ffffff;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.modal-content {
+    padding: 32px;
+    background: #ffffff;
+}
+
+.modal-subtitle {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    margin-top: 0;
+}
+
+.announcement-form {
+    .form-group {
+        margin-bottom: 24px;
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+
+            .required {
+                color: #dc3545;
+                margin-left: 2px;
+            }
+        }
+
+        .custom-input,
+        .custom-select,
+        .custom-textarea {
+            --background: #f8f9fa;
+            --border-radius: 8px;
+            --padding-start: 16px;
+            --padding-end: 16px;
+            --padding-top: 12px;
+            --padding-bottom: 12px;
+            --color: #2c3e50;
+            --placeholder-color: #adb5bd;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+
+            &:focus,
+            &:focus-within {
+                --background: #ffffff;
+                border-color: #4a90e2;
+                box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            }
+        }
+
+        .custom-textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+    }
+
+    .audience-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+
+        .audience-option {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+
+            &:hover {
+                background: #e9ecef;
+                border-color: #adb5bd;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+
+            &.selected {
+                background: #e3f2fd;
+                border-color: #4a90e2;
+                box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
+
+                .option-label {
+                    color: #4a90e2;
+                }
+            }
+
+            .option-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 8px;
+
+                ion-icon {
+                    font-size: 24px;
+                    flex-shrink: 0;
+                }
+
+                .option-label {
+                    font-weight: 600;
+                    font-size: 1rem;
+                    color: #2c3e50;
+                    flex-grow: 1;
+                }
+
+                .check-icon {
+                    font-size: 20px;
+                    flex-shrink: 0;
+                }
+            }
+
+            .option-description {
+                margin: 0;
+                font-size: 0.85rem;
+                color: #6c757d;
+                line-height: 1.4;
+            }
+        }
+    }
+}
+
+ion-footer {
+    ion-toolbar {
+        --background: #ffffff;
+        --border-color: #e0e0e0;
+        padding: 16px 24px;
+
+        .footer-actions {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 12px;
+
+            ion-button {
+                margin: 0;
+                height: 44px;
+                font-weight: 600;
+                text-transform: none;
+                letter-spacing: 0.3px;
+
+                &[fill="outline"] {
+                    --border-width: 2px;
+                }
+
+                ion-icon {
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+    .modal-content {
+        padding: 16px;
+    }
+
+    .announcement-form {
+        .audience-options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    ion-footer {
+        ion-toolbar {
+            padding: 12px 16px;
+
+            .footer-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+}

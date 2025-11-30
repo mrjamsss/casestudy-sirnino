@@ -420,3 +420,24 @@ ion-content {
         }
     }
 }
+
+// Modal Styling with Blur Backdrop
+::ng-deep .announcement-modal {
+    --backdrop-opacity: 1;
+    --background: transparent;
+
+    .modal-wrapper {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+
+    ion-modal {
+        --width: 90%;
+        --max-width: 750px;
+        --height: auto;
+        --max-height: 90vh;
+        --border-radius: 20px;
+        --box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+}
