@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SidebarService } from '../../shared/services/sidebar.service';
 
 interface StatCard {
@@ -127,11 +128,18 @@ export class DashboardPage implements OnInit {
     }
   ];
 
-  constructor(private sidebarService: SidebarService) { }
+  constructor(
+    private sidebarService: SidebarService,
+    private router: Router
+  ) { }
 
   ngOnInit() { }
 
   getStatusClass(status: string): string {
     return `status-${status.toLowerCase()}`;
+  }
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
   }
 }

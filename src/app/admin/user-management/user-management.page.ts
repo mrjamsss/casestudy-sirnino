@@ -11,14 +11,14 @@ import { AlertController, ModalController, ToastController } from '@ionic/angula
 export class UserManagementPage implements OnInit {
     users: UserData[] = [];
     filteredUsers: UserData[] = [];
-    
+
     // Filters
     searchQuery: string = '';
     filterStatus: string = 'all';
     filterBarangay: string = 'all';
     filterRole: string = 'all';
     filterAgeGroup: string = 'all';
-    
+
     // Tab
     selectedTab: 'all' | 'pending' = 'all';
 
@@ -149,7 +149,8 @@ export class UserManagementPage implements OnInit {
     }
 
     calculateStats() {
-        this.stats.total = this.users.length;
+        // Total should only count non-pending users (Active, Rejected, Suspended)
+        this.stats.total = this.users.filter(u => u.status !== 'Pending').length;
         this.stats.pending = this.users.filter(u => u.status === 'Pending').length;
         this.stats.active = this.users.filter(u => u.status === 'Active').length;
         this.stats.rejected = this.users.filter(u => u.status === 'Rejected').length;
@@ -161,12 +162,15 @@ export class UserManagementPage implements OnInit {
         // Tab Filter
         if (this.selectedTab === 'pending') {
             tempUsers = tempUsers.filter(u => u.status === 'Pending');
+        } else if (this.selectedTab === 'all') {
+            // Exclude pending users from "All Users" tab
+            tempUsers = tempUsers.filter(u => u.status !== 'Pending');
         }
 
         // Search
         if (this.searchQuery) {
             const query = this.searchQuery.toLowerCase();
-            tempUsers = tempUsers.filter(u => 
+            tempUsers = tempUsers.filter(u =>
                 (u.name.givenName + ' ' + u.name.lastName).toLowerCase().includes(query) ||
                 u.email.toLowerCase().includes(query) ||
                 u.mobileNumber.includes(query) ||
@@ -174,12 +178,8 @@ export class UserManagementPage implements OnInit {
             );
         }
 
-        // Status Filter (if not in pending tab)
+        // Status Filter (only for 'all' tab, and only for non-pending statuses)
         if (this.selectedTab === 'all' && this.filterStatus !== 'all') {
-            tempUsers = tempUsers.filter(u => u.status === 'Pending' ? false : u.status === this.filterStatus); // If pending tab is separate, maybe exclude pending from 'all' tab or handle logic differently. 
-            // User requested "Status Filter: Dropdown to show only 'Pending', 'Active', or 'Rejected'".
-            // If I have a separate tab for Pending, maybe the Status Filter is for the "All" tab.
-            // Let's assume Status Filter overrides if specific.
             tempUsers = tempUsers.filter(u => u.status === this.filterStatus);
         }
 
@@ -220,7 +220,7 @@ export class UserManagementPage implements OnInit {
         this.selectedTab = event.detail.value;
         // Reset status filter if switching to pending tab to avoid confusion?
         if (this.selectedTab === 'pending') {
-            this.filterStatus = 'all'; 
+            this.filterStatus = 'all';
         }
         this.applyFilters();
     }

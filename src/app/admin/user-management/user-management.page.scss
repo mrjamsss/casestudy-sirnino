@@ -670,3 +670,31 @@ ion-modal {
         }
     }
 }
+
+// Ensure table cell text is visible
+.user-table tbody tr td {
+    color: #0f172a !important;
+    font-weight: 500;
+}
+
+// Make modal close button visible with hover effect
+ion-modal ion-header ion-toolbar ion-buttons ion-button {
+    --color: #64748b;
+    --border-radius: 8px;
+    padding: 8px;
+    transition: all 0.2s ease;
+    
+    ion-icon {
+        color: #64748b;
+        font-size: 24px;
+    }
+    
+    &:hover {
+        --color: #0f172a;
+        --background: rgba(15, 23, 42, 0.05);
+        
+        ion-icon {
+            color: #0f172a;
+        }
+    }
+}

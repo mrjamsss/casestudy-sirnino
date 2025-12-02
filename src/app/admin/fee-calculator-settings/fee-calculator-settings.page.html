@@ -193,3 +193,51 @@
         </div>
     </div>
 </ion-content>
+<!-- Add Fee Modal -->
+<div class="modal-backdrop" *ngIf="showAddFeeModal" (click)="closeAddFeeModal()"></div>
+<div class="add-fee-modal" *ngIf="showAddFeeModal">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Add New Fee Structure</h2>
+            <button class="close-btn" (click)="closeAddFeeModal()">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label>Permit/Service Type</label>
+                <input type="text" [(ngModel)]="newFee.permitType" placeholder="e.g., New Business Permit">
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <ion-select [(ngModel)]="newFee.category" interface="popover" placeholder="Select category">
+                    <ion-select-option value="Business">Business</ion-select-option>
+                    <ion-select-option value="Construction">Construction</ion-select-option>
+                    <ion-select-option value="Health">Health</ion-select-option>
+                    <ion-select-option value="Civil">Civil</ion-select-option>
+                    <ion-select-option value="Other">Other</ion-select-option>
+                </ion-select>
+            </div>
+
+            <div class="form-group">
+                <label>Base Fee (₱)</label>
+                <input type="number" [(ngModel)]="newFee.baseFee" placeholder="0">
+            </div>
+
+            <div class="form-group">
+                <label>Percentage Rate (%)</label>
+                <input type="number" [(ngModel)]="newFee.percentageRate" placeholder="0.0" step="0.1">
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-button save-btn" (click)="saveNewFee()">
+                    <ion-icon name="save-outline"></ion-icon>
+                    Save Fee Structure
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

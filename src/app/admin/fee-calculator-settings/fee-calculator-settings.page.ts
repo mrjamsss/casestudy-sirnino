@@ -49,6 +49,8 @@ export class FeeCalculatorSettingsPage implements OnInit {
 
     isEditing = false;
     editingFee: FeeStructure = this.getEmptyFee();
+    showAddFeeModal = false;
+    newFee: FeeStructure = this.getEmptyFee();
 
     constructor(
         private alertCtrl: AlertController,
@@ -56,7 +58,20 @@ export class FeeCalculatorSettingsPage implements OnInit {
     ) { }
 
     ngOnInit() {
-        // Initialize component
+        this.loadFeeStructures();
+    }
+
+    loadFeeStructures() {
+        const storedFees = localStorage.getItem('feeStructures');
+        if (storedFees) {
+            this.feeStructures = JSON.parse(storedFees);
+        } else {
+            this.saveToLocalStorage();
+        }
+    }
+
+    saveToLocalStorage() {
+        localStorage.setItem('feeStructures', JSON.stringify(this.feeStructures));
     }
 
     getEmptyFee(): FeeStructure {
@@ -69,63 +84,32 @@ export class FeeCalculatorSettingsPage implements OnInit {
         };
     }
 
-    async openAddFeeModal() {
-        const alert = await this.alertCtrl.create({
-            header: 'Add New Fee Structure',
-            message: 'Enter the details for the new fee structure',
-            inputs: [
-                {
-                    name: 'permitType',
-                    type: 'text',
-                    placeholder: 'Permit/Service Type'
-                },
-                {
-                    name: 'category',
-                    type: 'text',
-                    placeholder: 'Category (Business, Construction, etc.)'
-                },
-                {
-                    name: 'baseFee',
-                    type: 'number',
-                    placeholder: 'Base Fee (optional)'
-                },
-                {
-                    name: 'percentageRate',
-                    type: 'number',
-                    placeholder: 'Percentage Rate (%)',
-                    value: '0'
-                }
-            ],
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel'
-                },
-                {
-                    text: 'Add',
-                    handler: (data) => {
-                        if (!data.permitType || !data.category) {
-                            this.showToast('Please fill in all required fields', 'warning');
-                            return false;
-                        }
+    openAddFeeModal() {
+        this.newFee = this.getEmptyFee();
+        this.showAddFeeModal = true;
+    }
 
-                        const newFee: FeeStructure = {
-                            id: Date.now().toString(),
-                            permitType: data.permitType,
-                            category: data.category,
-                            baseFee: data.baseFee ? parseFloat(data.baseFee) : null,
-                            percentageRate: parseFloat(data.percentageRate) || 0
-                        };
+    closeAddFeeModal() {
+        this.showAddFeeModal = false;
+    }
 
-                        this.feeStructures.push(newFee);
-                        this.showToast('Fee structure added successfully', 'success');
-                        return true;
-                    }
-                }
-            ]
-        });
+    saveNewFee() {
+        if (!this.newFee.permitType || !this.newFee.category) {
+            this.showToast('Please fill in all required fields', 'warning');
+            return;
+        }
 
-        await alert.present();
+        const newFeeEntry: FeeStructure = {
+            ...this.newFee,
+            id: Date.now().toString(),
+            baseFee: this.newFee.baseFee ? Number(this.newFee.baseFee) : null,
+            percentageRate: Number(this.newFee.percentageRate) || 0
+        };
+
+        this.feeStructures.push(newFeeEntry);
+        this.saveToLocalStorage();
+        this.showToast('Fee structure added successfully', 'success');
+        this.closeAddFeeModal();
     }
 
     editFee(fee: FeeStructure) {
@@ -150,6 +134,7 @@ export class FeeCalculatorSettingsPage implements OnInit {
         const index = this.feeStructures.findIndex(f => f.id === this.editingFee.id);
         if (index !== -1) {
             this.feeStructures[index] = { ...this.editingFee };
+            this.saveToLocalStorage();
             this.showToast('Fee structure updated successfully', 'success');
             this.cancelEdit();
         }
@@ -174,6 +159,7 @@ export class FeeCalculatorSettingsPage implements OnInit {
                     role: 'destructive',
                     handler: () => {
                         this.feeStructures = this.feeStructures.filter(f => f.id !== fee.id);
+                        this.saveToLocalStorage();
                         this.showToast('Fee structure deleted', 'success');
                     }
                 }
