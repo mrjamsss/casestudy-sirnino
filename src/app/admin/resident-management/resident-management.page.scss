@@ -467,7 +467,7 @@ ion-content {
         background: white;
         border-radius: 20px;
         width: 100%;
-        max-width: 600px;
+        max-width: 700px;
         max-height: 90vh;
         display: flex;
         flex-direction: column;
@@ -596,4 +596,83 @@ ion-content {
             min-width: 0;
         }
     }
+}
+
+/* Progress Bar Styling */
+.stepper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.stepper-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    color: #9ca3af;
+
+    &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px; // aligned with circle center
+        left: calc(40% + 18px); // 50% = center, + (circle radius 16px + 2px gap)
+        right: calc(-55% + 16px); // reach to near the next circle center
+        height: 2px;
+        background: #e5e7eb;
+        z-index: 0;
+    }
+
+    &.completed:not(:last-child)::after {
+        background: #0F4C81; // primary blue
+    }
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 4px auto;
+    border-radius: 50%;
+    border: 2px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: white;
+    color: #6b7280;
+    position: relative;
+    z-index: 1;
+}
+
+.step-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: uppercase;
+}
+
+/* Active state */
+.stepper-step.active .step-circle {
+    border-color: #FFC300; // accent gold
+    background: #FFC300;
+    color: #111827; // dark text
+}
+
+.stepper-step.active .step-label {
+    color: #0F4C81; // primary blue
+}
+
+/* Completed state (previous steps) */
+.stepper-step.completed .step-circle {
+    border-color: #0F4C81;
+    background: #0F4C81;
+    color: white;
+}
+
+.stepper-step.completed .step-label {
+    color: #0F4C81;
 }

@@ -6,10 +6,11 @@
                 <h1>Resident Management</h1>
                 <p class="subtitle">Manage barangay resident records</p>
             </div>
-            <ion-button class="add-btn">
+            <ion-button class="add-btn" (click)="openAddModal()">
                 <ion-icon name="add-outline" slot="start"></ion-icon>
                 Add New Resident
             </ion-button>
+
         </div>
 
         <div class="content-wrapper">
@@ -134,50 +135,289 @@
 <div class="resident-modal" *ngIf="isModalOpen">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-            <h2>{{ modalMode === 'edit' ? 'Edit Resident' : 'View Resident' }}</h2>
+            <h2>{{ modalMode === 'edit' ? 'Edit Resident' : modalMode === 'add' ? 'Add New Resident' : 'View Resident'
+                }}</h2>
             <button class="close-btn" (click)="closeModal()">
                 <ion-icon name="close-outline"></ion-icon>
             </button>
         </div>
 
         <div class="modal-body">
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" [(ngModel)]="modalName" [disabled]="modalMode === 'view'" placeholder="Full Name">
-            </div>
 
-            <div class="form-group">
-                <label>Age</label>
-                <input type="number" [(ngModel)]="modalAge" [disabled]="modalMode === 'view'" placeholder="Age">
-            </div>
+            <!-- Step progress for Add New Resident -->
+            <div *ngIf="modalMode === 'add'" class="stepper-wrapper">
+                <div class="stepper-step" [class.active]="modalAddStep === 1" [class.completed]="modalAddStep > 1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">REGISTRATION</div>
+                </div>
 
-            <div class="form-group">
-                <label>Address</label>
-                <textarea rows="3" [(ngModel)]="modalAddress" [disabled]="modalMode === 'view'"
-                    placeholder="Complete Address"></textarea>
-            </div>
+                <div class="stepper-step" [class.active]="modalAddStep === 2" [class.completed]="modalAddStep > 2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">BASIC</div>
+                </div>
 
-            <div class="form-group">
-                <label>Voter Status</label>
-                <div class="custom-select">
-                    <select [(ngModel)]="modalVoterStatus" [disabled]="modalMode === 'view'">
-                        <option value="Registered">Registered</option>
-                        <option value="Not Registered">Not Registered</option>
-                    </select>
+                <div class="stepper-step" [class.active]="modalAddStep === 3" [class.completed]="modalAddStep > 3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">ADDRESS</div>
+                </div>
+
+                <div class="stepper-step" [class.active]="modalAddStep === 4" [class.completed]="modalAddStep > 4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">IDENTIFICATION</div>
+                </div>
+
+                <div class="stepper-step" [class.active]="modalAddStep === 5" [class.completed]="modalAddStep > 5">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">HOUSEHOLD</div>
+                </div>
+
+                <div class="stepper-step" [class.active]="modalAddStep === 6" [class.completed]="modalAddStep > 6">
+                    <div class="step-circle">6</div>
+                    <div class="step-label">SOCIAL</div>
+                </div>
+
+                <div class="stepper-step" [class.active]="modalAddStep === 7" [class.completed]="modalAddStep > 7">
+                    <div class="step-circle">7</div>
+                    <div class="step-label">EMERGENCY</div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Life Status</label>
-                <div class="custom-select">
-                    <select [(ngModel)]="modalLifeStatus" [disabled]="modalMode === 'view'">
-                        <option value="Alive">Alive</option>
-                        <option value="Deceased">Deceased</option>
-                    </select>
-                </div>
-            </div>
 
-            <button *ngIf="modalMode === 'edit'" class="save-btn" (click)="updateResident()">Save Changes</button>
+
+
+            <!-- VIEW / EDIT (existing simple form, untouched) -->
+            <ng-container *ngIf="modalMode !== 'add'">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" [(ngModel)]="modalName" [disabled]="modalMode === 'view'"
+                        placeholder="Full Name">
+                </div>
+
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" [(ngModel)]="modalAge" [disabled]="modalMode === 'view'" placeholder="Age">
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea rows="3" [(ngModel)]="modalAddress" [disabled]="modalMode === 'view'"
+                        placeholder="Complete Address"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Voter Status</label>
+                    <div class="custom-select">
+                        <select [(ngModel)]="modalVoterStatus" [disabled]="modalMode === 'view'">
+                            <option value="Registered">Registered</option>
+                            <option value="Not Registered">Not Registered</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Life Status</label>
+                    <div class="custom-select">
+                        <select [(ngModel)]="modalLifeStatus" [disabled]="modalMode === 'view'">
+                            <option value="Alive">Alive</option>
+                            <option value="Deceased">Deceased</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button *ngIf="modalMode === 'edit'" class="save-btn" (click)="updateResident()">Save Changes</button>
+            </ng-container>
+
+            <!-- ADD MODE: multi-step resident form -->
+            <ng-container *ngIf="modalMode === 'add'">
+
+                <!-- Step 1: IDs -->
+                <div *ngIf="modalAddStep === 1">
+                    <div class="form-group">
+                        <label>Resident ID</label>
+                        <input type="text" [(ngModel)]="residentForm.residentId" placeholder="Auto Generated" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Registered</label>
+                        <input type="date" [(ngModel)]="residentForm.dateRegistered">
+                    </div>
+                    <button class="save-btn" (click)="nextAddStep()">Next</button>
+                </div>
+
+                <!-- Step 2: Basic Personal Info -->
+                <div *ngIf="modalAddStep === 2">
+                    <div class="form-group"><label>Given Name</label><input type="text"
+                            [(ngModel)]="residentForm.givenName"></div>
+                    <div class="form-group"><label>Middle Name</label><input type="text"
+                            [(ngModel)]="residentForm.middleName"></div>
+                    <div class="form-group"><label>Last Name</label><input type="text"
+                            [(ngModel)]="residentForm.lastName"></div>
+                    <div class="form-group"><label>Extension (Jr., Sr., etc.)</label><input type="text"
+                            [(ngModel)]="residentForm.extension"></div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select [(ngModel)]="residentForm.gender">
+                            <option value="">Select</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Birthday</label><input type="date"
+                            [(ngModel)]="residentForm.birthday"></div>
+                    <div class="form-group"><label>Place of Birth</label><input type="text"
+                            [(ngModel)]="residentForm.birthPlace"></div>
+                    <div class="form-group">
+                        <label>Civil Status</label>
+                        <select [(ngModel)]="residentForm.civilStatus">
+                            <option value="">Select</option>
+                            <option>Single</option>
+                            <option>Married</option>
+                            <option>Widowed</option>
+                            <option>Separated</option>
+                            <option>Divorced</option>
+                        </select>
+                    </div>
+                    <button class="save-btn" (click)="prevAddStep()">Back</button>
+                    <button class="save-btn" (click)="nextAddStep()">Next</button>
+                </div>
+
+                <!-- Step 3: Address & Contact -->
+                <div *ngIf="modalAddStep === 3">
+                    <div class="form-group"><label>House No. / Street / Purok</label><input type="text"
+                            [(ngModel)]="residentForm.houseNo"></div>
+                    <div class="form-group"><label>Barangay</label><input type="text"
+                            [(ngModel)]="residentForm.barangay"></div>
+                    <div class="form-group"><label>Municipality / City</label><input type="text"
+                            [(ngModel)]="residentForm.city"></div>
+                    <div class="form-group"><label>Province</label><input type="text"
+                            [(ngModel)]="residentForm.province"></div>
+                    <div class="form-group"><label>Years of Residency</label><input type="number"
+                            [(ngModel)]="residentForm.residencyYears"></div>
+                    <div class="form-group"><label>Phone Number</label><input type="tel"
+                            [(ngModel)]="residentForm.phone"></div>
+                    <div class="form-group"><label>Email (optional)</label><input type="email"
+                            [(ngModel)]="residentForm.email"></div>
+                    <button class="save-btn" (click)="prevAddStep()">Back</button>
+                    <button class="save-btn" (click)="nextAddStep()">Next</button>
+                </div>
+
+                <!-- Step 4: Identification -->
+                <div *ngIf="modalAddStep === 4">
+                    <div class="form-group"><label>ID Type</label><input type="text" [(ngModel)]="residentForm.idType">
+                    </div>
+                    <div class="form-group"><label>ID Number</label><input type="text"
+                            [(ngModel)]="residentForm.idNumber"></div>
+                    <div class="form-group">
+                        <label>Valid ID (Photo/File)</label>
+                        <input type="file" (change)="onIdFileChange($event)">
+                    </div>
+                    <button class="save-btn" (click)="prevAddStep()">Back</button>
+                    <button class="save-btn" (click)="nextAddStep()">Next</button>
+                </div>
+
+                <!-- Step 5: Household Information -->
+                <div *ngIf="modalAddStep === 5">
+                    <div class="form-group"><label>Household Head Name</label><input type="text"
+                            [(ngModel)]="residentForm.householdHead"></div>
+                    <div class="form-group"><label>Relationship to Household Head</label><input type="text"
+                            [(ngModel)]="residentForm.householdHeadRel"></div>
+                    <div class="form-group">
+                        <label>House Ownership</label>
+                        <select [(ngModel)]="residentForm.houseOwnership">
+                            <option value="">Select</option>
+                            <option>Owned</option>
+                            <option>Rented</option>
+                            <option>Shared</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <button class="save-btn" (click)="prevAddStep()">Back</button>
+                    <button class="save-btn" (click)="nextAddStep()">Next</button>
+                </div>
+
+                <!-- Step 6: Social & Demographic -->
+                <div *ngIf="modalAddStep === 6">
+                    <div class="form-group"><label>Occupation / Employment</label><input type="text"
+                            [(ngModel)]="residentForm.occupation"></div>
+                    <div class="form-group"><label>Educational Attainment</label><input type="text"
+                            [(ngModel)]="residentForm.education"></div>
+                    <div class="form-group">
+                        <label>PWD</label>
+                        <select [(ngModel)]="residentForm.pwd">
+                            <option value="">Select</option>
+                            <option [value]="true">Yes</option>
+                            <option [value]="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Senior Citizen</label>
+                        <select [(ngModel)]="residentForm.seniorCitizen">
+                            <option value="">Select</option>
+                            <option [value]="true">Yes</option>
+                            <option [value]="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Solo Parent</label>
+                        <select [(ngModel)]="residentForm.soloParent">
+                            <option value="">Select</option>
+                            <option [value]="true">Yes</option>
+                            <option [value]="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>4Ps Beneficiary</label>
+                        <select [(ngModel)]="residentForm.fourPs">
+                            <option value="">Select</option>
+                            <option [value]="true">Yes</option>
+                            <option [value]="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Indigenous Group (If applicable)</label><input type="text"
+                            [(ngModel)]="residentForm.indigenousGroup"></div>
+                    <button class="save-btn" (click)="prevAddStep()">Back</button>
+                    <button class="save-btn" (click)="nextAddStep()">Next</button>
+                </div>
+
+                <!-- Step 7: Emergency Contact & Record Status -->
+                <div *ngIf="modalAddStep === 7">
+                    <div class="form-group"><label>Emergency Contact Name</label><input type="text"
+                            [(ngModel)]="residentForm.emerContactName"></div>
+                    <div class="form-group"><label>Relationship</label><input type="text"
+                            [(ngModel)]="residentForm.emerContactRel"></div>
+                    <div class="form-group"><label>Contact Number</label><input type="tel"
+                            [(ngModel)]="residentForm.emerContactNumber"></div>
+
+                    <div class="form-group">
+                        <label>Resident Status</label>
+                        <select [(ngModel)]="residentForm.lifeStatus">
+                            <option value="Alive">Alive</option>
+                            <option value="Moved Out">Moved Out</option>
+                            <option value="Deceased">Deceased</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"><label>Remarks</label><textarea
+                            [(ngModel)]="residentForm.remarks"></textarea></div>
+
+                    <div class="form-group">
+                        <label>Registered Voter</label>
+                        <select [(ngModel)]="residentForm.voter">
+                            <option value="">Select</option>
+                            <option [value]="true">Yes</option>
+                            <option [value]="false">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"><label>Precinct Number</label><input type="text"
+                            [(ngModel)]="residentForm.precinctNo"></div>
+
+                    <button class="save-btn" (click)="prevAddStep()">Back</button>
+                    <button class="save-btn" (click)="addResident()">Finish & Add Resident</button>
+                </div>
+
+            </ng-container>
         </div>
+
     </div>
 </div>
