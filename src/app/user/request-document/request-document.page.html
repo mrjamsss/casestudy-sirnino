@@ -1,11 +1,143 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Request Document</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-content class="ion-no-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Request Documents</h1>
+            <p class="subtitle">Submit a request for official documents and certificates</p>
+        </div>
 
-<ion-content>
-    <div class="ion-padding">
-        <h1>Request Document</h1>
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <div class="request-grid">
+                <!-- Left Panel - Request Form -->
+                <div class="section-card form-card">
+                    <div class="section-header">
+                        <div class="header-left">
+                            <h2>New Document Request</h2>
+                            <p class="section-subtitle">Fill out the form to submit your request</p>
+                        </div>
+                    </div>
+
+                    <div class="form-content">
+                        <!-- Department Selection -->
+                        <div class="form-group">
+                            <ion-select 
+                                label="Department" 
+                                label-placement="floating" 
+                                fill="outline"
+                                [(ngModel)]="selectedDepartment"
+                                (ionChange)="onDepartmentChange()"
+                                class="custom-select"
+                                interface="popover"
+                                placeholder="Select department">
+                                <ion-select-option *ngFor="let dept of departments" [value]="dept.id">
+                                    {{ dept.name }}
+                                </ion-select-option>
+                            </ion-select>
+                        </div>
+
+                        <!-- Document Type Selection -->
+                        <div class="form-group">
+                            <ion-select 
+                                label="Document Type" 
+                                label-placement="floating" 
+                                fill="outline"
+                                [(ngModel)]="selectedDocumentType"
+                                class="custom-select"
+                                interface="popover"
+                                [disabled]="!selectedDepartment"
+                                placeholder="Select document type">
+                                <ion-select-option *ngFor="let service of availableServices" [value]="service.id">
+                                    {{ service.name }}
+                                </ion-select-option>
+                            </ion-select>
+                        </div>
+
+                        <!-- Additional Notes -->
+                        <div class="form-group">
+                            <ion-textarea
+                                label="Additional Notes (Optional)"
+                                label-placement="floating"
+                                fill="outline"
+                                [(ngModel)]="additionalNotes"
+                                placeholder="Any special instructions or information..."
+                                rows="5"
+                                class="custom-textarea">
+                            </ion-textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <ion-button 
+                            expand="block" 
+                            class="submit-button"
+                            (click)="submitRequest()"
+                            [disabled]="!selectedDepartment || !selectedDocumentType">
+                            <ion-icon name="send-outline" slot="start"></ion-icon>
+                            Submit Request
+                        </ion-button>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Information Cards -->
+                <div class="info-panel">
+                    <!-- Important Information Card -->
+                    <div class="section-card info-card">
+                        <h3>Important Information</h3>
+                        <ul class="info-list">
+                            <li>
+                                <ion-icon name="time-outline"></ion-icon>
+                                <span>Processing time varies by document type (3-14 business days)</span>
+                            </li>
+                            <li>
+                                <ion-icon name="notifications-outline"></ion-icon>
+                                <span>You will receive notifications about status updates</span>
+                            </li>
+                            <li>
+                                <ion-icon name="document-text-outline"></ion-icon>
+                                <span>Check "Service Requirements" for required documents</span>
+                            </li>
+                            <li>
+                                <ion-icon name="calculator-outline"></ion-icon>
+                                <span>Use the "Fee Calculator" to estimate costs</span>
+                            </li>
+                            <li>
+                                <ion-icon name="list-outline"></ion-icon>
+                                <span>Track your requests in "Transaction History"</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Need Help Card -->
+                    <div class="section-card help-card">
+                        <h3>Need Help?</h3>
+                        <p class="help-intro">If you have questions about the request process, check our FAQs or contact us:</p>
+                        
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <ion-icon name="call-outline"></ion-icon>
+                                <div>
+                                    <div class="contact-label">Phone:</div>
+                                    <div class="contact-value">(044) 463-1751</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <ion-icon name="mail-outline"></ion-icon>
+                                <div>
+                                    <div class="contact-label">Email:</div>
+                                    <div class="contact-value">info@cabanatuan.gov.ph</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <ion-icon name="time-outline"></ion-icon>
+                                <div>
+                                    <div class="contact-label">Hours:</div>
+                                    <div class="contact-value">Mon-Fri, 8:00 AM - 5:00 PM</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </ion-content>

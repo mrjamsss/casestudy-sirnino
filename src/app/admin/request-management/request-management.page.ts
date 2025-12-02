@@ -135,8 +135,48 @@ export class RequestManagementPage implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    // Initialize component and display all requests
+    this.loadRequests();
+    this.updateCounts();
+  }
+
+    loadRequests() {
+    const storedRequests = localStorage.getItem('document_requests');
+    if (storedRequests) {
+      try {
+        const parsedRequests = JSON.parse(storedRequests);
+        this.requests = parsedRequests.map((req: any) => ({
+          id: 'REQ' + req.id.toString().padStart(3, '0'),
+          user: req.userName || 'Unknown User',
+          documentType: req.serviceName,
+          department: req.departmentName,
+          date: new Date(req.dateRequested).toLocaleDateString('en-GB'),
+          status: (req.status || 'pending').toLowerCase() as 'pending' | 'processing' | 'completed' | 'rejected' | 'ready',
+          purpose: req.notes || 'Not specified',
+          details: req.notes || 'No additional details provided',
+          dateRequested: new Date(req.dateRequested).toLocaleString()
+        }));
+      } catch (e) {
+        console.error('Error loading requests:', e);
+      }
+    }
     this.filteredRequests = [...this.requests];
+  }
+
+  saveRequests() {
+    try {
+      const requestsToSave = this.requests.map(req => ({
+        id: parseInt(req.id.replace(/\D/g, '')) || Date.now(),
+        userName: req.user,
+        departmentName: req.department,
+        serviceName: req.documentType,
+        notes: req.details || req.purpose,
+        status: req.status.charAt(0).toUpperCase() + req.status.slice(1),
+        dateRequested: req.dateRequested
+      }));
+      localStorage.setItem('document_requests', JSON.stringify(requestsToSave));
+    } catch (e) {
+      console.error('Error saving requests:', e);
+    }
   }
 
   openTemplateModal() {
@@ -214,6 +254,7 @@ export class RequestManagementPage implements OnInit {
       this.filteredRequests = this.filteredRequests.filter(r => r.id !== this.selectedRequest!.id);
       this.selectedRequest = null;
       this.updateCounts();
+      this.saveRequests();
     }
   }
 
@@ -227,6 +268,7 @@ export class RequestManagementPage implements OnInit {
     }
     
     this.updateCounts();
+    this.saveRequests();
     this.closeDetailsModal();
     alert('Request approved successfully!');
   }
@@ -241,6 +283,7 @@ export class RequestManagementPage implements OnInit {
     }
     
     this.updateCounts();
+    this.saveRequests();
     this.closeDetailsModal();
     alert('Request rejected.');
   }
@@ -255,6 +298,7 @@ export class RequestManagementPage implements OnInit {
     }
     
     this.updateCounts();
+    this.saveRequests();
     this.closeDetailsModal();
     alert('Request marked as ready for pickup!');
   }
