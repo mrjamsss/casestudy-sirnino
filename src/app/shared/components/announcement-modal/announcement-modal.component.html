@@ -66,7 +66,7 @@
         <div class="footer-actions">
             <ion-button expand="block" fill="outline" (click)="dismiss()" color="medium">
                 Cancel
-            </ion-button>
+              </ion-button>
             <ion-button expand="block" (click)="save()" color="primary" [disabled]="!isFormValid()">
                 <ion-icon slot="start" [name]="isEdit ? 'checkmark-circle' : 'add-circle'"></ion-icon>
                 {{ isEdit ? 'Update' : 'Create' }} Announcement
