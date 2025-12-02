@@ -1,11 +1,68 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Transaction Logs</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-content class="ion-no-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Transaction History</h1>
+            <p class="subtitle">View all your requests and transactions</p>
+        </div>
 
-<ion-content>
-    <div class="ion-padding">
-        <h1>Transaction Logs</h1>
+        <div class="content-wrapper">
+            <!-- Tabs/Segments -->
+            <div class="tabs-wrapper">
+                <ion-segment [(ngModel)]="selectedSegment" mode="ios" class="custom-segment">
+                    <ion-segment-button value="requests">
+                        <ion-label>Document Requests</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="transactions">
+                        <ion-label>All Transactions</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
+            </div>
+
+            <!-- Requests Section -->
+            <div *ngIf="selectedSegment === 'requests'" class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Document Requests</h2>
+                        <p class="section-subtitle">Track the status of your document requests</p>
+                    </div>
+                </div>
+
+                <div class="user-table-wrapper">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Document Type</th>
+                                <th>Department</th>
+                                <th>Request Date</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="user-row" *ngFor="let req of requests">
+                                <td class="id-col">{{ req.id }}</td>
+                                <td>{{ req.type }}</td>
+                                <td>{{ req.department }}</td>
+                                <td>{{ req.date }}</td>
+                                <td>
+                                    <span class="status-badge" [ngClass]="req.status">
+                                        {{ req.status }}
+                                    </span>
+                                </td>
+                                <td class="notes-col">{{ req.notes }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <h3>Need to download receipts or documents?</h3>
+                <p>Contact the relevant department or visit City Hall with your transaction ID for official copies.</p>
+            </div>
+        </div>
     </div>
 </ion-content>
