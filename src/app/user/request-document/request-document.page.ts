@@ -1,8 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { DepartmentsService } from '../../services/departments.service';
-import { Department, Service } from '../../shared/models/department.interface';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
+
+interface Department {
+  id: string;
+  name: string;
+  documents: DocumentType[];
+}
+
+interface DocumentType {
+  id: string;
+  name: string;
+  purposes: string[];
+}
 
 @Component({
     selector: 'app-request-document',
@@ -11,54 +21,120 @@ import { AuthService } from '../../services/auth.service';
     standalone: false
 })
 export class RequestDocumentPage implements OnInit {
-    departments: Department[] = [];
-    availableServices: Service[] = [];
+    departments: Department[] = [
+        {
+            id: 'civil-registry',
+            name: 'Civil Registry',
+            documents: [
+                {
+                    id: 'birth-certificate',
+                    name: 'Birth Certificate',
+                    purposes: ['Employment', 'School Enrollment', 'Passport Application', 'Travel', 'Legal Matters', 'Other']
+                },
+                {
+                    id: 'marriage-certificate',
+                    name: 'Marriage Certificate',
+                    purposes: ['Employment', 'Visa Application', 'Legal Matters', 'Bank Requirements', 'Other']
+                },
+                {
+                    id: 'death-certificate',
+                    name: 'Death Certificate',
+                    purposes: ['Legal Matters', 'Insurance Claims', 'Estate Settlement', 'Other']
+                }
+            ]
+        },
+        {
+            id: 'business-permits',
+            name: 'Business Permits and Licensing Office',
+            documents: [
+                {
+                    id: 'business-permit',
+                    name: 'Business Permit',
+                    purposes: ['New Business', 'Business Renewal', 'Business Expansion', 'Other']
+                }
+            ]
+        },
+        {
+            id: 'treasury',
+            name: 'Treasury Office',
+            documents: [
+                {
+                    id: 'tax-clearance',
+                    name: 'Tax Clearance Certificate',
+                    purposes: ['Employment', 'Business Requirements', 'Loan Application', 'Legal Matters', 'Other']
+                }
+            ]
+        },
+        {
+            id: 'health',
+            name: 'Health Office',
+            documents: [
+                {
+                    id: 'health-certificate',
+                    name: 'Health Certificate',
+                    purposes: ['Employment', 'School Requirements', 'Travel', 'Business Requirements', 'Other']
+                }
+            ]
+        }
+    ];
+
+    availableDocuments: DocumentType[] = [];
+    availablePurposes: string[] = [];
     
-    selectedDepartment: number | null = null;
-    selectedDocumentType: number | null = null;
+    selectedDepartment: string = '';
+    selectedDocumentType: string = '';
+    selectedPurpose: string = '';
     additionalNotes: string = '';
 
     constructor(
-        private departmentsService: DepartmentsService,
         private toastController: ToastController,
         private authService: AuthService
     ) { }
 
     ngOnInit() {
-        this.loadDepartments();
-    }
-
-    loadDepartments() {
-        this.departmentsService.getDepartments().subscribe(data => {
-            this.departments = data;
-        });
+        // Component initialization
     }
 
     onDepartmentChange() {
-        // Reset document type when department changes
-        this.selectedDocumentType = null;
-        this.availableServices = [];
+        // Reset dependent fields
+        this.selectedDocumentType = '';
+        this.selectedPurpose = '';
+        this.availableDocuments = [];
+        this.availablePurposes = [];
 
         if (this.selectedDepartment) {
             const department = this.departments.find(d => d.id === this.selectedDepartment);
             if (department) {
-                this.availableServices = department.services;
+                this.availableDocuments = department.documents;
+            }
+        }
+    }
+
+    onDocumentTypeChange() {
+        // Reset purpose when document type changes
+        this.selectedPurpose = '';
+        this.availablePurposes = [];
+
+        if (this.selectedDocumentType) {
+            const document = this.availableDocuments.find(d => d.id === this.selectedDocumentType);
+            if (document) {
+                this.availablePurposes = document.purposes;
             }
         }
     }
 
     async submitRequest() {
         // Validate form
-        if (!this.selectedDepartment || !this.selectedDocumentType) {
-            await this.showToast('Please select both department and document type', 'warning');
+        if (!this.selectedDepartment || !this.selectedDocumentType || !this.selectedPurpose) {
+            await this.showToast('Please fill in all required fields', 'warning');
             return;
         }
 
-        // Get selected department and service details
+        // Get selected details
         const department = this.departments.find(d => d.id === this.selectedDepartment);
-        const service = this.availableServices.find(s => s.id === this.selectedDocumentType);
+        const document = this.availableDocuments.find(d => d.id === this.selectedDocumentType);
 
-        if (!department || !service) {
+        if (!department || !document) {
             await this.showToast('Invalid selection. Please try again.', 'danger');
             return;
         }
@@ -69,40 +145,41 @@ export class RequestDocumentPage implements OnInit {
             ? `${currentUser.name.givenName} ${currentUser.name.middleInitial ? currentUser.name.middleInitial + '. ' : ''}${currentUser.name.lastName}${currentUser.name.extension ? ' ' + currentUser.name.extension : ''}`
             : 'Unknown User';
 
-        // Create request object
+        // Create request object matching admin's expected format
         const request = {
-            id: Date.now(), // Simple ID generation
+            id: Date.now(),
             userName: userName,
             userEmail: currentUser?.email || '',
-            departmentId: this.selectedDepartment,
             departmentName: department.name,
-            serviceId: this.selectedDocumentType,
-            serviceName: service.name,
-            serviceType: service.type,
-            notes: this.additionalNotes,
+            serviceName: document.name,
+            purpose: this.selectedPurpose,
+            notes: this.additionalNotes || 'No additional notes',
             status: 'Pending',
-            dateRequested: new Date().toISOString(),
-            processingTime: service.processingTime,
-            fee: service.fee
+            dateRequested: new Date().toISOString()
         };
 
-        // Save to localStorage (in a real app, this would be an API call)
+        // Save to localStorage
         const existingRequests = JSON.parse(localStorage.getItem('document_requests') || '[]');
         existingRequests.push(request);
         localStorage.setItem('document_requests', JSON.stringify(existingRequests));
 
         // Show success message
-        await this.showToast(`Request submitted successfully! Your ${service.name} request is now being processed.`, 'success');
+        await this.showToast(
+            `Request submitted successfully! Your ${document.name} request for ${this.selectedPurpose} is now being processed.`, 
+            'success'
+        );
 
         // Reset form
         this.resetForm();
     }
 
     resetForm() {
-        this.selectedDepartment = null;
-        this.selectedDocumentType = null;
+        this.selectedDepartment = '';
+        this.selectedDocumentType = '';
+        this.selectedPurpose = '';
         this.additionalNotes = '';
-        this.availableServices = [];
+        this.availableDocuments = [];
+        this.availablePurposes = [];
     }
 
     async showToast(message: string, color: 'success' | 'warning' | 'danger') {
