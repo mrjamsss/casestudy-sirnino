@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DepartmentsService } from '../../services/departments.service';
 import { Department, Service } from '../../shared/models/department.interface';
 import { ToastController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-request-document',
@@ -19,7 +20,8 @@ export class RequestDocumentPage implements OnInit {
 
     constructor(
         private departmentsService: DepartmentsService,
-        private toastController: ToastController
+        private toastController: ToastController,
+        private authService: AuthService
     ) { }
 
     ngOnInit() {
@@ -61,9 +63,17 @@ export class RequestDocumentPage implements OnInit {
             return;
         }
 
+        // Get current user information
+        const currentUser = this.authService.getCurrentUser();
+        const userName = currentUser 
+            ? `${currentUser.name.givenName} ${currentUser.name.middleInitial ? currentUser.name.middleInitial + '. ' : ''}${currentUser.name.lastName}${currentUser.name.extension ? ' ' + currentUser.name.extension : ''}`
+            : 'Unknown User';
+
         // Create request object
         const request = {
             id: Date.now(), // Simple ID generation
+            userName: userName,
+            userEmail: currentUser?.email || '',
             departmentId: this.selectedDepartment,
             departmentName: department.name,
             serviceId: this.selectedDocumentType,
