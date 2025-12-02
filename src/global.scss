@@ -43,13 +43,21 @@ ion-modal {
   --width: 90vw !important;
 }
 
-/* Announcement Modal - Custom sizing */
+/* Announcement Modal - Custom sizing and white theme */
 ion-modal.announcement-modal {
   --height: auto;
   --max-height: 90vh;
   --width: 600px;
   --max-width: 90vw;
   --border-radius: 16px;
+  --background: #ffffff;
+  --ion-background-color: #ffffff;
+  --ion-text-color: #000000;
+}
+
+/* Force white background for announcement modal content */
+ion-modal.announcement-modal::part(content) {
+  background: #ffffff;
 }
 
 /* Small Modal - Custom sizing */
