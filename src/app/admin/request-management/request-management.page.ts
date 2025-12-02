@@ -29,7 +29,7 @@ export class RequestManagementPage implements OnInit {
   showDetailsModal = false;
   showCreateTemplateModal = false;
   showViewTemplateModal = false;
-  
+
   offices = [
     'Civil Registry',
     'Business Permits and Licensing Office',
@@ -132,14 +132,14 @@ export class RequestManagementPage implements OnInit {
   // Template storage
   savedTemplates: { [key: string]: any } = {};
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.loadRequests();
     this.updateCounts();
   }
 
-    loadRequests() {
+  loadRequests() {
     const storedRequests = localStorage.getItem('document_requests');
     if (storedRequests) {
       try {
@@ -191,7 +191,7 @@ export class RequestManagementPage implements OnInit {
   searchRequests() {
     // Trim whitespace from search input
     const trimmedSearch = this.searchId?.trim() || '';
-    
+
     // If all filters are empty, show all requests
     if (!trimmedSearch && !this.selectedDocumentType && !this.selectedDepartment && !this.selectedDate) {
       this.filteredRequests = [...this.requests];
@@ -200,18 +200,18 @@ export class RequestManagementPage implements OnInit {
 
     this.filteredRequests = this.requests.filter(req => {
       // Search by ID or Name (only if search text exists)
-      const matchesSearch = !trimmedSearch || 
+      const matchesSearch = !trimmedSearch ||
         req.id.toLowerCase().includes(trimmedSearch.toLowerCase()) ||
         req.user.toLowerCase().includes(trimmedSearch.toLowerCase());
-      
+
       // Filter by document type
-      const matchesType = !this.selectedDocumentType || 
+      const matchesType = !this.selectedDocumentType ||
         req.documentType === this.selectedDocumentType;
-      
+
       // Filter by department (status)
-      const matchesDept = !this.selectedDepartment || 
+      const matchesDept = !this.selectedDepartment ||
         req.department === this.selectedDepartment;
-      
+
       // Filter by date
       let matchesDate = true;
       if (this.selectedDate) {
@@ -220,7 +220,7 @@ export class RequestManagementPage implements OnInit {
         const formattedSearchDate = `${day}/${month}/${year}`;
         matchesDate = req.date === formattedSearchDate;
       }
-      
+
       return matchesSearch && matchesType && matchesDept && matchesDate;
     });
   }
@@ -248,7 +248,7 @@ export class RequestManagementPage implements OnInit {
 
   deleteRequest() {
     if (!this.selectedRequest) return;
-    
+
     if (confirm(`Are you sure you want to delete request ${this.selectedRequest.id}?`)) {
       this.requests = this.requests.filter(r => r.id !== this.selectedRequest!.id);
       this.filteredRequests = this.filteredRequests.filter(r => r.id !== this.selectedRequest!.id);
@@ -260,45 +260,48 @@ export class RequestManagementPage implements OnInit {
 
   approveRequest() {
     if (!this.selectedRequest) return;
-    
+
     const index = this.requests.findIndex(r => r.id === this.selectedRequest!.id);
     if (index !== -1) {
       this.requests[index].status = 'processing';
       this.selectedRequest.status = 'processing';
     }
-    
+
     this.updateCounts();
     this.saveRequests();
+    this.logTransaction('Approved', `Request ${this.selectedRequest.id} approved`);
     this.closeDetailsModal();
     alert('Request approved successfully!');
   }
 
   rejectRequest() {
     if (!this.selectedRequest) return;
-    
+
     const index = this.requests.findIndex(r => r.id === this.selectedRequest!.id);
     if (index !== -1) {
       this.requests[index].status = 'rejected';
       this.selectedRequest.status = 'rejected';
     }
-    
+
     this.updateCounts();
     this.saveRequests();
+    this.logTransaction('Rejected', `Request ${this.selectedRequest.id} rejected`);
     this.closeDetailsModal();
     alert('Request rejected.');
   }
 
   markForPickup() {
     if (!this.selectedRequest) return;
-    
+
     const index = this.requests.findIndex(r => r.id === this.selectedRequest!.id);
     if (index !== -1) {
       this.requests[index].status = 'ready';
       this.selectedRequest.status = 'ready';
     }
-    
+
     this.updateCounts();
     this.saveRequests();
+    this.logTransaction('Ready for Pickup', `Request ${this.selectedRequest.id} marked as ready for pickup`);
     this.closeDetailsModal();
     alert('Request marked as ready for pickup!');
   }
@@ -310,7 +313,7 @@ export class RequestManagementPage implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    switch(status) {
+    switch (status) {
       case 'completed': return 'success';
       case 'processing': return 'primary';
       case 'pending': return 'warning';
@@ -326,11 +329,11 @@ export class RequestManagementPage implements OnInit {
 
   createNewCertificate(templateName: string) {
     console.log('Create new:', templateName);
-    
+
     // Only open modal for Business Permit, Tax Clearance, and Health Certificate
-    if (templateName === 'Business Permit' || 
-        templateName === 'Tax Clearance Certificate' || 
-        templateName === 'Health Certificate') {
+    if (templateName === 'Business Permit' ||
+      templateName === 'Tax Clearance Certificate' ||
+      templateName === 'Health Certificate') {
       this.currentTemplateName = templateName;
       this.loadTemplateDefaults(templateName);
       this.closeTemplateModal();
@@ -342,7 +345,7 @@ export class RequestManagementPage implements OnInit {
 
   loadTemplateDefaults(templateName: string) {
     this.templateName = templateName;
-    
+
     // Load saved template if exists
     if (this.savedTemplates[templateName]) {
       const saved = this.savedTemplates[templateName];
@@ -354,7 +357,7 @@ export class RequestManagementPage implements OnInit {
     }
 
     // Default templates
-    switch(templateName) {
+    switch (templateName) {
       case 'Business Permit':
         this.headerText = `Republic of the Philippines
 MUNICIPALITY OF CAINTA
@@ -455,7 +458,7 @@ PRC # _______`;
       secretaryName: this.secretaryName,
       logoFile: this.logoFile
     };
-    
+
     alert(`Template for ${this.currentTemplateName} saved successfully!`);
     this.closeCreateTemplateModal();
   }
@@ -477,12 +480,12 @@ PRC # _______`;
 
   viewTemplate(templateName: string) {
     console.log('View template:', templateName);
-    
+
     // Only open view modal for Business Permit, Tax Clearance, and Health Certificate
-    if (templateName === 'Business Permit' || 
-        templateName === 'Tax Clearance Certificate' || 
-        templateName === 'Health Certificate') {
-      
+    if (templateName === 'Business Permit' ||
+      templateName === 'Tax Clearance Certificate' ||
+      templateName === 'Health Certificate') {
+
       if (this.savedTemplates[templateName]) {
         this.currentTemplateName = templateName;
         const saved = this.savedTemplates[templateName];
@@ -502,6 +505,24 @@ PRC # _______`;
   closeViewTemplateModal() {
     this.showViewTemplateModal = false;
     this.resetTemplateForm();
+  }
+
+  logTransaction(action: 'Approved' | 'Rejected' | 'Ready for Pickup', details: string) {
+    if (!this.selectedRequest) return;
+
+    const newLog = {
+      id: 'LOG-' + Date.now(),
+      requestId: this.selectedRequest.id,
+      user: this.selectedRequest.user,
+      documentType: this.selectedRequest.documentType,
+      action: action,
+      timestamp: new Date().toISOString(),
+      details: details
+    };
+
+    const existingLogs = JSON.parse(localStorage.getItem('transaction_logs') || '[]');
+    existingLogs.unshift(newLog); // Add new log to the beginning
+    localStorage.setItem('transaction_logs', JSON.stringify(existingLogs));
   }
 
   downloadPreview() {

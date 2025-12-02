@@ -58,6 +58,48 @@
                 </div>
             </div>
 
+            <!-- Transactions Section -->
+            <div *ngIf="selectedSegment === 'transactions'" class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Transaction Logs</h2>
+                        <p class="section-subtitle">View history of all actions</p>
+                    </div>
+                </div>
+
+                <div class="user-table-wrapper">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Log ID</th>
+                                <th>Request ID</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Date</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="user-row" *ngFor="let log of transactionLogs">
+                                <td class="id-col">{{ log.id }}</td>
+                                <td>{{ log.requestId }}</td>
+                                <td>{{ log.user }}</td>
+                                <td>
+                                    <span class="status-badge" [ngClass]="getActionColor(log.action)">
+                                        {{ log.action }}
+                                    </span>
+                                </td>
+                                <td>{{ log.timestamp | date:'medium' }}</td>
+                                <td class="notes-col">{{ log.details }}</td>
+                            </tr>
+                            <tr *ngIf="transactionLogs.length === 0">
+                                <td colspan="6" class="text-center">No transactions found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Info Box -->
             <div class="info-box">
                 <h3>Need to download receipts or documents?</h3>
