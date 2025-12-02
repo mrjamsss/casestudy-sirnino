@@ -1,0 +1,127 @@
+.page-background {
+    --background: #f4f5f8;
+}
+
+.page-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-section {
+    margin-bottom: 24px;
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    .search-label {
+        margin: 0 0 12px 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .custom-searchbar {
+        --background: #ffffff;
+        --box-shadow: none;
+        --border-radius: 8px;
+        padding: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        height: 48px;
+    }
+}
+
+.faq-list {
+    .category-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+        overflow: hidden;
+        padding-top: 16px;
+        padding-bottom: 0;
+    }
+
+    .category-header {
+        padding: 0 24px 12px 24px;
+
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+    }
+
+    ion-accordion-group {
+        background: transparent;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .custom-accordion {
+        background: transparent;
+
+        ion-item {
+            --background: transparent;
+            --inner-padding-end: 24px;
+            --padding-start: 24px;
+            --min-height: 56px;
+            border-top: 1px solid #f3f4f6;
+
+            h3 {
+                font-weight: 500;
+                font-size: 15px;
+                color: #374151;
+                margin: 0;
+                white-space: normal;
+            }
+        }
+
+        .accordion-content {
+            background: #f9fafb;
+            color: #4b5563;
+            line-height: 1.6;
+            font-size: 15px;
+            padding: 16px 24px;
+        }
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--ion-color-medium);
+
+    ion-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    p {
+        font-size: 16px;
+    }
+}
+
+.contact-support {
+    margin-top: 48px;
+    text-align: center;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #1f2937;
+    }
+
+    p {
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+}
