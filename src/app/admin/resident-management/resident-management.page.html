@@ -199,7 +199,8 @@
                 </div>
                 <div class="form-group">
                     <label>Date Registered *</label>
-                    <input type="date" [(ngModel)]="residentForm.dateRegistered" [disabled]="modalMode === 'view'" required>
+                    <input type="date" [(ngModel)]="residentForm.dateRegistered" [disabled]="modalMode === 'view'"
+                        required>
                 </div>
 
                 <!-- Basic Personal Info -->
@@ -405,7 +406,8 @@
 
                 <div class="form-group">
                     <label>Years of Residency *</label>
-                    <input type="number" [(ngModel)]="residentForm.residencyYears" required [disabled]="modalMode === 'view'">
+                    <input type="number" [(ngModel)]="residentForm.residencyYears" required
+                        [disabled]="modalMode === 'view'">
                 </div>
                 <div class="form-group">
                     <label>Phone Number *</label>
@@ -434,11 +436,13 @@
                 <!-- Household Information -->
                 <div class="form-group">
                     <label>Household Head Name *</label>
-                    <input type="text" [(ngModel)]="residentForm.householdHead" required [disabled]="modalMode === 'view'">
+                    <input type="text" [(ngModel)]="residentForm.householdHead" required
+                        [disabled]="modalMode === 'view'">
                 </div>
                 <div class="form-group">
                     <label>Relationship to Household Head *</label>
-                    <input type="text" [(ngModel)]="residentForm.householdHeadRel" required [disabled]="modalMode === 'view'">
+                    <input type="text" [(ngModel)]="residentForm.householdHeadRel" required
+                        [disabled]="modalMode === 'view'">
                 </div>
                 <div class="form-group">
                     <label>House Ownership *</label>
@@ -500,15 +504,18 @@
                 <!-- Emergency & Record Status -->
                 <div class="form-group">
                     <label>Emergency Contact Name *</label>
-                    <input type="text" [(ngModel)]="residentForm.emerContactName" required [disabled]="modalMode === 'view'">
+                    <input type="text" [(ngModel)]="residentForm.emerContactName" required
+                        [disabled]="modalMode === 'view'">
                 </div>
                 <div class="form-group">
                     <label>Relationship *</label>
-                    <input type="text" [(ngModel)]="residentForm.emerContactRel" required [disabled]="modalMode === 'view'">
+                    <input type="text" [(ngModel)]="residentForm.emerContactRel" required
+                        [disabled]="modalMode === 'view'">
                 </div>
                 <div class="form-group">
                     <label>Contact Number *</label>
-                    <input type="tel" [(ngModel)]="residentForm.emerContactNumber" required [disabled]="modalMode === 'view'">
+                    <input type="tel" [(ngModel)]="residentForm.emerContactNumber" required
+                        [disabled]="modalMode === 'view'">
                 </div>
 
                 <div class="form-group">
@@ -527,10 +534,10 @@
 
                 <div class="form-group">
                     <label>Registered Voter *</label>
-                    <select [(ngModel)]="residentForm.voter" required [disabled]="modalMode === 'view'">
-                        <option value="">Select</option>
-                        <option [value]="true">Yes</option>
-                        <option [value]="false">No</option>
+                    <select [(ngModel)]="residentForm.voter" required>
+                        <option [ngValue]="null">Select</option>
+                        <option [ngValue]="true">Yes</option>
+                        <option [ngValue]="false">No</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -829,11 +836,11 @@
                             [(ngModel)]="residentForm.remarks"></textarea></div>
 
                     <div class="form-group">
-                        <label>Registered Voter</label>
-                        <select [(ngModel)]="residentForm.voter">
-                            <option value="">Select</option>
-                            <option [value]="true">Yes</option>
-                            <option [value]="false">No</option>
+                        <label>Registered Voter *</label>
+                        <select [(ngModel)]="residentForm.voter" required>
+                            <option [ngValue]="null">Select</option>
+                            <option [ngValue]="true">Yes</option>
+                            <option [ngValue]="false">No</option>
                         </select>
                     </div>
 
