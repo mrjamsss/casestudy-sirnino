@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, ToastController, ModalController } from '@ionic/angular';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { OfficialModalComponent } from './official-modal/official-modal.component';
+import { CityInfoModalComponent } from './city-info-modal/city-info-modal.component';
 
 interface BarangayOfficial {
     id?: string;
@@ -55,16 +56,16 @@ export class SystemSettingsPage implements OnInit {
     initializeForms() {
         // Barangay Info Form
         this.barangayInfoForm = this.fb.group({
-            name: ['Cabanatuan City ', Validators.required],
-            captain: ['', Validators.required],
-            address: ['', Validators.required],
-            contact: ['', [Validators.required, Validators.pattern(/^09\d{9}$/)]],
+            name: [''],
+            captain: [''],
+            address: [''],
+            contact: [''],
         });
 
         // Vision & Mission Form
         this.visionMissionForm = this.fb.group({
-            vision: ['', Validators.required],
-            mission: ['', Validators.required],
+            vision: [''],
+            mission: [''],
         });
 
         // Password Form
@@ -97,6 +98,7 @@ export class SystemSettingsPage implements OnInit {
 
     // Officials Management
     loadOfficials() {
+        // Trigger rebuild
         this.loadingOfficials = true;
         // Simulate loading from storage
         setTimeout(() => {
@@ -188,6 +190,168 @@ export class SystemSettingsPage implements OnInit {
 
     saveOfficials() {
         localStorage.setItem('cityHallOfficials', JSON.stringify(this.officials));
+    }
+
+    async openCityInfoModal() {
+        const modal = await this.modalController.create({
+            component: CityInfoModalComponent
+        });
+
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            // Populate the barangay info form
+            this.barangayInfoForm.patchValue({
+                name: data.name,
+                captain: data.mayor,
+                address: data.address,
+                contact: data.contact
+            });
+
+            // Populate the vision & mission form
+            this.visionMissionForm.patchValue({
+                vision: data.vision,
+                mission: data.mission
+            });
+
+            // Set the logo
+            if (data.logo) {
+                this.uploadedLogo = data.logo;
+                localStorage.setItem('cityHallLogo', data.logo);
+            }
+
+            // Save all data
+            localStorage.setItem('cityHallInfo', JSON.stringify({
+                name: data.name,
+                captain: data.mayor,
+                address: data.address,
+                contact: data.contact
+            }));
+
+            localStorage.setItem('visionMission', JSON.stringify({
+                vision: data.vision,
+                mission: data.mission
+            }));
+
+            await this.showToast('City information added successfully', 'success');
+        }
+    }
+
+    async editCityInfo() {
+        const modal = await this.modalController.create({
+            component: CityInfoModalComponent,
+            componentProps: {
+                initialData: {
+                    name: this.barangayInfoForm.get('name')?.value || '',
+                    mayor: this.barangayInfoForm.get('captain')?.value || '',
+                    address: this.barangayInfoForm.get('address')?.value || '',
+                    contact: this.barangayInfoForm.get('contact')?.value || '',
+                    vision: this.visionMissionForm.get('vision')?.value || '',
+                    mission: this.visionMissionForm.get('mission')?.value || '',
+                    logo: this.uploadedLogo
+                },
+                startStep: 1
+            }
+        });
+
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            this.updateCityData(data);
+        }
+    }
+
+    async editVisionMission() {
+        const modal = await this.modalController.create({
+            component: CityInfoModalComponent,
+            componentProps: {
+                initialData: {
+                    name: this.barangayInfoForm.get('name')?.value || '',
+                    mayor: this.barangayInfoForm.get('captain')?.value || '',
+                    address: this.barangayInfoForm.get('address')?.value || '',
+                    contact: this.barangayInfoForm.get('contact')?.value || '',
+                    vision: this.visionMissionForm.get('vision')?.value || '',
+                    mission: this.visionMissionForm.get('mission')?.value || '',
+                    logo: this.uploadedLogo
+                },
+                startStep: 2
+            }
+        });
+
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            this.updateCityData(data);
+        }
+    }
+
+    async editLogo() {
+        const modal = await this.modalController.create({
+            component: CityInfoModalComponent,
+            componentProps: {
+                initialData: {
+                    name: this.barangayInfoForm.get('name')?.value || '',
+                    mayor: this.barangayInfoForm.get('captain')?.value || '',
+                    address: this.barangayInfoForm.get('address')?.value || '',
+                    contact: this.barangayInfoForm.get('contact')?.value || '',
+                    vision: this.visionMissionForm.get('vision')?.value || '',
+                    mission: this.visionMissionForm.get('mission')?.value || '',
+                    logo: this.uploadedLogo
+                },
+                startStep: 3
+            }
+        });
+
+        await modal.present();
+
+        const { data, role } = await modal.onWillDismiss();
+
+        if (role === 'confirm' && data) {
+            this.updateCityData(data);
+        }
+    }
+
+    private updateCityData(data: any) {
+        // Populate the barangay info form
+        this.barangayInfoForm.patchValue({
+            name: data.name,
+            captain: data.mayor,
+            address: data.address,
+            contact: data.contact
+        });
+
+        // Populate the vision & mission form
+        this.visionMissionForm.patchValue({
+            vision: data.vision,
+            mission: data.mission
+        });
+
+        // Set the logo
+        if (data.logo) {
+            this.uploadedLogo = data.logo;
+            localStorage.setItem('cityHallLogo', data.logo);
+        }
+
+        // Save all data
+        localStorage.setItem('cityHallInfo', JSON.stringify({
+            name: data.name,
+            captain: data.mayor,
+            address: data.address,
+            contact: data.contact
+        }));
+
+        localStorage.setItem('visionMission', JSON.stringify({
+            vision: data.vision,
+            mission: data.mission
+        }));
+
+        this.showToast('City information updated successfully', 'success');
     }
 
     // Barangay Info

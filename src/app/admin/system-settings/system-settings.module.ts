@@ -9,6 +9,7 @@ import { SystemSettingsPageRoutingModule } from './system-settings-routing.modul
 
 import { SystemSettingsPage } from './system-settings.page';
 import { OfficialModalComponent } from './official-modal/official-modal.component';
+import { CityInfoModalComponent } from './city-info-modal/city-info-modal.component';
 
 @NgModule({
     imports: [
@@ -19,6 +20,6 @@ import { OfficialModalComponent } from './official-modal/official-modal.componen
         IonicModule,
         SystemSettingsPageRoutingModule
     ],
-    declarations: [SystemSettingsPage, OfficialModalComponent]
+    declarations: [SystemSettingsPage, OfficialModalComponent, CityInfoModalComponent]
 })
 export class SystemSettingsPageModule { }

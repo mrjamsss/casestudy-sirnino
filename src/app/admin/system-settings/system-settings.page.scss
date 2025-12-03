@@ -103,6 +103,7 @@ ion-content {
 .header-actions {
     display: flex;
     gap: 12px;
+    align-items: center;
 }
 
 .export-button {
@@ -292,6 +293,7 @@ ion-content {
         --padding-end: 16px;
         font-size: 0.9375rem;
         font-weight: 500;
+        --highlight-color-focused: #{$cbn-primary};
     }
 
     .custom-textarea {
@@ -488,5 +490,24 @@ ion-content {
             width: 100%;
             justify-content: flex-end;
         }
+    }
+}
+
+.edit-section-btn {
+    --color: #{$cbn-primary};
+    --border-color: #{$cbn-primary};
+    --border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    height: 40px;
+    text-transform: none;
+    margin: 0;
+
+    &:hover {
+        --background: rgba($cbn-primary, 0.05);
+    }
+
+    ion-icon {
+        font-size: 18px;
     }
 }

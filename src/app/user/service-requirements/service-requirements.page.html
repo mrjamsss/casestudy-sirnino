@@ -1,11 +1,12 @@
-<ion-content class="ion-padding-vertical">
-    <div class="main-container">
-        <div class="header-section ion-padding-horizontal">
+<ion-content class="ion-no-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
             <h1>Service Requirements</h1>
             <p class="subtitle">Complete checklists for each department's services</p>
         </div>
 
-        <div class="departments-list ion-padding">
+        <div class="content-wrapper">
             <ion-card *ngFor="let dept of departments" class="department-card">
                 <ion-card-header>
                     <ion-card-title>{{ dept.name }}</ion-card-title>
@@ -53,6 +54,13 @@
                     </ion-accordion-group>
                 </ion-card-content>
             </ion-card>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <h3>Need more information?</h3>
+                <p>Contact the relevant department or visit City Hall for additional details about service requirements
+                    and processing.</p>
+            </div>
         </div>
     </div>
 </ion-content>

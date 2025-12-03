@@ -1,46 +1,47 @@
-<ion-content class="ion-padding page-background">
+<ion-content class="ion-no-padding">
     <div class="page-container">
-
-        <div class="search-section">
-            <p class="search-label">Type keywords to find relevant answers</p>
-            <ion-searchbar placeholder="Search for answers..." [(ngModel)]="searchTerm" (ionInput)="filterFaqs()"
-                class="custom-searchbar">
-            </ion-searchbar>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Help & Support</h1>
+            <p class="subtitle">Find answers to frequently asked questions</p>
         </div>
 
-        <div *ngIf="groupedFaqs.length === 0" class="empty-state">
-            <ion-icon name="search-outline"></ion-icon>
-            <p>No results found.</p>
-        </div>
-
-        <div class="faq-list">
-            <div *ngFor="let group of groupedFaqs" class="category-card">
-                <div class="category-header">
-                    <h2>{{ group.category }}</h2>
-                </div>
-
-                <ion-accordion-group>
-                    <ion-accordion *ngFor="let faq of group.faqs" [value]="faq.id" class="custom-accordion">
-                        <ion-item slot="header" lines="none">
-                            <ion-label>
-                                <h3>{{ faq.question }}</h3>
-                            </ion-label>
-                        </ion-item>
-                        <div class="ion-padding accordion-content" slot="content">
-                            {{ faq.answer }}
-                        </div>
-                    </ion-accordion>
-                </ion-accordion-group>
+        <div class="content-wrapper">
+            <!-- Search Section -->
+            <div class="search-section">
+                <p class="search-label">Type keywords to find relevant answers</p>
+                <ion-searchbar placeholder="Search for answers..." [(ngModel)]="searchTerm" (ionInput)="filterFaqs()"
+                    class="custom-searchbar" mode="ios">
+                </ion-searchbar>
             </div>
-        </div>
 
-        <div class="contact-support">
-            <h3>Still need help?</h3>
-            <p>Contact our support team for further assistance.</p>
-            <ion-button expand="block" fill="outline" color="primary">
-                <ion-icon name="mail-outline" slot="start"></ion-icon>
-                Contact Support
-            </ion-button>
+            <!-- Empty State -->
+            <div *ngIf="groupedFaqs.length === 0" class="empty-state">
+                <ion-icon name="search-outline"></ion-icon>
+                <p>No results found for your search.</p>
+            </div>
+
+            <!-- FAQ List -->
+            <div class="faq-list">
+                <div *ngFor="let group of groupedFaqs" class="category-card">
+                    <div class="category-header">
+                        <h2>{{ group.category }}</h2>
+                    </div>
+
+                    <ion-accordion-group>
+                        <ion-accordion *ngFor="let faq of group.faqs" [value]="faq.id" class="custom-accordion">
+                            <ion-item slot="header" lines="none">
+                                <ion-label>
+                                    <h3>{{ faq.question }}</h3>
+                                </ion-label>
+                            </ion-item>
+                            <div class="ion-padding accordion-content" slot="content">
+                                {{ faq.answer }}
+                            </div>
+                        </ion-accordion>
+                    </ion-accordion-group>
+                </div>
+            </div>
         </div>
     </div>
 </ion-content>

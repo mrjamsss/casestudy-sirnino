@@ -78,7 +78,7 @@ export class AnnouncementsPage implements OnInit {
             warning: 'warning',
             urgent: 'danger',
             maintenance: 'secondary',
-            event: 'tertiary'
+            event: 'primary'
         };
         return colors[type];
     }
