@@ -428,6 +428,123 @@ ion-content {
     color: #059669;
   }
 
+
+/* Responsive adjustments for Request Management Page */
+
+/* Ensure modal/content widths never overflow small viewports */
+.modal-content {
+  max-width: 100%;
+  width: 960px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1199px) {
+  .filter-row {
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr) auto;
+    }
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 991px) {
+  .content-wrapper {
+    padding: 16px;
+  }
+
+  .page-header {
+    padding: 16px;
+  }
+
+  .section-card {
+    padding: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .filter-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-items: stretch;
+
+    .custom-select, .custom-input {
+      min-width: 0;
+    }
+  }
+
+  .search-group {
+    width: 100%;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* Make the table rows stack as cards for narrow screens */
+  .user-table {
+    thead {
+      display: none;
+    }
+
+    tbody {
+      .user-row {
+        display: block;
+        background: white;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        border: 1px solid #eef2f7;
+
+        td {
+          display: flex;
+          justify-content: space-between;
+          padding: 8px 10px;
+        }
+
+        td.request-id {
+          font-weight: 700;
+          color: $cbn-primary;
+          margin-bottom: 6px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .search-group .custom-input, .custom-input {
+    height: 44px;
+  }
+
+  .search-group .search-btn {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+
+  .modal-content {
+    width: 96%;
+    padding: 12px;
+  }
+}
+
   &[data-status="rejected"] {
     background: rgba(#ef4444, 0.1);
     color: #dc2626;
