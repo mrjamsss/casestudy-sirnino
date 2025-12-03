@@ -1,24 +1,60 @@
-.settings-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+@use 'sass:color';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+// Cabanatuan City Colors
+$cbn-primary: #0F4C81;
+$cbn-secondary: #FFC300;
+$cbn-background: #F4F7F9;
+$cbn-text-dark: #0f172a;
+$cbn-text-light: #64748b;
+
+// Typography
+$font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+// Global Styles
+* {
+    font-family: $font-family;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+ion-content {
+    --background: #{$cbn-background};
+}
+
+.page-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+// Page Header
 .page-header {
-    margin-bottom: 30px;
+    background: white;
+    padding: 24px 32px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e8f0;
 
     h1 {
-        font-size: 28px;
+        font-size: 1.5rem;
         font-weight: 600;
-        color: #1a1a1a;
-        margin: 0 0 8px 0;
+        color: $cbn-text-dark;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.01em;
     }
 
     .subtitle {
-        font-size: 14px;
-        color: #666;
+        font-size: 0.875rem;
+        color: $cbn-text-light;
         margin: 0;
+        font-weight: 400;
+        line-height: 1.5;
     }
+}
+
+// Content Wrapper
+.content-wrapper {
+    padding: 24px 32px;
 }
 
 .settings-grid {
@@ -26,133 +62,147 @@
     grid-template-columns: 1fr 1fr;
     gap: 24px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         grid-template-columns: 1fr;
     }
 }
 
-.settings-card {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+// Section Cards
+.section-card {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
     margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
 
     &:last-child {
         margin-bottom: 0;
     }
 }
 
-.card-header {
-    margin-bottom: 24px;
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid $cbn-background;
+    flex-wrap: wrap;
+    gap: 16px;
 
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 16px;
+    .header-left {
+        flex: 1;
     }
 
     h2 {
-        font-size: 18px;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin: 0 0 4px 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $cbn-text-dark;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.01em;
     }
 
-    .card-subtitle {
-        font-size: 13px;
-        color: #666;
+    .section-subtitle {
+        font-size: 0.9375rem;
+        color: $cbn-text-light;
         margin: 0;
+        font-weight: 500;
     }
 }
 
 .edit-button {
-    --border-color: #1976d2;
-    --color: #1976d2;
-    font-weight: 500;
+    --border-color: #{$cbn-primary};
+    --color: #{$cbn-primary};
+    font-weight: 600;
     text-transform: none;
     height: 36px;
-    font-size: 14px;
+    font-size: 0.875rem;
     flex-shrink: 0;
+    --border-radius: 8px;
 
     &:hover {
-        --background: rgba(25, 118, 210, 0.04);
+        --background: rgba($cbn-primary, 0.04);
     }
 }
 
-// Personal Information Form
+// Form Styles
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 
     label {
         display: block;
-        font-size: 13px;
-        font-weight: 500;
-        color: #333;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $cbn-text-dark;
         margin-bottom: 8px;
     }
 
     ion-input {
-        --background: #f5f5f5;
-        --padding-start: 12px;
-        --padding-end: 12px;
-        --padding-top: 10px;
-        --padding-bottom: 10px;
-        border-radius: 4px;
-        font-size: 14px;
-        border: 1px solid #e0e0e0;
+        --background: #f8fafc;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        border: 1px solid #e2e8f0;
+        color: $cbn-text-dark;
 
         &.readonly-input {
-            --background: #fafafa;
-            --color: #666;
+            --background: #f1f5f9;
+            --color: $cbn-text-light;
+            border-color: transparent;
         }
     }
-}
-
-.save-button {
-    --background: #1976d2;
-    --background-hover: #1565c0;
-    --background-activated: #0d47a1;
-    --color: #ffffff;
-    font-weight: 500;
-    text-transform: none;
-    margin-top: 8px;
-    height: 44px;
-    font-size: 15px;
 }
 
 .button-group {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 8px;
+    margin-top: 32px;
+}
+
+.save-button {
+    --background: #{$cbn-primary};
+    --background-hover: #{color.adjust($cbn-primary, $lightness: -5%)};
+    --color: #ffffff;
+    font-weight: 600;
+    text-transform: none;
+    height: 48px;
+    font-size: 1rem;
+    --border-radius: 8px;
+    margin: 0;
 }
 
 .cancel-button {
-    --border-color: #666;
-    --color: #666;
-    font-weight: 500;
+    --border-color: #cbd5e1;
+    --color: $cbn-text-light;
+    font-weight: 600;
     text-transform: none;
-    height: 44px;
-    font-size: 15px;
+    height: 48px;
+    font-size: 1rem;
+    --border-radius: 8px;
+    margin: 0;
 
     &:hover {
-        --background: rgba(102, 102, 102, 0.04);
+        --background: #f8fafc;
     }
 }
 
-// Change Password Card
+// Password Card
 .password-card {
     .form-group {
         label {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
 
             .label-icon {
-                font-size: 16px;
-                color: #1976d2;
+                font-size: 1.125rem;
+                color: $cbn-primary;
             }
         }
     }
@@ -164,40 +214,27 @@
 
         ion-input {
             flex: 1;
-            --background: #f5f5f5;
-            --padding-start: 12px;
-            --padding-end: 40px;
-            --padding-top: 10px;
-            --padding-bottom: 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            border: 1px solid #e0e0e0;
+            --padding-end: 48px;
         }
 
         .password-toggle {
             position: absolute;
-            right: 12px;
-            font-size: 20px;
-            color: #666;
+            right: 16px;
+            font-size: 1.25rem;
+            color: $cbn-text-light;
             cursor: pointer;
             z-index: 10;
+            transition: color 0.2s;
 
             &:hover {
-                color: #1976d2;
+                color: $cbn-primary;
             }
         }
     }
 
     .update-password-button {
-        --background: #1976d2;
-        --background-hover: #1565c0;
-        --background-activated: #0d47a1;
-        --color: #ffffff;
-        font-weight: 500;
-        text-transform: none;
-        margin-top: 8px;
-        height: 44px;
-        font-size: 15px;
+        @extend .save-button;
+        margin-top: 32px;
     }
 }
 
@@ -207,49 +244,31 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 200px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 20px;
+        min-height: 240px;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 32px;
+        border: 1px dashed #cbd5e1;
 
         img {
             width: 180px;
             height: 180px;
             border-radius: 50%;
             object-fit: cover;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .no-logo {
             text-align: center;
-            color: #999;
-
-            ion-icon {
-                font-size: 64px;
-                margin-bottom: 12px;
-            }
+            color: $cbn-text-light;
 
             p {
                 margin: 0;
-                font-size: 14px;
-            }
-
-            .not-available-text {
-                color: #999;
+                font-size: 0.9375rem;
                 font-style: italic;
             }
         }
     }
-}
-
-// Not available styling
-.not-available {
-    color: #999 !important;
-    font-style: italic;
-}
-
-.not-available-text {
-    color: #999;
-    font-style: italic;
 }
 
 // City Information Card
@@ -257,19 +276,27 @@
     .info-row {
         display: flex;
         align-items: flex-start;
-        padding: 12px 0;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 16px 0;
+        border-bottom: 1px solid #f1f5f9;
 
         &:last-child {
             border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        &:first-child {
+            padding-top: 0;
         }
 
         .info-icon {
-            font-size: 20px;
-            color: #1976d2;
-            margin-right: 12px;
+            font-size: 1.25rem;
+            color: $cbn-primary;
+            margin-right: 16px;
             margin-top: 2px;
             flex-shrink: 0;
+            background: rgba($cbn-primary, 0.1);
+            padding: 8px;
+            border-radius: 8px;
         }
 
         .info-content {
@@ -279,27 +306,19 @@
             gap: 4px;
 
             .info-label {
-                font-size: 12px;
-                color: #666;
-                font-weight: 500;
+                font-size: 0.8125rem;
+                color: $cbn-text-light;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
             }
 
             .info-value {
-                font-size: 14px;
-                color: #1a1a1a;
-                font-weight: 400;
+                font-size: 0.9375rem;
+                color: $cbn-text-dark;
+                font-weight: 500;
+                line-height: 1.5;
             }
-        }
-    }
-
-    .no-data {
-        text-align: center;
-        padding: 20px;
-        color: #999;
-
-        p {
-            margin: 0;
-            font-size: 14px;
         }
     }
 }
@@ -308,7 +327,7 @@
 .vision-card {
     .vision-mission-content {
         .vm-section {
-            margin-bottom: 20px;
+            margin-bottom: 32px;
 
             &:last-child {
                 margin-bottom: 0;
@@ -317,40 +336,33 @@
             .vm-header {
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                margin-bottom: 12px;
+                gap: 12px;
+                margin-bottom: 16px;
 
                 ion-icon {
-                    font-size: 20px;
-                    color: #1976d2;
+                    font-size: 1.25rem;
+                    color: $cbn-primary;
+                    background: rgba($cbn-primary, 0.1);
+                    padding: 8px;
+                    border-radius: 8px;
                 }
 
                 h3 {
-                    font-size: 15px;
-                    font-weight: 600;
-                    color: #1a1a1a;
+                    font-size: 1.125rem;
+                    font-weight: 700;
+                    color: $cbn-text-dark;
                     margin: 0;
                 }
             }
 
             p {
-                font-size: 14px;
-                line-height: 1.6;
-                color: #555;
+                font-size: 0.9375rem;
+                line-height: 1.7;
+                color: $cbn-text-dark;
                 margin: 0;
                 text-align: justify;
+                padding-left: 4px;
             }
-        }
-    }
-
-    .no-data {
-        text-align: center;
-        padding: 20px;
-        color: #999;
-
-        p {
-            margin: 0;
-            font-size: 14px;
         }
     }
 }
@@ -361,26 +373,36 @@
         .official-item {
             display: flex;
             align-items: center;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 12px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border-color: #e2e8f0;
+            }
 
             &:last-child {
                 margin-bottom: 0;
             }
 
             .official-avatar {
-                width: 48px;
-                height: 48px;
+                width: 56px;
+                height: 56px;
                 border-radius: 50%;
                 overflow: hidden;
-                margin-right: 12px;
+                margin-right: 16px;
                 flex-shrink: 0;
-                background: #e0e0e0;
+                background: #e2e8f0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                border: 2px solid white;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
                 img {
                     width: 100%;
@@ -389,8 +411,8 @@
                 }
 
                 ion-icon {
-                    font-size: 48px;
-                    color: #999;
+                    font-size: 56px;
+                    color: #94a3b8;
                 }
             }
 
@@ -398,57 +420,90 @@
                 flex: 1;
 
                 h4 {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: #1a1a1a;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    color: $cbn-text-dark;
                     margin: 0 0 4px 0;
                 }
 
                 p {
-                    font-size: 13px;
-                    color: #666;
+                    font-size: 0.875rem;
+                    color: $cbn-text-light;
                     margin: 0;
+                    font-weight: 500;
                 }
             }
         }
     }
+}
 
-    .no-data {
-        text-align: center;
-        padding: 20px;
-        color: #999;
+.not-available {
+    color: $cbn-text-light !important;
+    font-style: italic;
+    opacity: 0.7;
+}
 
-        p {
-            margin: 0;
-            font-size: 14px;
-        }
+.not-available-text {
+    color: $cbn-text-light;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.no-data {
+    text-align: center;
+    padding: 32px;
+    color: $cbn-text-light;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px dashed #cbd5e1;
+
+    p {
+        margin: 0;
+        font-size: 0.9375rem;
     }
 }
 
-// Responsive adjustments
+// Responsive Design
 @media (max-width: 768px) {
-    .settings-container {
-        padding: 16px;
+    .page-container {
+        padding: 0;
     }
 
     .page-header {
-        margin-bottom: 20px;
+        padding: 20px 16px;
 
         h1 {
-            font-size: 24px;
+            font-size: 1.25rem;
+        }
+
+        .subtitle {
+            font-size: 0.8125rem;
         }
     }
 
-    .settings-card {
-        padding: 20px;
+    .content-wrapper {
+        padding: 16px;
+    }
+
+    .section-card {
+        padding: 24px 16px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .edit-button {
+            width: 100%;
+        }
     }
 
     .logo-card .logo-display {
-        min-height: 150px;
+        min-height: 180px;
 
         img {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
         }
     }
 }
