@@ -97,7 +97,8 @@ export class SignUpModalComponent {
 
   // Phone number validation - only allow numbers, max 11 digits
   onPhoneInput(event: any) {
-    let value = event.target.value;
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
     // Remove all non-digit characters
     value = value.replace(/\D/g, '');
     // Limit to 11 digits
@@ -105,12 +106,13 @@ export class SignUpModalComponent {
       value = value.substring(0, 11);
     }
     this.formData.mobileNumber = value;
-    event.target.value = value;
+    input.value = value;
   }
 
   // Barangay Autocomplete
   filterBarangays(event: any) {
-    const query = event.target.value.toLowerCase();
+    const input = event.target as HTMLInputElement;
+    const query = input.value.toLowerCase();
     this.filteredBarangays = this.barangays.filter(b => b.toLowerCase().includes(query));
   }
 
@@ -147,6 +149,7 @@ export class SignUpModalComponent {
 
   onMouseLeaveBarangayList() {
     this.isMouseOverBarangayList = false;
+  }
   // List of ID types that should only accept numbers
   numericIdTypes = [
     'Philippine National ID (PhilSys ID)',
@@ -161,7 +164,8 @@ export class SignUpModalComponent {
   // Handle ID number input based on ID type
   onIdNumberInput(event: any) {
     const idType = this.formData.idType;
-    let value = event.target.value;
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
 
     // If the selected ID type is numeric, remove non-digit characters
     if (this.numericIdTypes.includes(idType)) {
@@ -170,7 +174,7 @@ export class SignUpModalComponent {
       // Only update if the value actually changed (to avoid cursor jumping issues if possible)
       if (value !== numericValue) {
         value = numericValue;
-        event.target.value = value;
+        input.value = value;
         this.formData.idNumber = value;
       }
     }
@@ -178,11 +182,12 @@ export class SignUpModalComponent {
 
   // House number validation - only allow numbers
   onHouseNoInput(event: any) {
-    let value = event.target.value;
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
     // Remove all non-digit characters
     value = value.replace(/\D/g, '');
     this.formData.address.houseNo = value;
-    event.target.value = value;
+    input.value = value;
   }
 
   dismiss() {
