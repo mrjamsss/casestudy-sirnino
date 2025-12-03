@@ -92,12 +92,6 @@ export class AuthService {
         };
         this.setCurrentUser(adminUser);
         return { success: true };
-      } else {
-        this.loadingSubject.next(false);
-        return {
-          success: false,
-          message: 'Invalid admin credentials.'
-        };
       }
     }
 
