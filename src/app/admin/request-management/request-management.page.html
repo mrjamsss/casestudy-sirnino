@@ -11,7 +11,6 @@
         Create Template
       </ion-button>
     </div>
-
     <div class="content-wrapper">
       <!-- Stats Grid -->
       <div class="stats-grid">
@@ -62,9 +61,18 @@
             </ion-select-option>
           </ion-select>
 
-          <ion-select class="custom-select" [(ngModel)]="selectedDepartment" placeholder="All Status"
+          <ion-select class="custom-select" [(ngModel)]="selectedStatus" placeholder="All Status"
             interface="popover" fill="outline">
             <ion-select-option value="">All Status</ion-select-option>
+            <ion-select-option value="pending">Pending</ion-select-option>
+            <ion-select-option value="processing">Approved</ion-select-option>
+            <ion-select-option value="rejected">Rejected</ion-select-option>
+            <ion-select-option value="ready">For Pick-up</ion-select-option>
+          </ion-select>
+
+          <ion-select class="custom-select" [(ngModel)]="selectedDepartment" placeholder="All Departments"
+            interface="popover" fill="outline">
+            <ion-select-option value="">All Departments</ion-select-option>
             <ion-select-option *ngFor="let dept of departments" [value]="dept">
               {{ dept }}
             </ion-select-option>
@@ -73,13 +81,15 @@
           <ion-input class="custom-input" type="date" [(ngModel)]="selectedDate" placeholder="dd/mm/yyyy">
           </ion-input>
 
-          <ion-input class="custom-input" [(ngModel)]="searchId" placeholder="Search by Request ID or Name..."
-            (keyup.enter)="searchRequests()">
-          </ion-input>
+          <div class="search-group">
+            <ion-input class="custom-input" [(ngModel)]="searchId" placeholder="Search by Request ID or Name..."
+              (keyup.enter)="searchRequests()">
+            </ion-input>
 
-          <ion-button class="search-btn" color="success" (click)="searchRequests()">
-            Search
-          </ion-button>
+            <ion-button class="search-btn icon-btn" size="small" fill="solid" color="success" (click)="searchRequests()">
+              <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+            </ion-button>
+          </div>
         </div>
       </div>
 
@@ -172,7 +182,10 @@
                 <ion-icon name="add"></ion-icon>
                 Create New
               </button>
-              <button class="template-btn view-btn" (click)="viewTemplate(template.name)">
+              <button class="template-btn view-btn"
+                (click)="viewTemplate(template.name)"
+                [disabled]="(template.name === 'Birth Certificate' && !hasSavedBirthCertTemplate()) || (template.name === 'Marriage Certificate' && !hasSavedMarriageCertTemplate()) || (template.name === 'Death Certificate' && !hasSavedDeathCertTemplate())"
+                [class.disabled]="(template.name === 'Birth Certificate' && !hasSavedBirthCertTemplate()) || (template.name === 'Marriage Certificate' && !hasSavedMarriageCertTemplate()) || (template.name === 'Death Certificate' && !hasSavedDeathCertTemplate())">
                 <ion-icon name="eye-outline"></ion-icon>
                 View Template
               </button>
@@ -352,6 +365,790 @@
         <div class="preview-secretary" *ngIf="secretaryName">
           <pre>{{ secretaryName }}</pre>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Birth Certificate Modal -->
+<div class="modal-backdrop" *ngIf="showBirthCertificateModal" (click)="closeBirthCertificateModal()"></div>
+<div class="birth-certificate-modal" *ngIf="showBirthCertificateModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create Certificate Template</h2>
+      <button class="close-btn" (click)="closeBirthCertificateModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Document Header -->
+      <div class="document-header">
+        <div class="form-title">
+          <p class="form-number">Municipal Form No. 102 (Revised January 2007)</p>
+          <p class="republic-text">Republic of the Philippines</p>
+          <p class="office-text">OFFICE OF THE CIVIL REGISTRAR GENERAL</p>
+          <h1 class="cert-title">CERTIFICATE OF LIVE BIRTH</h1>
+        </div>
+      </div>
+
+      <!-- Registry Information -->
+      <div class="form-section registry-section">
+        <div class="registry-content">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Province</label>
+              <input type="text" [(ngModel)]="birthCertData.province" placeholder="Enter province">
+            </div>
+            <div class="form-group">
+              <label>Registry No.</label>
+              <input type="text" [(ngModel)]="birthCertData.registryNo" placeholder="Enter registry number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>City/Municipality</label>
+            <input type="text" [(ngModel)]="birthCertData.cityMunicipality" placeholder="Enter city/municipality">
+          </div>
+        </div>
+      </div>
+
+      <!-- CHILD Section -->
+      <div class="form-section child-section">
+        <div class="section-label">CHILD</div>
+        
+        <div class="form-group">
+          <label>1. NAME</label>
+          <div class="name-row">
+            <input type="text" [(ngModel)]="birthCertData.childFirstName" placeholder="(First)">
+            <input type="text" [(ngModel)]="birthCertData.childMiddleName" placeholder="(Middle)">
+            <input type="text" [(ngModel)]="birthCertData.childLastName" placeholder="(Last)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>2. SEX (Male / Female)</label>
+            <input type="text" [(ngModel)]="birthCertData.sex" placeholder="Male or Female">
+          </div>
+          <div class="form-group flex-2">
+            <label>3. DATE OF BIRTH</label>
+            <div class="date-row">
+              <input type="text" [(ngModel)]="birthCertData.dateOfBirthDay" placeholder="(Day)">
+              <input type="text" [(ngModel)]="birthCertData.dateOfBirthMonth" placeholder="(Month)">
+              <input type="text" [(ngModel)]="birthCertData.dateOfBirthYear" placeholder="(Year)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>4. PLACE OF BIRTH</label>
+          <div class="place-row">
+            <input type="text" [(ngModel)]="birthCertData.placeOfBirthName" placeholder="(Name of Hospital/Clinic/Institution/ House No., St., Barangay)">
+            <input type="text" [(ngModel)]="birthCertData.placeOfBirthCity" placeholder="(City/Municipality)">
+            <input type="text" [(ngModel)]="birthCertData.placeOfBirthProvince" placeholder="(Province)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>5a. TYPE OF BIRTH</label>
+            <input type="text" [(ngModel)]="birthCertData.typeOfBirth" placeholder="(Single, Twin, Triplet, etc.)">
+          </div>
+          <div class="form-group">
+            <label>5b. IF MULTIPLE BIRTH, CHILD WAS</label>
+            <input type="text" [(ngModel)]="birthCertData.multipleChildInfo" placeholder="(First, Second, Third, etc.)">
+          </div>
+          <div class="form-group">
+            <label>5c. BIRTH ORDER</label>
+            <input type="text" [(ngModel)]="birthCertData.birthOrder" placeholder="(Order of this birth to previous live births including fetal death)">
+          </div>
+          <div class="form-group">
+            <label>6. WEIGHT AT BIRTH</label>
+            <input type="text" [(ngModel)]="birthCertData.weightAtBirth" placeholder="grams">
+          </div>
+        </div>
+      </div>
+
+      <!-- MOTHER Section -->
+      <div class="form-section mother-section">
+        <div class="section-label">MOTHER</div>
+        
+        <div class="form-group">
+          <label>7. MAIDEN NAME</label>
+          <div class="name-row">
+            <input type="text" [(ngModel)]="birthCertData.motherFirstName" placeholder="(First)">
+            <input type="text" [(ngModel)]="birthCertData.motherMiddleName" placeholder="(Middle)">
+            <input type="text" [(ngModel)]="birthCertData.motherLastName" placeholder="(Last)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>8. CITIZENSHIP</label>
+            <input type="text" [(ngModel)]="birthCertData.motherCitizenship" placeholder="Enter citizenship">
+          </div>
+          <div class="form-group">
+            <label>9. RELIGION/RELIGIOUS SECT</label>
+            <input type="text" [(ngModel)]="birthCertData.motherReligion" placeholder="Enter religion">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>10a. Total number of children born alive</label>
+            <input type="text" [(ngModel)]="birthCertData.motherTotalChildren" placeholder="Number">
+          </div>
+          <div class="form-group">
+            <label>10b. No. of children still living including this birth</label>
+            <input type="text" [(ngModel)]="birthCertData.motherChildrenAlive" placeholder="Number">
+          </div>
+          <div class="form-group">
+            <label>10c. No. of children born alive but are now dead</label>
+            <input type="text" [(ngModel)]="birthCertData.motherChildrenDead" placeholder="Number">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>11. OCCUPATION</label>
+            <input type="text" [(ngModel)]="birthCertData.motherOccupation" placeholder="Enter occupation">
+          </div>
+          <div class="form-group">
+            <label>12. AGE at the time of this birth (completed years)</label>
+            <input type="text" [(ngModel)]="birthCertData.motherAge" placeholder="Age">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>13. RESIDENCE</label>
+          <div class="place-row">
+            <input type="text" [(ngModel)]="birthCertData.motherResidenceHouse" placeholder="(House No., St., Barangay)">
+            <input type="text" [(ngModel)]="birthCertData.motherResidenceCity" placeholder="(City/Municipality)">
+            <input type="text" [(ngModel)]="birthCertData.motherResidenceProvince" placeholder="(Province)">
+            <input type="text" [(ngModel)]="birthCertData.motherResidenceCountry" placeholder="(Country)">
+          </div>
+        </div>
+      </div>
+
+      <!-- FATHER Section -->
+      <div class="form-section father-section">
+        <div class="section-label">FATHER</div>
+        
+        <div class="form-group">
+          <label>14. NAME</label>
+          <div class="name-row">
+            <input type="text" [(ngModel)]="birthCertData.fatherFirstName" placeholder="(First)">
+            <input type="text" [(ngModel)]="birthCertData.fatherMiddleName" placeholder="(Middle)">
+            <input type="text" [(ngModel)]="birthCertData.fatherLastName" placeholder="(Last)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>15. CITIZENSHIP</label>
+            <input type="text" [(ngModel)]="birthCertData.fatherCitizenship" placeholder="Enter citizenship">
+          </div>
+          <div class="form-group">
+            <label>16. RELIGION/RELIGIOUS SECT</label>
+            <input type="text" [(ngModel)]="birthCertData.fatherReligion" placeholder="Enter religion">
+          </div>
+          <div class="form-group">
+            <label>17. OCCUPATION</label>
+            <input type="text" [(ngModel)]="birthCertData.fatherOccupation" placeholder="Enter occupation">
+          </div>
+          <div class="form-group">
+            <label>18. AGE at the time of this birth (completed years)</label>
+            <input type="text" [(ngModel)]="birthCertData.fatherAge" placeholder="Age">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>19. RESIDENCE</label>
+          <div class="place-row">
+            <input type="text" [(ngModel)]="birthCertData.fatherResidenceHouse" placeholder="(House No., St., Barangay)">
+            <input type="text" [(ngModel)]="birthCertData.fatherResidenceCity" placeholder="(City/Municipality)">
+            <input type="text" [(ngModel)]="birthCertData.fatherResidenceProvince" placeholder="(Province)">
+            <input type="text" [(ngModel)]="birthCertData.fatherResidenceCountry" placeholder="(Country)">
+          </div>
+        </div>
+      </div>
+
+      <!-- MARRIAGE OF PARENTS Section -->
+      <div class="form-section marriage-section">
+        <div class="section-label">MARRIAGE OF PARENTS (if not married, accomplish Affidavit of Acknowledgement/Admission of Paternity at the back.)</div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>20a. DATE</label>
+            <div class="date-row">
+              <input type="text" [(ngModel)]="birthCertData.marriageDate" placeholder="(Month) (Day) (Year)">
+            </div>
+          </div>
+          <div class="form-group flex-2">
+            <label>20b. PLACE</label>
+            <div class="place-row">
+              <input type="text" [(ngModel)]="birthCertData.marriagePlace" placeholder="(City / Municipality)">
+              <input type="text" [(ngModel)]="birthCertData.marriageProvince" placeholder="(Province)">
+              <input type="text" [(ngModel)]="birthCertData.marriageCountry" placeholder="(Country)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTENDANT Section -->
+      <div class="form-section attendant-section">
+        <div class="section-label">21a. ATTENDANT</div>
+        <div class="attendant-options">
+          <label>1 Physician ☐ 2 Nurse ☐ 3 Midwife ☐ 4 Hilot (Traditional Birth Attendant) ☐ 5 Others (Specify)</label>
+        </div>
+        
+        <div class="form-group">
+          <label>21b. CERTIFICATION OF ATTENDANT AT BIRTH</label>
+          <p class="cert-text">I hereby certify that I attended the birth of the child who was born alive at _____ am/pm on the date of birth specified above.</p>
+          <div class="signature-row">
+            <div class="form-group">
+              <label>Signature</label>
+              <input type="text" [(ngModel)]="birthCertData.attendantName" placeholder="Signature">
+            </div>
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" [(ngModel)]="birthCertData.attendantAddress" placeholder="Address">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Name in Print</label>
+              <input type="text" [(ngModel)]="birthCertData.attendantName" placeholder="Name">
+            </div>
+            <div class="form-group">
+              <label>Title or Position</label>
+              <input type="text" [(ngModel)]="birthCertData.attendantTitle" placeholder="Title">
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="text" [(ngModel)]="birthCertData.attendantDate" placeholder="Date">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFORMANT Section -->
+      <div class="form-section informant-section">
+        <div class="section-label">22. CERTIFICATION OF INFORMANT</div>
+        <p class="cert-text">I hereby certify that all information supplied are true and correct to my own knowledge and belief.</p>
+        
+        <div class="signature-row">
+          <div class="form-group">
+            <label>Signature</label>
+            <input type="text" placeholder="Signature">
+          </div>
+          <div class="form-group">
+            <label>Name in Print</label>
+            <input type="text" [(ngModel)]="birthCertData.informantName" placeholder="Name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Relationship to the Child</label>
+            <input type="text" [(ngModel)]="birthCertData.informantRelationship" placeholder="Relationship">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input type="text" [(ngModel)]="birthCertData.informantAddress" placeholder="Address">
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="text" [(ngModel)]="birthCertData.informantDate" placeholder="Date">
+          </div>
+        </div>
+      </div>
+
+      <!-- PREPARED BY Section -->
+      <div class="form-section prepared-section">
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <div class="section-label">23. PREPARED BY</div>
+            <div class="signature-group">
+              <label>Signature</label>
+              <input type="text" placeholder="Signature">
+            </div>
+            <div class="form-group">
+              <label>Name in Print</label>
+              <input type="text" [(ngModel)]="birthCertData.preparedByName" placeholder="Name">
+            </div>
+            <div class="form-group">
+              <label>Title or Position</label>
+              <input type="text" [(ngModel)]="birthCertData.preparedByTitle" placeholder="Title">
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="text" [(ngModel)]="birthCertData.preparedByDate" placeholder="Date">
+            </div>
+          </div>
+          
+          <div class="form-group flex-1">
+            <div class="section-label">24. RECEIVED BY</div>
+            <div class="signature-group">
+              <label>Signature</label>
+              <input type="text" placeholder="Signature">
+            </div>
+            <div class="form-group">
+              <label>Name in Print</label>
+              <input type="text" [(ngModel)]="birthCertData.receivedByName" placeholder="Name">
+            </div>
+            <div class="form-group">
+              <label>Title or Position</label>
+              <input type="text" [(ngModel)]="birthCertData.receivedByTitle" placeholder="Title">
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="text" [(ngModel)]="birthCertData.receivedByDate" placeholder="Date">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REGISTERED BY Section -->
+      <div class="form-section registered-section">
+        <div class="section-label">25. REGISTERED BY THE CIVIL REGISTRAR</div>
+        <div class="signature-row">
+          <div class="form-group">
+            <label>Signature</label>
+            <input type="text" placeholder="Signature">
+          </div>
+          <div class="form-group">
+            <label>Name in Print</label>
+            <input type="text" [(ngModel)]="birthCertData.registeredByName" placeholder="Name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Title or Position</label>
+            <input type="text" [(ngModel)]="birthCertData.registeredByTitle" placeholder="Title">
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="text" [(ngModel)]="birthCertData.registeredByDate" placeholder="Date">
+          </div>
+        </div>
+      </div>
+
+      <!-- REMARKS Section -->
+      <div class="form-section remarks-section">
+        <div class="section-label">REMARKS/ANNOTATIONS (For LCRO/OCRG Use Only)</div>
+        <div class="form-group">
+          <textarea rows="3" [(ngModel)]="birthCertData.remarks" placeholder="Enter remarks or annotations"></textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="action-button download-btn" (click)="downloadBirthCertificatePDF()">
+          <ion-icon name="download-outline"></ion-icon>
+          Download Preview
+        </button>
+        <button class="action-button save-btn" (click)="saveBirthCertificateTemplate()">
+          <ion-icon name="save-outline"></ion-icon>
+          Save Template
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Marriage Certificate Modal -->
+<div class="modal-backdrop" *ngIf="showMarriageCertificateModal" (click)="closeMarriageCertificateModal()"></div>
+<div class="marriage-certificate-modal" *ngIf="showMarriageCertificateModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create Certificate Template</h2>
+      <button class="close-btn" (click)="closeMarriageCertificateModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Document Header -->
+      <div class="document-header">
+        <div class="form-title">
+          <p class="form-number">Municipal Form No. 97 (Revised January 2007)</p>
+          <p class="republic-text">Republic of the Philippines</p>
+          <p class="office-text">OFFICE OF THE CIVIL REGISTRAR GENERAL</p>
+          <h1 class="cert-title">CERTIFICATE OF MARRIAGE</h1>
+        </div>
+      </div>
+
+      <!-- Registry Information -->
+      <div class="form-section registry-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Province</label>
+            <input type="text" [(ngModel)]="marriageCertData.province" placeholder="Enter province">
+          </div>
+          <div class="form-group">
+            <label>Registry No.</label>
+            <input type="text" [(ngModel)]="marriageCertData.registryNo" placeholder="Enter registry number">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>City/Municipality</label>
+          <input type="text" [(ngModel)]="marriageCertData.cityMunicipality" placeholder="Enter city/municipality">
+        </div>
+      </div>
+
+      <!-- HUSBAND / WIFE Section -->
+      <div class="form-section marriage-parties-section">
+        <div class="section-label">HUSBAND / WIFE</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Husband - Name</label>
+            <div class="name-row">
+              <input type="text" [(ngModel)]="marriageCertData.husbandFirstName" placeholder="(First)">
+              <input type="text" [(ngModel)]="marriageCertData.husbandMiddleName" placeholder="(Middle)">
+              <input type="text" [(ngModel)]="marriageCertData.husbandLastName" placeholder="(Last)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Wife - Name</label>
+            <div class="name-row">
+              <input type="text" [(ngModel)]="marriageCertData.wifeFirstName" placeholder="(First)">
+              <input type="text" [(ngModel)]="marriageCertData.wifeMiddleName" placeholder="(Middle)">
+              <input type="text" [(ngModel)]="marriageCertData.wifeLastName" placeholder="(Last)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Husband - Date of Birth</label>
+            <div class="date-row">
+              <input type="text" [(ngModel)]="marriageCertData.husbandDateOfBirthDay" placeholder="(Day)">
+              <input type="text" [(ngModel)]="marriageCertData.husbandDateOfBirthMonth" placeholder="(Month)">
+              <input type="text" [(ngModel)]="marriageCertData.husbandDateOfBirthYear" placeholder="(Year)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Wife - Date of Birth</label>
+            <div class="date-row">
+              <input type="text" [(ngModel)]="marriageCertData.wifeDateOfBirthDay" placeholder="(Day)">
+              <input type="text" [(ngModel)]="marriageCertData.wifeDateOfBirthMonth" placeholder="(Month)">
+              <input type="text" [(ngModel)]="marriageCertData.wifeDateOfBirthYear" placeholder="(Year)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Husband - Place of Birth</label>
+            <input type="text" [(ngModel)]="marriageCertData.husbandPlaceOfBirthCity" placeholder="(City/Municipality)">
+          </div>
+          <div class="form-group">
+            <label>Wife - Place of Birth</label>
+            <input type="text" [(ngModel)]="marriageCertData.wifePlaceOfBirthCity" placeholder="(City/Municipality)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Marriage Details -->
+      <div class="form-section marriage-details-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Place of Marriage</label>
+            <input type="text" [(ngModel)]="marriageCertData.marriagePlaceCity" placeholder="(Place of Marriage)">
+          </div>
+          <div class="form-group">
+            <label>Date of Marriage</label>
+            <div class="date-row">
+              <input type="text" [(ngModel)]="marriageCertData.marriageDateDay" placeholder="(Day)">
+              <input type="text" [(ngModel)]="marriageCertData.marriageDateMonth" placeholder="(Month)">
+              <input type="text" [(ngModel)]="marriageCertData.marriageDateYear" placeholder="(Year)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Time of Marriage</label>
+            <input type="text" [(ngModel)]="marriageCertData.marriageTimeOfMarriage" placeholder="(Time)">
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTIFICATION / SIGNATURES -->
+      <div class="form-section certification-section">
+        <div class="form-group">
+          <label>Certification Text</label>
+          <textarea rows="4" [(ngModel)]="marriageCertData.remarks" placeholder="Certification text..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Husband Signature</label>
+            <input type="text" [(ngModel)]="marriageCertData.husbandSignature" placeholder="Signature">
+          </div>
+          <div class="form-group">
+            <label>Wife Signature</label>
+            <input type="text" [(ngModel)]="marriageCertData.wifeSignature" placeholder="Signature">
+          </div>
+          <div class="form-group">
+            <label>Solemnizing Officer</label>
+            <input type="text" [(ngModel)]="marriageCertData.solemnizingOfficerName" placeholder="Name">
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="action-button download-btn" (click)="downloadMarriageCertificatePDF()">
+          <ion-icon name="download-outline"></ion-icon>
+          Download Preview
+        </button>
+        <button class="action-button save-btn" (click)="saveMarriageCertificateTemplate()">
+          <ion-icon name="save-outline"></ion-icon>
+          Save Template
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Death Certificate Modal -->
+<div class="modal-backdrop" *ngIf="showDeathCertificateModal" (click)="closeDeathCertificateModal()"></div>
+<div class="death-certificate-modal" *ngIf="showDeathCertificateModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create Certificate Template</h2>
+      <button class="close-btn" (click)="closeDeathCertificateModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Document Header -->
+      <div class="document-header">
+        <div class="form-title">
+          <p class="form-number">Municipal Form No. 103 (Revised August 2016)</p>
+          <p class="republic-text">Republic of the Philippines</p>
+          <p class="office-text">OFFICE OF THE CIVIL REGISTRAR GENERAL</p>
+          <h1 class="cert-title">CERTIFICATE OF DEATH</h1>
+        </div>
+      </div>
+
+      <!-- Registry Information -->
+      <div class="form-section registry-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Province</label>
+            <input type="text" [(ngModel)]="deathCertData.province" placeholder="Enter province">
+          </div>
+          <div class="form-group">
+            <label>Registry No.</label>
+            <input type="text" [(ngModel)]="deathCertData.registryNo" placeholder="Enter registry number">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>City/Municipality</label>
+          <input type="text" [(ngModel)]="deathCertData.cityMunicipality" placeholder="Enter city/municipality">
+        </div>
+      </div>
+
+      <!-- DECEASED Section -->
+      <div class="form-section deceased-section">
+        <div class="section-label">DECEASED INFORMATION</div>
+
+        <div class="form-group">
+          <label>1. NAME</label>
+          <div class="name-row">
+            <input type="text" [(ngModel)]="deathCertData.deceasedFirstName" placeholder="(First)">
+            <input type="text" [(ngModel)]="deathCertData.deceasedMiddleName" placeholder="(Middle)">
+            <input type="text" [(ngModel)]="deathCertData.deceasedLastName" placeholder="(Last)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>2. SEX</label>
+            <input type="text" [(ngModel)]="deathCertData.sex" placeholder="Male or Female">
+          </div>
+          <div class="form-group flex-2">
+            <label>3. DATE OF DEATH</label>
+            <div class="date-row">
+              <input type="text" [(ngModel)]="deathCertData.dateOfDeathDay" placeholder="(Day)">
+              <input type="text" [(ngModel)]="deathCertData.dateOfDeathMonth" placeholder="(Month)">
+              <input type="text" [(ngModel)]="deathCertData.dateOfDeathYear" placeholder="(Year)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Time of Death</label>
+            <input type="text" [(ngModel)]="deathCertData.timeOfDeath" placeholder="(Time)">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>4. AGE AT TIME OF DEATH</label>
+            <div class="age-row">
+              <input type="text" [(ngModel)]="deathCertData.ageYears" placeholder="Years">
+              <input type="text" [(ngModel)]="deathCertData.ageMonths" placeholder="Months">
+              <input type="text" [(ngModel)]="deathCertData.ageDays" placeholder="Days">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>5. DATE OF BIRTH</label>
+            <div class="date-row">
+              <input type="text" [(ngModel)]="deathCertData.dateOfBirthDay" placeholder="(Day)">
+              <input type="text" [(ngModel)]="deathCertData.dateOfBirthMonth" placeholder="(Month)">
+              <input type="text" [(ngModel)]="deathCertData.dateOfBirthYear" placeholder="(Year)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>6. PLACE OF DEATH</label>
+          <div class="place-row">
+            <input type="text" [(ngModel)]="deathCertData.placeOfDeathName" placeholder="(Hospital/Clinic/Institution/House No., St., Barangay)">
+            <input type="text" [(ngModel)]="deathCertData.placeOfDeathCity" placeholder="(City/Municipality)">
+            <input type="text" [(ngModel)]="deathCertData.placeOfDeathProvince" placeholder="(Province)">
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONAL INFORMATION -->
+      <div class="form-section personal-info-section">
+        <div class="section-label">PERSONAL INFORMATION</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>7. CIVIL STATUS</label>
+            <input type="text" [(ngModel)]="deathCertData.civilStatus" placeholder="(Single/Married/Widowed/Divorced)">
+          </div>
+          <div class="form-group">
+            <label>8. OCCUPATION</label>
+            <input type="text" [(ngModel)]="deathCertData.occupation" placeholder="Enter occupation">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>9. RESIDENCE</label>
+          <div class="place-row">
+            <input type="text" [(ngModel)]="deathCertData.residenceHouse" placeholder="(House No., St., Barangay)">
+            <input type="text" [(ngModel)]="deathCertData.residenceCity" placeholder="(City/Municipality)">
+            <input type="text" [(ngModel)]="deathCertData.residenceProvince" placeholder="(Province)">
+            <input type="text" [(ngModel)]="deathCertData.residenceCountry" placeholder="(Country)">
+          </div>
+        </div>
+      </div>
+
+      <!-- PARENTS INFORMATION -->
+      <div class="form-section parents-section">
+        <div class="section-label">PARENTS INFORMATION</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>10. FATHER'S NAME</label>
+            <div class="name-row">
+              <input type="text" [(ngModel)]="deathCertData.fatherFirstName" placeholder="(First)">
+              <input type="text" [(ngModel)]="deathCertData.fatherMiddleName" placeholder="(Middle)">
+              <input type="text" [(ngModel)]="deathCertData.fatherLastName" placeholder="(Last)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>11. MOTHER'S MAIDEN NAME</label>
+            <div class="name-row">
+              <input type="text" [(ngModel)]="deathCertData.motherFirstName" placeholder="(First)">
+              <input type="text" [(ngModel)]="deathCertData.motherMiddleName" placeholder="(Middle)">
+              <input type="text" [(ngModel)]="deathCertData.motherLastName" placeholder="(Last)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>12. SPOUSE (If applicable)</label>
+          <div class="name-row">
+            <input type="text" [(ngModel)]="deathCertData.spouseFirstName" placeholder="(First)">
+            <input type="text" [(ngModel)]="deathCertData.spouseMiddleName" placeholder="(Middle)">
+            <input type="text" [(ngModel)]="deathCertData.spouseLastName" placeholder="(Last)">
+          </div>
+        </div>
+      </div>
+
+      <!-- CAUSE OF DEATH -->
+      <div class="form-section cause-of-death-section">
+        <div class="section-label">CAUSE OF DEATH</div>
+
+        <div class="form-group">
+          <label>19a. IMMEDIATE CAUSE OF DEATH</label>
+          <textarea rows="2" [(ngModel)]="deathCertData.immediateCoD" placeholder="Enter immediate cause..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>19b. ANTECEDENT CAUSE OF DEATH</label>
+          <textarea rows="2" [(ngModel)]="deathCertData.antecedentCoD" placeholder="Enter antecedent cause..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>19c. UNDERLYING CAUSE OF DEATH</label>
+          <textarea rows="2" [(ngModel)]="deathCertData.underlyingCoD" placeholder="Enter underlying cause..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>19d. OTHER SIGNIFICANT CONDITIONS</label>
+          <textarea rows="2" [(ngModel)]="deathCertData.otherConditions" placeholder="Enter other conditions..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>20. MANNER OF DEATH</label>
+            <input type="text" [(ngModel)]="deathCertData.mannerOfDeath" placeholder="(Natural/Accident/Suicide/Homicide/Other)">
+          </div>
+          <div class="form-group">
+            <label>21. ATTENDING PHYSICIAN/HEALTH OFFICER</label>
+            <input type="text" [(ngModel)]="deathCertData.attendantType" placeholder="(Physician/Health Officer/Other)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Name of Attendant</label>
+          <input type="text" [(ngModel)]="deathCertData.attendantName" placeholder="Enter attendant name">
+        </div>
+      </div>
+
+      <!-- CERTIFICATION -->
+      <div class="form-section certification-section">
+        <div class="section-label">CERTIFICATION</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Certifier Signature</label>
+            <input type="text" [(ngModel)]="deathCertData.certifierSignature" placeholder="Signature">
+          </div>
+          <div class="form-group">
+            <label>Certifier Name</label>
+            <input type="text" [(ngModel)]="deathCertData.certifierName" placeholder="Full Name">
+          </div>
+          <div class="form-group">
+            <label>Title/Position</label>
+            <input type="text" [(ngModel)]="deathCertData.certifierTitle" placeholder="Title or Position">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Remarks</label>
+          <textarea rows="3" [(ngModel)]="deathCertData.remarks" placeholder="Enter remarks..."></textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="action-button download-btn" (click)="downloadDeathCertificatePDF()">
+          <ion-icon name="download-outline"></ion-icon>
+          Download Preview
+        </button>
+        <button class="action-button save-btn" (click)="saveDeathCertificateTemplate()">
+          <ion-icon name="save-outline"></ion-icon>
+          Save Template
+        </button>
       </div>
     </div>
   </div>
