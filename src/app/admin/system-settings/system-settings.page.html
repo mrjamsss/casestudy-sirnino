@@ -64,7 +64,8 @@
                         <p class="section-subtitle">Update basic City details</p>
                     </div>
                     <div class="header-actions">
-                        <ion-button (click)="openCityInfoModal()" color="primary" class="export-button">
+                        <ion-button (click)="openCityInfoModal()" color="primary" class="export-button"
+                            [disabled]="hasCityInfo">
                             <ion-icon name="add-circle-outline" slot="start"></ion-icon>
                             Add City Information
                         </ion-button>

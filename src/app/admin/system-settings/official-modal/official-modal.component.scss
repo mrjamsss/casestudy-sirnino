@@ -12,15 +12,16 @@ $border-color: #e2e8f0;
 
 // Modal Background
 ion-content {
-    --background: #{$bg-light};
-    --color: #{$text-dark};
+    --background: white;
+    --color: #1e293b;
 }
 
 ion-header {
     ion-toolbar {
-        --background: #{$cbn-accent};
-        --color: #07203a;
-        --border-color: transparent;
+        --background: white;
+        --color: #0f3460;
+        --border-color: #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
 
         ion-title {
             font-weight: 700;
@@ -31,6 +32,10 @@ ion-header {
         ion-buttons ion-button {
             --color: #07203a;
             font-weight: 600;
+
+            &:hover {
+                --color: #0f3460;
+            }
         }
     }
 }
@@ -48,6 +53,11 @@ ion-header {
         border-radius: 50%;
         background-color: #{$input-bg};
         border: 2px dashed #{$border-color};
+        width: 120px;
+        height: 120px;
+        border-radius: 16px; // Changed from 50% to 16px
+        background-color: #f8f9fa;
+        border: 2px dashed #cbd5e1;
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -68,14 +78,14 @@ ion-header {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #{$text-light};
+            color: #64748b;
             text-align: center;
             padding: 10px;
 
             ion-icon {
                 font-size: 32px;
                 margin-bottom: 5px;
-                color: #{$cbn-accent};
+                color: #94a3b8;
             }
 
             span {
@@ -85,14 +95,17 @@ ion-header {
         }
 
         &:hover {
-            border-color: #{$cbn-accent};
-            background-color: white;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #f59e0b;
+            background-color: #fffbeb; // Very light gold/yellow
+
+            .placeholder ion-icon {
+                color: #f59e0b;
+            }
         }
     }
 
     .upload-btn {
-        --color: #{$cbn-primary};
+        --color: #0f3460;
         font-weight: 600;
         letter-spacing: 0.5px;
         margin-top: 5px;
@@ -141,6 +154,23 @@ ion-header {
     margin-top: -15px;
     margin-bottom: 15px;
     margin-left: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &::before {
+        content: '!';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        background: #ef4444;
+        color: white;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: bold;
+    }
 }
 
 .actions {
@@ -157,5 +187,16 @@ ion-header {
         text-transform: uppercase;
         box-shadow: 0 4px 14px rgba($cbn-accent, 0.35);
         font-size: 0.9375rem;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
     }
 }

@@ -1,133 +1,138 @@
-<ion-content class="ion-padding-vertical">
-    <div class="main-container">
-        <div class="header-section ion-padding-horizontal">
+<ion-content class="ion-no-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
             <h1>Fee Calculator</h1>
-            <p class="subtitle">Calculate fees for permits and services</p>
+            <p class="subtitle">Calculate fees for permits and official services</p>
         </div>
 
-        <div class="ion-padding">
-            <!-- Calculator Card -->
-            <div class="calculator-card">
-                <div class="card-header">
-                    <ion-icon name="calculator-outline" class="header-icon"></ion-icon>
-                    <div>
-                        <h2>Calculate Your Fee</h2>
-                        <p class="card-subtitle">Select a permit type and enter your capital/project cost</p>
-                    </div>
-                </div>
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <div class="calculator-grid">
+                <!-- Calculator Form and Results -->
+                <div class="main-panel">
+                    <div class="section-card form-card">
+                        <div class="section-header">
+                            <div class="header-left">
+                                <h2>Calculate Your Fee</h2>
+                                <p class="section-subtitle">Select a permit type and enter your capital/project cost</p>
+                            </div>
+                        </div>
 
-                <div class="calculator-form">
-                    <!-- Permit Type Selection -->
-                    <div class="form-group">
-                        <label class="form-label">
-                            <ion-icon name="document-text-outline"></ion-icon>
-                            Permit/Service Type
-                        </label>
-                        <ion-select [(ngModel)]="selectedFeeId" (ionChange)="onPermitTypeChange()"
-                            placeholder="Select a permit or service" interface="popover" class="custom-select">
-                            <ion-select-option *ngFor="let fee of feeStructures" [value]="fee.id">
-                                {{ fee.permitType }} ({{ fee.category }})
-                            </ion-select-option>
-                        </ion-select>
+                        <div class="form-content">
+                            <!-- Permit Type Selection -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <ion-icon name="document-text-outline"></ion-icon>
+                                    Permit/Service Type
+                                </label>
+                                <ion-select fill="outline" [(ngModel)]="selectedFeeId"
+                                    (ionChange)="onPermitTypeChange()" class="custom-select" interface="popover"
+                                    placeholder="Select a permit or service">
+                                    <ion-select-option *ngFor="let fee of feeStructures" [value]="fee.id">
+                                        {{ fee.permitType }} ({{ fee.category }})
+                                    </ion-select-option>
+                                </ion-select>
+                            </div>
+
+                            <!-- Capital/Project Cost Input -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <ion-icon name="cash-outline"></ion-icon>
+                                    Capital/Project Cost (₱)
+                                </label>
+                                <ion-input fill="outline" [(ngModel)]="capital" (ionInput)="onCapitalChange()"
+                                    type="number" placeholder="0" class="custom-input" min="0">
+                                </ion-input>
+                            </div>
+
+                            <!-- Calculate Button -->
+                            <ion-button expand="block" class="submit-button" (click)="calculateFee()"
+                                [disabled]="!selectedFeeId || !capital || capital <= 0">
+                                <ion-icon name="calculator-outline" slot="start"></ion-icon>
+                                Calculate Fee
+                            </ion-button>
+                        </div>
                     </div>
 
-                    <!-- Capital/Project Cost Input -->
-                    <div class="form-group">
-                        <label class="form-label">
-                            <ion-icon name="cash-outline"></ion-icon>
-                            Capital/Project Cost (₱)
-                        </label>
-                        <ion-input [(ngModel)]="capital" (ionInput)="onCapitalChange()" type="number" placeholder="0"
-                            class="custom-input" min="0">
-                        </ion-input>
-                    </div>
+                    <!-- Results Section (Shows only when calculated) -->
+                    <div class="results-card" *ngIf="showResults && calculation">
+                        <div class="section-header">
+                            <div class="header-left">
+                                <h2>Fee Breakdown</h2>
+                                <p class="section-subtitle">{{ calculation.selectedFee.permitType }}</p>
+                            </div>
+                        </div>
 
-                    <!-- Calculate Button -->
-                    <ion-button expand="block" class="calculate-button" (click)="calculateFee()"
-                        [disabled]="!selectedFeeId || !capital || capital <= 0">
-                        <ion-icon name="calculator-outline" slot="start"></ion-icon>
-                        Calculate Fee
-                    </ion-button>
+                        <div class="breakdown-content">
+                            <!-- Category Badge -->
+                            <div class="category-section">
+                                <ion-badge [color]="getCategoryColor(calculation.selectedFee.category)">
+                                    {{ calculation.selectedFee.category }}
+                                </ion-badge>
+                            </div>
+
+                            <!-- Breakdown Items -->
+                            <div class="breakdown-items">
+                                <div class="breakdown-item">
+                                    <div class="item-label">
+                                        <ion-icon name="pricetag-outline"></ion-icon>
+                                        <span>Base Fee</span>
+                                    </div>
+                                    <div class="item-value">
+                                        ₱{{ calculation.baseFeeAmount | number:'1.2-2' }}
+                                    </div>
+                                </div>
+
+                                <div class="breakdown-item">
+                                    <div class="item-label">
+                                        <ion-icon name="trending-up-outline"></ion-icon>
+                                        <span>Percentage ({{ calculation.selectedFee.percentageRate }}% of ₱{{ capital |
+                                            number:'1.2-2' }})</span>
+                                    </div>
+                                    <div class="item-value">
+                                        ₱{{ calculation.percentageAmount | number:'1.2-2' }}
+                                    </div>
+                                </div>
+
+                                <div class="breakdown-item total">
+                                    <div class="item-label">
+                                        <ion-icon name="cash-outline"></ion-icon>
+                                        <span>Total Fee</span>
+                                    </div>
+                                    <div class="item-value total-amount">
+                                        ₱{{ calculation.totalFee | number:'1.2-2' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Formula Display -->
+                            <div class="formula-section">
+                                <div class="formula-label">
+                                    <ion-icon name="information-circle-outline"></ion-icon>
+                                    Calculation Formula
+                                </div>
+                                <div class="formula-text">
+                                    Base Fee + (Capital × Percentage Rate ÷ 100)
+                                </div>
+                                <div class="formula-example">
+                                    ₱{{ calculation.baseFeeAmount | number:'1.2-2' }} + (₱{{ capital | number:'1.2-2' }}
+                                    × {{ calculation.selectedFee.percentageRate }}% ÷ 100) = ₱{{ calculation.totalFee |
+                                    number:'1.2-2' }}
+                                </div>
+                            </div>
+
+                            <!-- Reset Button -->
+                            <ion-button expand="block" fill="outline" class="reset-button" (click)="resetCalculator()">
+                                <ion-icon name="refresh-outline" slot="start"></ion-icon>
+                                Calculate Another Fee
+                            </ion-button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Results Section -->
-            <div class="results-card" *ngIf="showResults && calculation">
-                <div class="card-header">
-                    <ion-icon name="receipt-outline" class="header-icon"></ion-icon>
-                    <div>
-                        <h2>Fee Breakdown</h2>
-                        <p class="card-subtitle">{{ calculation.selectedFee.permitType }}</p>
-                    </div>
-                </div>
-
-                <div class="breakdown-content">
-                    <!-- Category Badge -->
-                    <div class="category-section">
-                        <ion-badge [color]="getCategoryColor(calculation.selectedFee.category)">
-                            {{ calculation.selectedFee.category }}
-                        </ion-badge>
-                    </div>
-
-                    <!-- Breakdown Items -->
-                    <div class="breakdown-items">
-                        <div class="breakdown-item">
-                            <div class="item-label">
-                                <ion-icon name="pricetag-outline"></ion-icon>
-                                <span>Base Fee</span>
-                            </div>
-                            <div class="item-value">
-                                ₱{{ calculation.baseFeeAmount | number:'1.2-2' }}
-                            </div>
-                        </div>
-
-                        <div class="breakdown-item">
-                            <div class="item-label">
-                                <ion-icon name="trending-up-outline"></ion-icon>
-                                <span>Percentage ({{ calculation.selectedFee.percentageRate }}% of ₱{{ capital |
-                                    number:'1.2-2' }})</span>
-                            </div>
-                            <div class="item-value">
-                                ₱{{ calculation.percentageAmount | number:'1.2-2' }}
-                            </div>
-                        </div>
-
-                        <div class="breakdown-item total">
-                            <div class="item-label">
-                                <ion-icon name="cash-outline"></ion-icon>
-                                <span>Total Fee</span>
-                            </div>
-                            <div class="item-value total-amount">
-                                ₱{{ calculation.totalFee | number:'1.2-2' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Formula Display -->
-                    <div class="formula-section">
-                        <div class="formula-label">
-                            <ion-icon name="information-circle-outline"></ion-icon>
-                            Calculation Formula
-                        </div>
-                        <div class="formula-text">
-                            Base Fee + (Capital × Percentage Rate ÷ 100)
-                        </div>
-                        <div class="formula-example">
-                            ₱{{ calculation.baseFeeAmount | number:'1.2-2' }} + (₱{{ capital | number:'1.2-2' }} × {{
-                            calculation.selectedFee.percentageRate }}% ÷ 100) = ₱{{ calculation.totalFee |
-                            number:'1.2-2' }}
-                        </div>
-                    </div>
-
-                    <!-- Reset Button -->
-                    <ion-button expand="block" fill="outline" class="reset-button" (click)="resetCalculator()">
-                        <ion-icon name="refresh-outline" slot="start"></ion-icon>
-                        Calculate Another Fee
-                    </ion-button>
-                </div>
-            </div>
-
-            <!-- Formula Guide Section -->
+            <!-- Full Width Formula Guide -->
             <div class="formula-guide-card">
                 <div class="guide-header">
                     <div class="guide-title">

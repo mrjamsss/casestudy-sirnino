@@ -294,6 +294,36 @@ ion-content {
   --box-shadow: none;
 }
 
+/* Group the search input and button so the button sits next to the input */
+.search-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+
+  .custom-input {
+    flex: 1 1 auto;
+    min-width: 0; /* allow shrinking inside flex */
+    height: 44px;
+  }
+
+    .search-btn {
+      flex: 0 0 44px;
+      width: 10px;
+      height: 44px;
+      --border-radius: 10px;
+      font-size: 0.875rem;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn::part(native) {
+      padding: 0;
+    }
+}
+
 // User Table
 .user-table-wrapper {
   overflow-x: auto;
@@ -397,6 +427,123 @@ ion-content {
     background: rgba(#10b981, 0.1);
     color: #059669;
   }
+
+
+/* Responsive adjustments for Request Management Page */
+
+/* Ensure modal/content widths never overflow small viewports */
+.modal-content {
+  max-width: 100%;
+  width: 960px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1199px) {
+  .filter-row {
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr) auto;
+    }
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 991px) {
+  .content-wrapper {
+    padding: 16px;
+  }
+
+  .page-header {
+    padding: 16px;
+  }
+
+  .section-card {
+    padding: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .filter-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-items: stretch;
+
+    .custom-select, .custom-input {
+      min-width: 0;
+    }
+  }
+
+  .search-group {
+    width: 100%;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* Make the table rows stack as cards for narrow screens */
+  .user-table {
+    thead {
+      display: none;
+    }
+
+    tbody {
+      .user-row {
+        display: block;
+        background: white;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        border: 1px solid #eef2f7;
+
+        td {
+          display: flex;
+          justify-content: space-between;
+          padding: 8px 10px;
+        }
+
+        td.request-id {
+          font-weight: 700;
+          color: $cbn-primary;
+          margin-bottom: 6px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .search-group .custom-input, .custom-input {
+    height: 44px;
+  }
+
+  .search-group .search-btn {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+
+  .modal-content {
+    width: 96%;
+    padding: 12px;
+  }
+}
 
   &[data-status="rejected"] {
     background: rgba(#ef4444, 0.1);
@@ -600,19 +747,35 @@ ion-content {
         width: 100%;
         justify-content: center;
 
-        &:hover {
+        &:hover:not(:disabled) {
           background: $cbn-primary;
           color: white;
           border-color: $cbn-primary;
+        }
+
+        &:disabled,
+        &.disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          background: #f5f5f5;
+          color: #999;
+          border-color: #e0e0e0;
         }
 
         &.view-btn {
           background: $cbn-background;
           border-color: transparent;
 
-          &:hover {
+          &:hover:not(:disabled) {
             background: #e2e8f0;
             color: $cbn-text-dark;
+          }
+
+          &:disabled,
+          &.disabled {
+            background: #e8e8e8;
+            color: #999;
+            opacity: 0.5;
           }
         }
       }
@@ -1339,5 +1502,643 @@ ion-content {
     ion-icon {
       opacity: 0.5;
     }
+  }
+}
+
+/* Birth Certificate Modal Specific Styles */
+.birth-certificate-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+
+  .modal-content {
+    background: white;
+    border-radius: 16px;
+    width: 95%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    position: relative;
+  }
+
+  .modal-body {
+    padding: 0 24px 24px 24px;
+    margin-top: 0;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid #e2e8f0;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-size: 24px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+}
+
+.document-header {
+  text-align: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 8px;
+  padding-top: 2px;
+  margin-bottom: 8px;
+  margin-top: 0;
+  background: white;
+
+  .form-title {
+    margin: 0;
+  }
+}
+
+.form-number {
+  font-size: 11px;
+  margin: 0;
+  font-weight: 500;
+  color: #000;
+}
+
+.republic-text {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 8px 0 0 0;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.office-text {
+  font-size: 11px;
+  margin: 3px 0 0 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.cert-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 12px 0;
+  letter-spacing: 2px;
+  color: #000;
+}
+
+.form-section {
+  border: 2px solid #333;
+  padding: 12px;
+  margin-bottom: 0;
+  background: white;
+  page-break-inside: avoid;
+}
+
+.section-label {
+  font-weight: 700;
+  font-size: 11px;
+  background: #e8e8e8;
+  padding: 6px 8px;
+  margin: -12px -12px 12px -12px;
+  border-bottom: 1px solid #333;
+  display: block;
+  letter-spacing: 0.3px;
+  color: #000;
+}
+
+.form-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-group {
+  flex: 1;
+  margin-bottom: 0;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-group.flex-2 {
+  flex: 2;
+}
+
+.form-group.flex-1 {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #000;
+  line-height: 1.3;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 6px 4px;
+  border: 1px solid #666;
+  border-radius: 0;
+  font-size: 11px;
+  box-sizing: border-box;
+  font-family: 'Courier New', monospace;
+  background: white;
+  color: #333;
+
+  &::placeholder {
+    color: #999;
+    font-style: italic;
+  }
+
+  &:focus {
+    outline: 1px solid #666;
+    background: #f5f5f5;
+  }
+}
+
+.form-group textarea {
+  resize: vertical;
+  font-family: 'Courier New', monospace;
+  min-height: 60px;
+}
+
+.name-row,
+.date-row,
+.place-row {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.name-row input,
+.date-row input,
+.place-row input {
+  flex: 1;
+  padding: 6px 4px;
+  border: 1px solid #666;
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+}
+
+.cert-text {
+  font-size: 10px;
+  margin: 8px 0;
+  line-height: 1.4;
+  color: #333;
+}
+
+.signature-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+
+  .form-group {
+    flex: 1;
+    min-width: 150px;
+  }
+}
+
+.signature-group {
+  margin-bottom: 8px;
+}
+
+.attendant-options {
+  margin: 8px 0;
+  padding: 8px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  font-size: 10px;
+
+  label {
+    font-size: 10px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+.registry-section {
+  border-color: #333;
+  background: #fffacd;
+  margin-bottom: 2px;
+
+  .registry-content {
+    margin: 0;
+  }
+}
+
+.child-section {
+  border-color: #008000;
+  border-width: 2px;
+  background: #f0fff0;
+  margin-bottom: 2px;
+}
+
+.mother-section {
+  border-color: #ffd700;
+  border-width: 2px;
+  background: #fffef0;
+  margin-bottom: 2px;
+}
+
+.father-section {
+  border-color: #ff8c00;
+  border-width: 2px;
+  background: #fff8f0;
+  margin-bottom: 2px;
+}
+
+.marriage-section {
+  border-color: #333;
+  margin-bottom: 2px;
+}
+
+.attendant-section {
+  border-color: #333;
+  margin-bottom: 2px;
+}
+
+.informant-section {
+  border-color: #333;
+  margin-bottom: 2px;
+}
+
+.prepared-section {
+  border-color: #333;
+  margin-bottom: 2px;
+}
+
+.registered-section {
+  border-color: #333;
+  margin-bottom: 2px;
+}
+
+.remarks-section {
+  border-color: #333;
+  margin-bottom: 2px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px 0 0 0;
+  border-top: 2px solid #ddd;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  color: #666;
+  text-transform: none;
+
+  ion-icon {
+    font-size: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.download-btn {
+  background: white;
+  color: #666;
+  border: 1px solid #ddd;
+
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+    border-color: #999;
+    color: #333;
+  }
+}
+
+.save-btn {
+  background: #2196F3;
+  color: white;
+  border-color: #1976D2;
+
+  &:hover:not(:disabled) {
+    background: #1976D2;
+  }
+}
+
+.print-btn {
+  background: #2196F3;
+  color: white;
+  border-color: #1976D2;
+
+  &:hover:not(:disabled) {
+    background: #1976D2;
+  }
+}
+
+.cancel-btn {
+  background: #f44336;
+  color: white;
+  border-color: #da190b;
+
+  &:hover:not(:disabled) {
+    background: #da190b;
+  }
+}
+
+.download-btn:hover {
+  background: #F57C00;
+}
+
+@media print {
+  .modal-header,
+  .action-buttons {
+    display: none !important;
+  }
+  
+  .birth-certificate-modal .modal-content {
+    width: 100%;
+    max-width: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+// Marriage Certificate Modal Styles
+.marriage-certificate-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  animation: slideInUp 0.3s ease-out;
+
+  .modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 95%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-body {
+    padding: 0 24px 24px 24px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid #e2e8f0;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-size: 24px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: #333;
+      }
+
+      ion-icon {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .document-header {
+    padding: 12px 0;
+    border-bottom: 2px solid #0F4C81;
+    margin-bottom: 16px;
+    text-align: center;
+
+    .form-title {
+      margin: 0;
+
+      .form-number,
+      .republic-text,
+      .office-text {
+        font-size: 0.75rem;
+        color: #000;
+        margin: 2px 0;
+        font-weight: 600;
+      }
+
+      .cert-title {
+        font-size: 1.5rem;
+        color: #000;
+        margin: 8px 0 0 0;
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+@media print {
+  .modal-header,
+  .action-buttons {
+    display: none !important;
+  }
+  
+  .marriage-certificate-modal .modal-content {
+    width: 100%;
+    max-width: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+// Death Certificate Modal Styles
+.death-certificate-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  animation: slideInUp 0.3s ease-out;
+
+  .modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 95%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-body {
+    padding: 0 24px 24px 24px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid #e2e8f0;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-size: 24px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: #333;
+      }
+
+      ion-icon {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .document-header {
+    padding: 12px 0;
+    border-bottom: 2px solid #0F4C81;
+    margin-bottom: 16px;
+    text-align: center;
+
+    .form-title {
+      margin: 0;
+
+      .form-number,
+      .republic-text,
+      .office-text {
+        font-size: 0.75rem;
+        color: #000;
+        margin: 2px 0;
+        font-weight: 600;
+      }
+
+      .cert-title {
+        font-size: 1.5rem;
+        color: #000;
+        margin: 8px 0 0 0;
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+@media print {
+  .modal-header,
+  .action-buttons {
+    display: none !important;
+  }
+  
+  .death-certificate-modal .modal-content {
+    width: 100%;
+    max-width: none;
+    box-shadow: none;
+    border: none;
   }
 }

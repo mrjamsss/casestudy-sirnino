@@ -127,8 +127,8 @@
             ID Number <span class="required">*</span>
           </label>
           <div class="input-wrapper">
-            <ion-input type="text" class="custom-input" placeholder="Enter ID number"
-              [(ngModel)]="formData.idNumber"></ion-input>
+            <ion-input type="text" class="custom-input" placeholder="Enter ID number" [(ngModel)]="formData.idNumber"
+              (ionInput)="onIdNumberInput($event)"></ion-input>
           </div>
         </div>
       </div>
@@ -154,7 +154,8 @@
         <div class="form-group half">
           <label class="form-label">House No.</label>
           <div class="input-wrapper">
-            <ion-input [(ngModel)]="formData.address.houseNo" placeholder="123" class="custom-input"></ion-input>
+            <ion-input [(ngModel)]="formData.address.houseNo" placeholder="123" class="custom-input"
+              (ionInput)="onHouseNoInput($event)"></ion-input>
           </div>
         </div>
 

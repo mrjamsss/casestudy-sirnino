@@ -147,6 +147,42 @@ export class SignUpModalComponent {
 
   onMouseLeaveBarangayList() {
     this.isMouseOverBarangayList = false;
+  // List of ID types that should only accept numbers
+  numericIdTypes = [
+    'Philippine National ID (PhilSys ID)',
+    'SSS ID',
+    'GSIS ID',
+    'Unified Multi-Purpose ID (UMID)',
+    'TIN ID',
+    'PhilHealth ID',
+    'Postal ID'
+  ];
+
+  // Handle ID number input based on ID type
+  onIdNumberInput(event: any) {
+    const idType = this.formData.idType;
+    let value = event.target.value;
+
+    // If the selected ID type is numeric, remove non-digit characters
+    if (this.numericIdTypes.includes(idType)) {
+      const numericValue = value.replace(/\D/g, '');
+
+      // Only update if the value actually changed (to avoid cursor jumping issues if possible)
+      if (value !== numericValue) {
+        value = numericValue;
+        event.target.value = value;
+        this.formData.idNumber = value;
+      }
+    }
+  }
+
+  // House number validation - only allow numbers
+  onHouseNoInput(event: any) {
+    let value = event.target.value;
+    // Remove all non-digit characters
+    value = value.replace(/\D/g, '');
+    this.formData.address.houseNo = value;
+    event.target.value = value;
   }
 
   dismiss() {
@@ -222,6 +258,14 @@ export class SignUpModalComponent {
         return {
           valid: false,
           message: 'Email and Password fields are required.'
+        };
+      }
+
+      // Validate Gmail address
+      if (!this.formData.email.toLowerCase().endsWith('@gmail.com')) {
+        return {
+          valid: false,
+          message: 'Please use a valid Gmail address (@gmail.com).'
         };
       }
 
