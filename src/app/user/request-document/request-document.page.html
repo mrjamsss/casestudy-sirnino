@@ -1,4 +1,4 @@
-<ion-content class="ion-no-padding">
+<div class="page-wrapper">
     <div class="page-container">
         <!-- Page Header -->
         <div class="page-header">
@@ -22,12 +22,8 @@
                         <!-- Department Selection -->
                         <div class="form-group">
                             <label class="form-label">Department <span class="required">*</span></label>
-                            <ion-select 
-                                fill="outline"
-                                [(ngModel)]="selectedDepartment"
-                                (ionChange)="onDepartmentChange()"
-                                class="custom-select"
-                                interface="popover"
+                            <ion-select fill="outline" [(ngModel)]="selectedDepartment"
+                                (ionChange)="onDepartmentChange()" class="custom-select" interface="popover"
                                 placeholder="Select department">
                                 <ion-select-option *ngFor="let dept of departments" [value]="dept.id">
                                     {{ dept.name }}
@@ -38,14 +34,9 @@
                         <!-- Document Type Selection -->
                         <div class="form-group">
                             <label class="form-label">Document Type <span class="required">*</span></label>
-                            <ion-select 
-                                fill="outline"
-                                [(ngModel)]="selectedDocumentType"
-                                (ionChange)="onDocumentTypeChange()"
-                                class="custom-select"
-                                interface="popover"
-                                [disabled]="!selectedDepartment"
-                                placeholder="Select document type">
+                            <ion-select fill="outline" [(ngModel)]="selectedDocumentType"
+                                (ionChange)="onDocumentTypeChange()" class="custom-select" interface="popover"
+                                [disabled]="!selectedDepartment" placeholder="Select document type">
                                 <ion-select-option *ngFor="let doc of availableDocuments" [value]="doc.id">
                                     {{ doc.name }}
                                 </ion-select-option>
@@ -55,13 +46,8 @@
                         <!-- Purpose Selection -->
                         <div class="form-group">
                             <label class="form-label">Purpose <span class="required">*</span></label>
-                            <ion-select 
-                                fill="outline"
-                                [(ngModel)]="selectedPurpose"
-                                class="custom-select"
-                                interface="popover"
-                                [disabled]="!selectedDocumentType"
-                                placeholder="Select purpose">
+                            <ion-select fill="outline" [(ngModel)]="selectedPurpose" class="custom-select"
+                                interface="popover" [disabled]="!selectedDocumentType" placeholder="Select purpose">
                                 <ion-select-option *ngFor="let purpose of availablePurposes" [value]="purpose">
                                     {{ purpose }}
                                 </ion-select-option>
@@ -71,20 +57,14 @@
                         <!-- Additional Notes -->
                         <div class="form-group">
                             <label class="form-label">Additional Notes (Optional)</label>
-                            <ion-textarea
-                                fill="outline"
-                                [(ngModel)]="additionalNotes"
-                                placeholder="Any special instructions or information..."
-                                rows="5"
+                            <ion-textarea fill="outline" [(ngModel)]="additionalNotes"
+                                placeholder="Any special instructions or information..." rows="5"
                                 class="custom-textarea">
                             </ion-textarea>
                         </div>
 
                         <!-- Submit Button -->
-                        <ion-button 
-                            expand="block" 
-                            class="submit-button"
-                            (click)="submitRequest()"
+                        <ion-button expand="block" class="submit-button" (click)="submitRequest()"
                             [disabled]="!selectedDepartment || !selectedDocumentType || !selectedPurpose">
                             <ion-icon name="send-outline" slot="start"></ion-icon>
                             Submit Request
@@ -124,8 +104,9 @@
                     <!-- Need Help Card -->
                     <div class="section-card help-card">
                         <h3>Need Help?</h3>
-                        <p class="help-intro">If you have questions about the request process, check our FAQs or contact us:</p>
-                        
+                        <p class="help-intro">If you have questions about the request process, check our FAQs or contact
+                            us:</p>
+
                         <div class="contact-info">
                             <div class="contact-item">
                                 <ion-icon name="call-outline"></ion-icon>
@@ -154,4 +135,4 @@
             </div>
         </div>
     </div>
-</ion-content>
+</div>

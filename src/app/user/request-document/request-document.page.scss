@@ -18,8 +18,9 @@ $font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif
     -moz-osx-font-smoothing: grayscale;
 }
 
-ion-content {
-    --background: #{$cbn-background};
+.page-wrapper {
+    background: #{$cbn-background};
+    min-height: 100%;
 }
 
 .page-container {

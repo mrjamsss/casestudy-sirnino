@@ -1,9 +1,20 @@
-<ion-content class="ion-no-padding">
-  <div class="page-container">
-    <!-- Page Header -->
-    <div class="page-header">
-      <h1>Welcome to City Hall Services</h1>
-      <p class="subtitle">Manage your documents and track your requests</p>
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Welcome to City Hall Services</h1>
+    <p class="subtitle">Manage your documents and track your requests</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let stat of stats" (click)="onStatCardClick(stat)"
+      [style.cursor]="stat.title === 'Announcements' ? 'pointer' : 'default'">
+      <div class="stat-header">
+        <span class="stat-title">{{ stat.title }}</span>
+        <ion-icon [name]="stat.icon" [style.color]="stat.color"></ion-icon>
+      </div>
+      <div class="stat-value">{{ stat.value }}</div>
+      <div class="stat-subtitle">{{ stat.subtitle }}</div>
     </div>
 
     <div class="content-wrapper">
@@ -19,26 +30,21 @@
         </div>
       </div>
 
-      <div class="content-grid">
-        <!-- Recent Requests -->
-        <div class="section-card">
-          <div class="section-header">
-            <h2>Recent Requests</h2>
-            <p class="section-subtitle">Your latest document requests</p>
+      <div class="requests-list">
+        <div class="request-item" *ngFor="let request of recentRequests">
+          <div class="request-info">
+            <h3>{{ request.documentType }}</h3>
+            <p>{{ request.department }}</p>
           </div>
-
-          <div class="requests-list">
-            <div class="request-item" *ngFor="let request of recentRequests">
-              <div class="request-info">
-                <h3>{{ request.title }}</h3>
-                <p>{{ request.department }}</p>
-              </div>
-              <span class="status-badge" [class]="request.statusClass">{{ request.status }}</span>
-            </div>
-            <div class="view-all-btn">
-              <ion-button expand="block" fill="outline" (click)="viewAllRequests()">View All Requests</ion-button>
-            </div>
-          </div>
+          <span class="status-badge" [ngClass]="getStatusClass(request.status)">
+            {{ request.status }}
+          </span>
+        </div>
+        <div class="view-all-btn" *ngIf="recentRequests.length > 0">
+          <button [routerLink]="['/user/transaction-logs']">View All Requests</button>
+        </div>
+        <div class="empty-state" *ngIf="recentRequests.length === 0">
+          <p>No requests yet. Start by requesting a new document!</p>
         </div>
 
         <!-- Quick Actions -->
@@ -48,12 +54,10 @@
             <p class="section-subtitle">Common services and tasks</p>
           </div>
 
-          <div class="actions-list">
-            <div class="action-item" *ngFor="let action of quickActions" (click)="onQuickAction(action.route)">
-              <ion-icon [name]="action.icon"></ion-icon>
-              <span>{{ action.title }}</span>
-            </div>
-          </div>
+      <div class="actions-list">
+        <div class="action-item" *ngFor="let action of quickActions" [routerLink]="[action.route]" tabindex="0">
+          <ion-icon [name]="action.icon"></ion-icon>
+          <span>{{ action.title }}</span>
         </div>
       </div>
     </div>
