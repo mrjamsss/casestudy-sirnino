@@ -17,12 +17,13 @@
 
                     <div class="form-group">
                         <label>Category</label>
-                        <div class="custom-select">
-                            <select [(ngModel)]="selectedCategory">
-                                <option value="" disabled selected>Select category</option>
-                                <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-                            </select>
-                        </div>
+                        <ion-select class="custom-select" [(ngModel)]="selectedCategory" placeholder="Select category"
+                            interface="popover" fill="outline">
+                            <ion-select-option value="">Select category</ion-select-option>
+                            <ion-select-option *ngFor="let cat of categories" [value]="cat">
+                                {{ cat }}
+                            </ion-select-option>
+                        </ion-select>
                     </div>
 
                     <div class="form-group">
@@ -111,28 +112,28 @@
         </div>
     </div>
 
+</ion-content>
     <!-- Modal -->
-    <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
-        <ng-template>
-            <ion-header>
-                <ion-toolbar>
-                    <ion-title>{{ modalMode === 'edit' ? 'Edit FAQ' : 'View FAQ' }}</ion-title>
-                    <ion-buttons slot="end">
-                        <ion-button (click)="closeModal()">
-                            <ion-icon name="close-outline"></ion-icon>
-                        </ion-button>
-                    </ion-buttons>
-                </ion-toolbar>
-            </ion-header>
-            <ion-content class="ion-padding">
+    <div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()"></div>
+    <div class="faq-modal" *ngIf="isModalOpen">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>{{ modalMode === 'edit' ? 'Edit FAQ' : 'View FAQ' }}</h2>
+                <button class="close-btn" (click)="closeModal()">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+
+            <div class="modal-body">
                 <div class="form-group">
                     <label>Category</label>
-                    <div class="custom-select">
-                        <select [(ngModel)]="modalCategory" [disabled]="modalMode === 'view'">
-                            <option value="" disabled selected>Select category</option>
-                            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-                        </select>
-                    </div>
+                    <ion-select class="custom-select" [(ngModel)]="modalCategory" placeholder="Select category"
+                        interface="popover" fill="outline" [disabled]="modalMode === 'view'">
+                        <ion-select-option value="">Select category</ion-select-option>
+                        <ion-select-option *ngFor="let cat of categories" [value]="cat">
+                            {{ cat }}
+                        </ion-select-option>
+                    </ion-select>
                 </div>
 
                 <div class="form-group">
@@ -147,8 +148,12 @@
                         [disabled]="modalMode === 'view'"></textarea>
                 </div>
 
-                <button *ngIf="modalMode === 'edit'" class="save-btn" (click)="updateFAQ()">Save Changes</button>
-            </ion-content>
-        </ng-template>
-    </ion-modal>
-</ion-content>
+                <div class="action-buttons" *ngIf="modalMode === 'edit'">
+                    <button class="action-button save-btn" (click)="updateFAQ()">
+                        <ion-icon name="save-outline"></ion-icon>
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
