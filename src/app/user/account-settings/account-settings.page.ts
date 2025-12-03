@@ -19,6 +19,14 @@ export class AccountSettingsPage implements OnInit {
     memberSince: string = '';
     isEditMode: boolean = false;
 
+    // Change Password fields
+    currentPassword: string = '';
+    newPassword: string = '';
+    confirmPassword: string = '';
+    showCurrentPassword: boolean = false;
+    showNewPassword: boolean = false;
+    showConfirmPassword: boolean = false;
+
     // System Settings Data
     cityLogo: string | null = null;
     cityInfo: CityInfo | null = null;
@@ -167,6 +175,68 @@ export class AccountSettingsPage implements OnInit {
         // Restore original contact number
         this.contactNumber = this.originalContactNumber;
         this.isEditMode = false;
+    }
+
+    // Change Password Methods
+    toggleCurrentPasswordVisibility() {
+        this.showCurrentPassword = !this.showCurrentPassword;
+    }
+
+    toggleNewPasswordVisibility() {
+        this.showNewPassword = !this.showNewPassword;
+    }
+
+    toggleConfirmPasswordVisibility() {
+        this.showConfirmPassword = !this.showConfirmPassword;
+    }
+
+    async updatePassword() {
+        // Validate all fields are filled
+        if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
+            await this.showToast('Please fill in all password fields', 'warning');
+            return;
+        }
+
+        // Validate current password
+        if (!this.userData) {
+            await this.showToast('No user data found', 'danger');
+            return;
+        }
+
+        if (this.userData.password !== this.currentPassword) {
+            await this.showToast('Current password is incorrect', 'danger');
+            return;
+        }
+
+        // Validate new password length
+        if (this.newPassword.length < 8) {
+            await this.showToast('New password must be at least 8 characters', 'warning');
+            return;
+        }
+
+        // Validate passwords match
+        if (this.newPassword !== this.confirmPassword) {
+            await this.showToast('New passwords do not match', 'warning');
+            return;
+        }
+
+        // Validate new password is different from current
+        if (this.currentPassword === this.newPassword) {
+            await this.showToast('New password must be different from current password', 'warning');
+            return;
+        }
+
+        // Update password
+        this.userData.password = this.newPassword;
+        this.authService.updateUser(this.userData);
+        this.authService.setCurrentUser(this.userData);
+
+        // Clear password fields
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+
+        await this.showToast('Password updated successfully!', 'success');
     }
 
     async showToast(message: string, color: string) {
