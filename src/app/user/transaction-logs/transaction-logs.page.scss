@@ -196,10 +196,17 @@ ion-content {
                 }
             }
         }
+
+        .text-center {
+            text-align: center;
+            color: $cbn-text-light;
+            font-style: italic;
+            padding: 40px 20px;
+        }
     }
 }
 
-// Status Badge
+// Status Badge - Matching admin statuses
 .status-badge {
     display: inline-block;
     padding: 6px 12px;
@@ -209,20 +216,32 @@ ion-content {
     letter-spacing: 0.02em;
     text-transform: capitalize;
 
-    &.Processing,
-    &.Pending {
+    // Pending status (orange/warning)
+    &.pending {
         background: rgba(#f59e0b, 0.1);
         color: #d97706;
     }
 
-    &.Completed,
-    &.Approved {
+    // Processing status (Approved - green/success)
+    &.processing {
         background: rgba(#10b981, 0.1);
         color: #059669;
     }
 
-    &.Rejected,
-    &.Cancelled {
+    // Ready status (Ready for Pickup - blue/primary)
+    &.ready {
+        background: rgba($cbn-primary, 0.1);
+        color: $cbn-primary;
+    }
+
+    // Completed status (dark green)
+    &.completed {
+        background: rgba(#10b981, 0.15);
+        color: #047857;
+    }
+
+    // Rejected status (red/danger)
+    &.rejected {
         background: rgba(#ef4444, 0.1);
         color: #dc2626;
     }
@@ -294,6 +313,15 @@ ion-content {
 
         tbody td {
             padding: 16px;
+        }
+    }
+
+    .custom-segment {
+        width: 100%;
+
+        ion-segment-button {
+            min-width: auto;
+            flex: 1;
         }
     }
 }

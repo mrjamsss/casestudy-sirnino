@@ -3,66 +3,15 @@
         <!-- Page Header -->
         <div class="page-header">
             <h1>Transaction History</h1>
-            <p class="subtitle">View all your requests and transactions</p>
+            <p class="subtitle">View all transaction logs</p>
         </div>
 
         <div class="content-wrapper">
-            <!-- Tabs/Segments -->
-            <div class="tabs-wrapper">
-                <ion-segment [(ngModel)]="selectedSegment" mode="ios" class="custom-segment">
-                    <ion-segment-button value="requests">
-                        <ion-label>Document Requests</ion-label>
-                    </ion-segment-button>
-                    <ion-segment-button value="transactions">
-                        <ion-label>All Transactions</ion-label>
-                    </ion-segment-button>
-                </ion-segment>
-            </div>
-
-            <!-- Requests Section -->
-            <div *ngIf="selectedSegment === 'requests'" class="section-card">
-                <div class="section-header">
-                    <div class="header-left">
-                        <h2>Document Requests</h2>
-                        <p class="section-subtitle">Track the status of your document requests</p>
-                    </div>
-                </div>
-
-                <div class="user-table-wrapper">
-                    <table class="user-table">
-                        <thead>
-                            <tr>
-                                <th>Request ID</th>
-                                <th>Document Type</th>
-                                <th>Department</th>
-                                <th>Request Date</th>
-                                <th>Status</th>
-                                <th>Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="user-row" *ngFor="let req of requests">
-                                <td class="id-col">{{ req.id }}</td>
-                                <td>{{ req.type }}</td>
-                                <td>{{ req.department }}</td>
-                                <td>{{ req.date }}</td>
-                                <td>
-                                    <span class="status-badge" [ngClass]="req.status">
-                                        {{ req.status }}
-                                    </span>
-                                </td>
-                                <td class="notes-col">{{ req.notes }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- Transactions Section -->
-            <div *ngIf="selectedSegment === 'transactions'" class="section-card">
+            <div class="section-card">
                 <div class="section-header">
                     <div class="header-left">
-                        <h2>Transaction Logs</h2>
+                        <h2>All Transactions</h2>
                         <p class="section-subtitle">View history of all actions</p>
                     </div>
                 </div>

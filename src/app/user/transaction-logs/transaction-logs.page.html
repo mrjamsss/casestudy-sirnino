@@ -19,12 +19,12 @@
                 </ion-segment>
             </div>
 
-            <!-- Requests Section -->
+            <!-- Processing Requests Section -->
             <div *ngIf="selectedSegment === 'requests'" class="section-card">
                 <div class="section-header">
                     <div class="header-left">
                         <h2>Document Requests</h2>
-                        <p class="section-subtitle">Track the status of your document requests</p>
+                        <p class="section-subtitle">Track the status of your ongoing document requests</p>
                     </div>
                 </div>
 
@@ -35,23 +35,72 @@
                                 <th>Request ID</th>
                                 <th>Document Type</th>
                                 <th>Department</th>
+                                <th>Purpose</th>
                                 <th>Request Date</th>
                                 <th>Status</th>
                                 <th>Notes</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="user-row" *ngFor="let req of requests">
-                                <td class="id-col">{{ req.id }}</td>
-                                <td>{{ req.type }}</td>
-                                <td>{{ req.department }}</td>
-                                <td>{{ req.date }}</td>
+                            <tr class="user-row" *ngFor="let req of processingRequests">
+                                <td class="id-col">{{ getRequestId(req.id) }}</td>
+                                <td>{{ req.serviceName }}</td>
+                                <td>{{ req.departmentName }}</td>
+                                <td>{{ req.purpose }}</td>
+                                <td>{{ formatDate(req.dateRequested) }}</td>
                                 <td>
-                                    <span class="status-badge" [ngClass]="req.status">
-                                        {{ req.status }}
+                                    <span class="status-badge" [ngClass]="getStatusClass(req.status)">
+                                        {{ getStatusDisplayText(req.status) }}
                                     </span>
                                 </td>
                                 <td class="notes-col">{{ req.notes }}</td>
+                            </tr>
+                            <tr *ngIf="processingRequests.length === 0">
+                                <td colspan="7" class="text-center">No pending requests found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Completed Transactions Section -->
+            <div *ngIf="selectedSegment === 'transactions'" class="section-card">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>All Transactions</h2>
+                        <p class="section-subtitle">View history of completed and rejected requests</p>
+                    </div>
+                </div>
+
+                <div class="user-table-wrapper">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Document Type</th>
+                                <th>Department</th>
+                                <th>Purpose</th>
+                                <th>Request Date</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="user-row" *ngFor="let req of completedTransactions">
+                                <td class="id-col">{{ getRequestId(req.id) }}</td>
+                                <td>{{ req.serviceName }}</td>
+                                <td>{{ req.departmentName }}</td>
+                                <td>{{ req.purpose }}</td>
+                                <td>{{ formatDate(req.dateRequested) }}</td>
+                                <td>
+                                    <span class="status-badge" [ngClass]="getStatusClass(req.status)">
+                                        {{ getStatusDisplayText(req.status) }}
+                                    </span>
+                                </td>
+                                <td class="notes-col">{{ req.notes }}</td>
+                            </tr>
+                            <tr *ngIf="completedTransactions.length === 0">
+                                <td colspan="7" class="text-center">No completed transactions found.</td>
                             </tr>
                         </tbody>
                     </table>
