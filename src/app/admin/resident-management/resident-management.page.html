@@ -70,6 +70,8 @@
                             <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
                             Import File
                         </ion-button>
+                        <input type="file" #fileInput accept=".csv" style="display: none"
+                            (change)="onImportFileSelected($event)">
                         <ion-button fill="clear" class="action-btn view-btn" [disabled]="!selectedResident"
                             (click)="openModal('view')">
                             <ion-icon name="eye-outline" slot="start"></ion-icon>
@@ -81,10 +83,11 @@
                             Edit
                         </ion-button>
                         <ion-button fill="clear" class="action-btn delete-btn" [disabled]="!selectedResident"
-                            (click)="deleteSelectedResident()">
+                            (click)="openDeleteConfirm()">
                             <ion-icon name="trash-outline" slot="start"></ion-icon>
                             Delete
                         </ion-button>
+
                     </div>
                 </div>
 
@@ -187,45 +190,367 @@
 
             <!-- VIEW / EDIT (existing simple form, untouched) -->
             <ng-container *ngIf="modalMode !== 'add'">
+
+                <!-- Registration -->
                 <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" [(ngModel)]="modalName" [disabled]="modalMode === 'view'"
-                        placeholder="Full Name">
+                    <label>Resident ID *</label>
+                    <input type="text" [(ngModel)]="residentForm.residentId" [disabled]="true"
+                        placeholder="Auto Generated" required>
+                </div>
+                <div class="form-group">
+                    <label>Date Registered *</label>
+                    <input type="date" [(ngModel)]="residentForm.dateRegistered" [disabled]="modalMode === 'view'"
+                        required>
                 </div>
 
-                <div class="form-group">
-                    <label>Age</label>
-                    <input type="number" [(ngModel)]="modalAge" [disabled]="modalMode === 'view'" placeholder="Age">
+                <!-- Basic Personal Info -->
+                <div class="form-group" *ngIf="modalMode === 'view'">
+                    <label>Full Name *</label>
+                    <input type="text" [value]="
+      (residentForm.givenName ? residentForm.givenName + ' ' : '') +
+      (residentForm.middleName ? residentForm.middleName + ' ' : '') +
+      (residentForm.lastName ? residentForm.lastName + ' ' : '') +
+      (residentForm.extension ? residentForm.extension : '')
+    " readonly>
                 </div>
 
+                <!-- Name fields in EDIT mode -->
+                <div *ngIf="modalMode === 'edit'">
+                    <div class="form-group">
+                        <label>Given Name *</label>
+                        <input type="text" [(ngModel)]="residentForm.givenName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Middle Name</label>
+                        <input type="text" [(ngModel)]="residentForm.middleName">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" [(ngModel)]="residentForm.lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Extension (Jr., Sr., etc.)</label>
+                        <input type="text" [(ngModel)]="residentForm.extension">
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label>Address</label>
-                    <textarea rows="3" [(ngModel)]="modalAddress" [disabled]="modalMode === 'view'"
-                        placeholder="Complete Address"></textarea>
+                    <label>Gender *</label>
+                    <select [(ngModel)]="residentForm.gender" [disabled]="modalMode === 'view'" required>
+                        <option value="" disabled selected>Select</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Birthday *</label>
+                    <input type="date" [(ngModel)]="residentForm.birthday" [disabled]="modalMode === 'view'" required>
+                </div>
+                <div class="form-group">
+                    <label>Place of Birth *</label>
+                    <input type="text" [(ngModel)]="residentForm.birthPlace" [disabled]="modalMode === 'view'" required>
+                </div>
+                <div class="form-group">
+                    <label>Civil Status *</label>
+                    <select [(ngModel)]="residentForm.civilStatus" [disabled]="modalMode === 'view'" required>
+                        <option value="">Select</option>
+                        <option>Single</option>
+                        <option>Married</option>
+                        <option>Widowed</option>
+                        <option>Separated</option>
+                        <option>Divorced</option>
+                    </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Voter Status</label>
-                    <div class="custom-select">
-                        <select [(ngModel)]="modalVoterStatus" [disabled]="modalMode === 'view'">
-                            <option value="Registered">Registered</option>
-                            <option value="Not Registered">Not Registered</option>
+                <!-- Address & Contact -->
+                <div class="form-group" *ngIf="modalMode === 'view'">
+                    <label>Address *</label>
+                    <input type="text" [value]="
+      (residentForm.houseNo ? residentForm.houseNo + ', ' : '') +
+      (residentForm.street ? residentForm.street + ', ' : '') +
+      (residentForm.purok ? 'Purok ' + residentForm.purok + ', ' : '') +
+      (residentForm.barangay ? residentForm.barangay + ', ' : '') +
+      (residentForm.city ? residentForm.city + ', ' : '') +
+      (residentForm.province ? residentForm.province : '')
+    " readonly>
+                </div>
+
+
+                <!-- Address fields in EDIT mode -->
+                <div *ngIf="modalMode === 'edit'">
+                    <div class="form-group">
+                        <label>House Number</label>
+                        <input type="text" [(ngModel)]="residentForm.houseNo">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Street *</label>
+                        <input type="text" [(ngModel)]="residentForm.street" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Purok *</label>
+                        <select [(ngModel)]="residentForm.purok" required>
+                            <option value="">Select Purok</option>
+                            <option *ngFor="let p of purokOptions" [value]="p">Purok {{ p }}</option>
                         </select>
+                    </div>
+
+                    <div class="form-group" *ngIf="modalMode === 'edit'">
+                        <label>Barangay *</label>
+                        <select [(ngModel)]="residentForm.barangay" required>
+                            <option value="">Select Barangay</option>
+                            <!-- same options list as above -->
+                            <option>Aduas Centro</option>
+                            <option>Aduas Norte</option>
+                            <option>Aduas Sur</option>
+                            <option>Bagong Buhay</option>
+                            <option>Bagong Sikat</option>
+                            <option>Bakero</option>
+                            <option>Bakod Bayan</option>
+                            <option>Balite</option>
+                            <option>Bangad</option>
+                            <option>Bantug Bulalo</option>
+                            <option>Bantug Norte</option>
+                            <option>Barlis</option>
+                            <option>Barrera District (Poblacion)</option>
+                            <option>Bernardo District (Poblacion)</option>
+                            <option>Bitas</option>
+                            <option>Bonifacio District (Poblacion)</option>
+                            <option>Buliran</option>
+                            <option>Caalibangbangan</option>
+                            <option>Cabu</option>
+                            <option>Calawagan (Kalawagan)</option>
+                            <option>Campo Tinio</option>
+                            <option>Caridad</option>
+                            <option>Caudillo</option>
+                            <option>Cinco-Cinco</option>
+                            <option>City Supermarket (Poblacion)</option>
+                            <option>Communal</option>
+                            <option>Cruz Roja</option>
+                            <option>Daang Sarile</option>
+                            <option>Dalampang</option>
+                            <option>Dicarma (Poblacion)</option>
+                            <option>Dimasalang (Poblacion)</option>
+                            <option>Dionisio S. Garcia</option>
+                            <option>Fatima (Poblacion)</option>
+                            <option>General Luna (Poblacion)</option>
+                            <option>Hermogenes C. Concepcion, Sr.</option>
+                            <option>Ibabao Bana</option>
+                            <option>Imelda District</option>
+                            <option>Isla (Poblacion)</option>
+                            <option>Kalikid Norte</option>
+                            <option>Kalikid Sur</option>
+                            <option>Kapitan Pepe (Poblacion)</option>
+                            <option>Lagare</option>
+                            <option>Lourdes (Matungal-tungal)</option>
+                            <option>M. S. Garcia</option>
+                            <option>Mabini Extension</option>
+                            <option>Mabini Homesite</option>
+                            <option>Macatbong</option>
+                            <option>Magsaysay District</option>
+                            <option>Magsaysay Norte</option>
+                            <option>Magsaysay South</option>
+                            <option>Maria Theresa</option>
+                            <option>Matadero (Poblacion)</option>
+                            <option>Mayapyap Norte</option>
+                            <option>Mayapyap Sur</option>
+                            <option>Melojavilla (Poblacion)</option>
+                            <option>Nabao (Poblacion)</option>
+                            <option>Obrero</option>
+                            <option>Padre Burgos (Poblacion)</option>
+                            <option>Padre Crisostomo</option>
+                            <option>Pagas</option>
+                            <option>Palagay</option>
+                            <option>Pamaldan</option>
+                            <option>Pangatian</option>
+                            <option>Patalac</option>
+                            <option>Polilio</option>
+                            <option>Pula</option>
+                            <option>Quezon District (Poblacion)</option>
+                            <option>Rizdelis (Poblacion)</option>
+                            <option>Samon</option>
+                            <option>San Isidro</option>
+                            <option>San Josef Norte</option>
+                            <option>San Josef Sur</option>
+                            <option>San Juan Pob. (Accfa)</option>
+                            <option>San Roque Norte</option>
+                            <option>San Roque Sur</option>
+                            <option>Sanbermicristi (Poblacion)</option>
+                            <option>Sangitan</option>
+                            <option>Sangitan East</option>
+                            <option>Sapang</option>
+                            <option>Santa Arcadia</option>
+                            <option>Santo Niño</option>
+                            <option>Sumacab Este</option>
+                            <option>Sumacab Norte</option>
+                            <option>Sumacab South</option>
+                            <option>Talipapa</option>
+                            <option>Valdefuente</option>
+                            <option>Valle Cruz</option>
+                            <option>Vijandre District (Poblacion)</option>
+                            <option>Villa Ofelia-Caridad</option>
+                            <option>Zulueta District (Poblacion)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Municipality / City *</label>
+                        <input type="text" [(ngModel)]="residentForm.city" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Province *</label>
+                        <input type="text" [(ngModel)]="residentForm.province" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Life Status</label>
-                    <div class="custom-select">
-                        <select [(ngModel)]="modalLifeStatus" [disabled]="modalMode === 'view'">
-                            <option value="Alive">Alive</option>
-                            <option value="Deceased">Deceased</option>
-                        </select>
-                    </div>
+                    <label>Years of Residency *</label>
+                    <input type="number" [(ngModel)]="residentForm.residencyYears" required
+                        [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" [(ngModel)]="residentForm.phone" required [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" [(ngModel)]="residentForm.email" [disabled]="modalMode === 'view'">
                 </div>
 
-                <button *ngIf="modalMode === 'edit'" class="save-btn" (click)="updateResident()">Save Changes</button>
+
+                <!-- Identification -->
+                <div class="form-group">
+                    <label>ID Type</label>
+                    <input type="text" [(ngModel)]="residentForm.idType" [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>ID Number</label>
+                    <input type="text" [(ngModel)]="residentForm.idNumber" [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group" *ngIf="modalMode === 'edit'">
+                    <label>Valid ID (Photo/File)</label>
+                    <input type="file" (change)="onIdFileChange($event)">
+                </div>
+
+                <!-- Household Information -->
+                <div class="form-group">
+                    <label>Household Head Name *</label>
+                    <input type="text" [(ngModel)]="residentForm.householdHead" required
+                        [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>Relationship to Household Head *</label>
+                    <input type="text" [(ngModel)]="residentForm.householdHeadRel" required
+                        [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>House Ownership *</label>
+                    <select [(ngModel)]="residentForm.houseOwnership" required [disabled]="modalMode === 'view'">
+                        <option value="">Select</option>
+                        <option>Owned</option>
+                        <option>Rented</option>
+                        <option>Shared</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <!-- Social & Demographic -->
+                <div class="form-group">
+                    <label>Occupation / Employment *</label>
+                    <input type="text" [(ngModel)]="residentForm.occupation" required [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>Educational Attainment *</label>
+                    <input type="text" [(ngModel)]="residentForm.education" required [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>PWD *</label>
+                    <select [(ngModel)]="residentForm.pwd" required [disabled]="modalMode === 'view'">
+                        <option value="">Select</option>
+                        <option [value]="true">Yes</option>
+                        <option [value]="false">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Senior Citizen *</label>
+                    <select [(ngModel)]="residentForm.seniorCitizen" required [disabled]="modalMode === 'view'">
+                        <option value="">Select</option>
+                        <option [value]="true">Yes</option>
+                        <option [value]="false">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Solo Parent *</label>
+                    <select [(ngModel)]="residentForm.soloParent" required [disabled]="modalMode === 'view'">
+                        <option value="">Select</option>
+                        <option [value]="true">Yes</option>
+                        <option [value]="false">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>4Ps Beneficiary *</label>
+                    <select [(ngModel)]="residentForm.fourPs" required [disabled]="modalMode === 'view'">
+                        <option value="">Select</option>
+                        <option [value]="true">Yes</option>
+                        <option [value]="false">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Indigenous Group (If applicable)</label>
+                    <input type="text" [(ngModel)]="residentForm.indigenousGroup" [disabled]="modalMode === 'view'">
+                </div>
+
+                <!-- Emergency & Record Status -->
+                <div class="form-group">
+                    <label>Emergency Contact Name *</label>
+                    <input type="text" [(ngModel)]="residentForm.emerContactName" required
+                        [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>Relationship *</label>
+                    <input type="text" [(ngModel)]="residentForm.emerContactRel" required
+                        [disabled]="modalMode === 'view'">
+                </div>
+                <div class="form-group">
+                    <label>Contact Number *</label>
+                    <input type="tel" [(ngModel)]="residentForm.emerContactNumber" required
+                        [disabled]="modalMode === 'view'">
+                </div>
+
+                <div class="form-group">
+                    <label>Resident Status *</label>
+                    <select [(ngModel)]="residentForm.lifeStatus" required [disabled]="modalMode === 'view'">
+                        <option value="Alive">Alive</option>
+                        <option value="Moved Out">Moved Out</option>
+                        <option value="Deceased">Deceased</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea [(ngModel)]="residentForm.remarks" [disabled]="modalMode === 'view'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Registered Voter *</label>
+                    <select [(ngModel)]="residentForm.voter" required>
+                        <option [ngValue]="null">Select</option>
+                        <option [ngValue]="true">Yes</option>
+                        <option [ngValue]="false">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Precinct Number</label>
+                    <input type="text" [(ngModel)]="residentForm.precinctNo" [disabled]="modalMode === 'view'">
+                </div>
+
+                <!-- Save button only in edit mode -->
+                <button *ngIf="modalMode === 'edit'" class="save-btn" (click)="updateResident()">
+                    Save Changes
+                </button>
             </ng-container>
+
 
             <!-- ADD MODE: multi-step resident form -->
             <ng-container *ngIf="modalMode === 'add'">
@@ -237,38 +562,38 @@
                         <input type="text" [(ngModel)]="residentForm.residentId" placeholder="Auto Generated" disabled>
                     </div>
                     <div class="form-group">
-                        <label>Date Registered</label>
-                        <input type="date" [(ngModel)]="residentForm.dateRegistered">
+                        <label>Date Registered *</label>
+                        <input type="date" [(ngModel)]="residentForm.dateRegistered" required>
                     </div>
                     <button class="save-btn" (click)="nextAddStep()">Next</button>
                 </div>
 
                 <!-- Step 2: Basic Personal Info -->
                 <div *ngIf="modalAddStep === 2">
-                    <div class="form-group"><label>Given Name</label><input type="text"
-                            [(ngModel)]="residentForm.givenName"></div>
+                    <div class="form-group"><label>Given Name *</label><input type="text"
+                            [(ngModel)]="residentForm.givenName" required></div>
                     <div class="form-group"><label>Middle Name</label><input type="text"
                             [(ngModel)]="residentForm.middleName"></div>
-                    <div class="form-group"><label>Last Name</label><input type="text"
-                            [(ngModel)]="residentForm.lastName"></div>
+                    <div class="form-group"><label>Last Name *</label><input type="text"
+                            [(ngModel)]="residentForm.lastName" required></div>
                     <div class="form-group"><label>Extension (Jr., Sr., etc.)</label><input type="text"
                             [(ngModel)]="residentForm.extension"></div>
                     <div class="form-group">
-                        <label>Gender</label>
-                        <select [(ngModel)]="residentForm.gender">
+                        <label>Gender *</label>
+                        <select [(ngModel)]="residentForm.gender" required>
                             <option value="">Select</option>
                             <option>Male</option>
                             <option>Female</option>
                             <option>Other</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Birthday</label><input type="date"
-                            [(ngModel)]="residentForm.birthday"></div>
-                    <div class="form-group"><label>Place of Birth</label><input type="text"
-                            [(ngModel)]="residentForm.birthPlace"></div>
+                    <div class="form-group"><label>Birthday *</label><input type="date"
+                            [(ngModel)]="residentForm.birthday" required></div>
+                    <div class="form-group"><label>Place of Birth *</label><input type="text"
+                            [(ngModel)]="residentForm.birthPlace" required></div>
                     <div class="form-group">
-                        <label>Civil Status</label>
-                        <select [(ngModel)]="residentForm.civilStatus">
+                        <label>Civil Status *</label>
+                        <select [(ngModel)]="residentForm.civilStatus" required>
                             <option value="">Select</option>
                             <option>Single</option>
                             <option>Married</option>
@@ -283,18 +608,128 @@
 
                 <!-- Step 3: Address & Contact -->
                 <div *ngIf="modalAddStep === 3">
-                    <div class="form-group"><label>House No. / Street / Purok</label><input type="text"
-                            [(ngModel)]="residentForm.houseNo"></div>
-                    <div class="form-group"><label>Barangay</label><input type="text"
-                            [(ngModel)]="residentForm.barangay"></div>
-                    <div class="form-group"><label>Municipality / City</label><input type="text"
-                            [(ngModel)]="residentForm.city"></div>
-                    <div class="form-group"><label>Province</label><input type="text"
-                            [(ngModel)]="residentForm.province"></div>
-                    <div class="form-group"><label>Years of Residency</label><input type="number"
-                            [(ngModel)]="residentForm.residencyYears"></div>
-                    <div class="form-group"><label>Phone Number</label><input type="tel"
-                            [(ngModel)]="residentForm.phone"></div>
+                    <div class="form-group">
+                        <label>House Number</label>
+                        <input type="text" [(ngModel)]="residentForm.houseNo">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Street *</label>
+                        <input type="text" [(ngModel)]="residentForm.street" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Purok *</label>
+                        <select [(ngModel)]="residentForm.purok" required>
+                            <option value="">Select Purok</option>
+                            <option *ngFor="let p of purokOptions" [value]="p">Purok {{ p }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Barangay *</label>
+                        <select [(ngModel)]="residentForm.barangay" required>
+                            <option value="">Select Barangay</option>
+                            <option>Aduas Centro</option>
+                            <option>Aduas Norte</option>
+                            <option>Aduas Sur</option>
+                            <option>Bagong Buhay</option>
+                            <option>Bagong Sikat</option>
+                            <option>Bakero</option>
+                            <option>Bakod Bayan</option>
+                            <option>Balite</option>
+                            <option>Bangad</option>
+                            <option>Bantug Bulalo</option>
+                            <option>Bantug Norte</option>
+                            <option>Barlis</option>
+                            <option>Barrera District (Poblacion)</option>
+                            <option>Bernardo District (Poblacion)</option>
+                            <option>Bitas</option>
+                            <option>Bonifacio District (Poblacion)</option>
+                            <option>Buliran</option>
+                            <option>Caalibangbangan</option>
+                            <option>Cabu</option>
+                            <option>Calawagan (Kalawagan)</option>
+                            <option>Campo Tinio</option>
+                            <option>Caridad</option>
+                            <option>Caudillo</option>
+                            <option>Cinco-Cinco</option>
+                            <option>City Supermarket (Poblacion)</option>
+                            <option>Communal</option>
+                            <option>Cruz Roja</option>
+                            <option>Daang Sarile</option>
+                            <option>Dalampang</option>
+                            <option>Dicarma (Poblacion)</option>
+                            <option>Dimasalang (Poblacion)</option>
+                            <option>Dionisio S. Garcia</option>
+                            <option>Fatima (Poblacion)</option>
+                            <option>General Luna (Poblacion)</option>
+                            <option>Hermogenes C. Concepcion, Sr.</option>
+                            <option>Ibabao Bana</option>
+                            <option>Imelda District</option>
+                            <option>Isla (Poblacion)</option>
+                            <option>Kalikid Norte</option>
+                            <option>Kalikid Sur</option>
+                            <option>Kapitan Pepe (Poblacion)</option>
+                            <option>Lagare</option>
+                            <option>Lourdes (Matungal-tungal)</option>
+                            <option>M. S. Garcia</option>
+                            <option>Mabini Extension</option>
+                            <option>Mabini Homesite</option>
+                            <option>Macatbong</option>
+                            <option>Magsaysay District</option>
+                            <option>Magsaysay Norte</option>
+                            <option>Magsaysay South</option>
+                            <option>Maria Theresa</option>
+                            <option>Matadero (Poblacion)</option>
+                            <option>Mayapyap Norte</option>
+                            <option>Mayapyap Sur</option>
+                            <option>Melojavilla (Poblacion)</option>
+                            <option>Nabao (Poblacion)</option>
+                            <option>Obrero</option>
+                            <option>Padre Burgos (Poblacion)</option>
+                            <option>Padre Crisostomo</option>
+                            <option>Pagas</option>
+                            <option>Palagay</option>
+                            <option>Pamaldan</option>
+                            <option>Pangatian</option>
+                            <option>Patalac</option>
+                            <option>Polilio</option>
+                            <option>Pula</option>
+                            <option>Quezon District (Poblacion)</option>
+                            <option>Rizdelis (Poblacion)</option>
+                            <option>Samon</option>
+                            <option>San Isidro</option>
+                            <option>San Josef Norte</option>
+                            <option>San Josef Sur</option>
+                            <option>San Juan Pob. (Accfa)</option>
+                            <option>San Roque Norte</option>
+                            <option>San Roque Sur</option>
+                            <option>Sanbermicristi (Poblacion)</option>
+                            <option>Sangitan</option>
+                            <option>Sangitan East</option>
+                            <option>Sapang</option>
+                            <option>Santa Arcadia</option>
+                            <option>Santo Niño</option>
+                            <option>Sumacab Este</option>
+                            <option>Sumacab Norte</option>
+                            <option>Sumacab South</option>
+                            <option>Talipapa</option>
+                            <option>Valdefuente</option>
+                            <option>Valle Cruz</option>
+                            <option>Vijandre District (Poblacion)</option>
+                            <option>Villa Ofelia-Caridad</option>
+                            <option>Zulueta District (Poblacion)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"><label>Municipality / City *</label><input type="text"
+                            [(ngModel)]="residentForm.city" required></div>
+                    <div class="form-group"><label>Province *</label><input type="text"
+                            [(ngModel)]="residentForm.province" required></div>
+                    <div class="form-group"><label>Years of Residency *</label><input type="number"
+                            [(ngModel)]="residentForm.residencyYears" required></div>
+                    <div class="form-group"><label>Phone Number *</label><input type="tel"
+                            [(ngModel)]="residentForm.phone" required></div>
                     <div class="form-group"><label>Email (optional)</label><input type="email"
                             [(ngModel)]="residentForm.email"></div>
                     <button class="save-btn" (click)="prevAddStep()">Back</button>
@@ -317,13 +752,13 @@
 
                 <!-- Step 5: Household Information -->
                 <div *ngIf="modalAddStep === 5">
-                    <div class="form-group"><label>Household Head Name</label><input type="text"
-                            [(ngModel)]="residentForm.householdHead"></div>
-                    <div class="form-group"><label>Relationship to Household Head</label><input type="text"
-                            [(ngModel)]="residentForm.householdHeadRel"></div>
+                    <div class="form-group"><label>Household Head Name *</label><input type="text"
+                            [(ngModel)]="residentForm.householdHead" required></div>
+                    <div class="form-group"><label>Relationship to Household Head *</label><input type="text"
+                            [(ngModel)]="residentForm.householdHeadRel" required></div>
                     <div class="form-group">
-                        <label>House Ownership</label>
-                        <select [(ngModel)]="residentForm.houseOwnership">
+                        <label>House Ownership *</label>
+                        <select [(ngModel)]="residentForm.houseOwnership" required>
                             <option value="">Select</option>
                             <option>Owned</option>
                             <option>Rented</option>
@@ -337,37 +772,37 @@
 
                 <!-- Step 6: Social & Demographic -->
                 <div *ngIf="modalAddStep === 6">
-                    <div class="form-group"><label>Occupation / Employment</label><input type="text"
-                            [(ngModel)]="residentForm.occupation"></div>
-                    <div class="form-group"><label>Educational Attainment</label><input type="text"
-                            [(ngModel)]="residentForm.education"></div>
+                    <div class="form-group"><label>Occupation / Employment *</label><input type="text"
+                            [(ngModel)]="residentForm.occupation" required></div>
+                    <div class="form-group"><label>Educational Attainment *</label><input type="text"
+                            [(ngModel)]="residentForm.education" required></div>
                     <div class="form-group">
-                        <label>PWD</label>
-                        <select [(ngModel)]="residentForm.pwd">
+                        <label>PWD *</label>
+                        <select [(ngModel)]="residentForm.pwd" required>
                             <option value="">Select</option>
                             <option [value]="true">Yes</option>
                             <option [value]="false">No</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Senior Citizen</label>
-                        <select [(ngModel)]="residentForm.seniorCitizen">
+                        <label>Senior Citizen *</label>
+                        <select [(ngModel)]="residentForm.seniorCitizen" required>
                             <option value="">Select</option>
                             <option [value]="true">Yes</option>
                             <option [value]="false">No</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Solo Parent</label>
-                        <select [(ngModel)]="residentForm.soloParent">
+                        <label>Solo Parent *</label>
+                        <select [(ngModel)]="residentForm.soloParent" required>
                             <option value="">Select</option>
                             <option [value]="true">Yes</option>
                             <option [value]="false">No</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>4Ps Beneficiary</label>
-                        <select [(ngModel)]="residentForm.fourPs">
+                        <label>4Ps Beneficiary *</label>
+                        <select [(ngModel)]="residentForm.fourPs" required>
                             <option value="">Select</option>
                             <option [value]="true">Yes</option>
                             <option [value]="false">No</option>
@@ -381,16 +816,16 @@
 
                 <!-- Step 7: Emergency Contact & Record Status -->
                 <div *ngIf="modalAddStep === 7">
-                    <div class="form-group"><label>Emergency Contact Name</label><input type="text"
-                            [(ngModel)]="residentForm.emerContactName"></div>
-                    <div class="form-group"><label>Relationship</label><input type="text"
-                            [(ngModel)]="residentForm.emerContactRel"></div>
-                    <div class="form-group"><label>Contact Number</label><input type="tel"
-                            [(ngModel)]="residentForm.emerContactNumber"></div>
+                    <div class="form-group"><label>Emergency Contact Name *</label><input type="text"
+                            [(ngModel)]="residentForm.emerContactName" required></div>
+                    <div class="form-group"><label>Relationship *</label><input type="text"
+                            [(ngModel)]="residentForm.emerContactRel" required></div>
+                    <div class="form-group"><label>Contact Number *</label><input type="tel"
+                            [(ngModel)]="residentForm.emerContactNumber" required></div>
 
                     <div class="form-group">
-                        <label>Resident Status</label>
-                        <select [(ngModel)]="residentForm.lifeStatus">
+                        <label>Resident Status *</label>
+                        <select [(ngModel)]="residentForm.lifeStatus" required>
                             <option value="Alive">Alive</option>
                             <option value="Moved Out">Moved Out</option>
                             <option value="Deceased">Deceased</option>
@@ -401,11 +836,11 @@
                             [(ngModel)]="residentForm.remarks"></textarea></div>
 
                     <div class="form-group">
-                        <label>Registered Voter</label>
-                        <select [(ngModel)]="residentForm.voter">
-                            <option value="">Select</option>
-                            <option [value]="true">Yes</option>
-                            <option [value]="false">No</option>
+                        <label>Registered Voter *</label>
+                        <select [(ngModel)]="residentForm.voter" required>
+                            <option [ngValue]="null">Select</option>
+                            <option [ngValue]="true">Yes</option>
+                            <option [ngValue]="false">No</option>
                         </select>
                     </div>
 
@@ -419,5 +854,40 @@
             </ng-container>
         </div>
 
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-backdrop" *ngIf="isDeleteConfirmOpen" (click)="closeDeleteConfirm()"></div>
+<div class="resident-modal" *ngIf="isDeleteConfirmOpen">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Confirm Deletion</h2>
+            <button class="close-btn" (click)="closeDeleteConfirm()">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <p>Are you sure you want to delete this resident?</p>
+            <p *ngIf="selectedResident">
+                <strong>{{ selectedResident.name }}</strong>
+            </p>
+
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button class="save-btn" style="background:#e5e7eb; color:#111827;" (click)="closeDeleteConfirm()">
+                    Cancel
+                </button>
+                <button class="save-btn" style="background:#dc2626;" (click)="confirmDeleteResident()">
+                    Delete Resident
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" *ngIf="isToastVisible">
+    <div class="toast" [attr.data-type]="toastType">
+        {{ toastMessage }}
     </div>
 </div>
