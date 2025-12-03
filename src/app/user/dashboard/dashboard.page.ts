@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,15 +21,21 @@ export class DashboardPage implements OnInit {
   ];
 
   quickActions = [
-    { title: 'Request New Document', icon: 'document-text-outline' },
-    { title: 'Calculate Permit Fees', icon: 'time-outline' },
-    { title: 'View Requirements', icon: 'checkmark-circle-outline' },
-    { title: 'Community Programs', icon: 'information-circle-outline' }
+    { title: 'Request New Document', icon: 'document-text-outline', route: '/citizen-portal/request-document' },
+    { title: 'Calculate Permit Fees', icon: 'time-outline', route: '/citizen-portal/fee-calculator' },
+    { title: 'View Requirements', icon: 'checkmark-circle-outline', route: '/citizen-portal/service-requirements' }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
+  viewAllRequests() {
+    this.router.navigate(['/citizen-portal/transaction-logs']);
+  }
+
+  onQuickAction(route: string) {
+    this.router.navigate([route]);
+  }
 }
