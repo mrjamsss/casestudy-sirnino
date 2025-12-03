@@ -4,6 +4,7 @@ import { AlertController, ToastController, ModalController } from '@ionic/angula
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { OfficialModalComponent } from './official-modal/official-modal.component';
 import { CityInfoModalComponent } from './city-info-modal/city-info-modal.component';
+import { AuthService } from '../../services/auth.service';
 
 interface BarangayOfficial {
     id?: string;
@@ -42,7 +43,8 @@ export class SystemSettingsPage implements OnInit {
         private fb: FormBuilder,
         private alertController: AlertController,
         private toastController: ToastController,
-        private modalController: ModalController
+        private modalController: ModalController,
+        private authService: AuthService
     ) { }
 
     get hasCityInfo(): boolean {
@@ -475,11 +477,19 @@ export class SystemSettingsPage implements OnInit {
 
     async updatePassword() {
         if (this.passwordForm.valid) {
-            // In a real app, you would verify the current password and update it
             const currentPassword = this.passwordForm.get('currentPassword')?.value;
             const newPassword = this.passwordForm.get('newPassword')?.value;
 
-            // Simulate password update
+            // Verify current password
+            const storedPassword = this.authService.getAdminPassword();
+            if (currentPassword !== storedPassword) {
+                await this.showToast('Incorrect current password', 'danger');
+                return;
+            }
+
+            // Update password
+            this.authService.updateAdminPassword(newPassword);
+
             await this.showToast('Password updated successfully', 'success');
             this.passwordForm.reset();
             this.passwordStrength = 0;

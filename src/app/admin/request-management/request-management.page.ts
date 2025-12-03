@@ -17,6 +17,152 @@ interface CertificateTemplate {
   color: string;
 }
 
+interface BirthCertificateData {
+  registryNo: string;
+  province: string;
+  cityMunicipality: string;
+  childFirstName: string;
+  childMiddleName: string;
+  childLastName: string;
+  sex: string;
+  dateOfBirthDay: string;
+  dateOfBirthMonth: string;
+  dateOfBirthYear: string;
+  placeOfBirthName: string;
+  placeOfBirthCity: string;
+  placeOfBirthProvince: string;
+  typeOfBirth: string;
+  multipleChildInfo: string;
+  birthOrder: string;
+  weightAtBirth: string;
+  motherFirstName: string;
+  motherMiddleName: string;
+  motherLastName: string;
+  motherCitizenship: string;
+  motherReligion: string;
+  motherTotalChildren: string;
+  motherChildrenAlive: string;
+  motherChildrenDead: string;
+  motherOccupation: string;
+  motherAge: string;
+  motherResidenceHouse: string;
+  motherResidenceCity: string;
+  motherResidenceProvince: string;
+  motherResidenceCountry: string;
+  fatherFirstName: string;
+  fatherMiddleName: string;
+  fatherLastName: string;
+  fatherCitizenship: string;
+  fatherReligion: string;
+  fatherOccupation: string;
+  fatherAge: string;
+  fatherResidenceHouse: string;
+  fatherResidenceCity: string;
+  fatherResidenceProvince: string;
+  fatherResidenceCountry: string;
+  marriageDate: string;
+  marriagePlace: string;
+  marriageProvince: string;
+  marriageCountry: string;
+  attendantType: string;
+  attendantName: string;
+  attendantTitle: string;
+  attendantAddress: string;
+  attendantDate: string;
+  informantName: string;
+  informantRelationship: string;
+  informantAddress: string;
+  informantDate: string;
+  preparedByName: string;
+  preparedByTitle: string;
+  preparedByDate: string;
+  receivedByName: string;
+  receivedByTitle: string;
+  receivedByDate: string;
+  registeredByName: string;
+  registeredByTitle: string;
+  registeredByDate: string;
+  remarks: string;
+}
+
+interface MarriageCertificateData {
+  registryNo: string;
+  province: string;
+  cityMunicipality: string;
+  husbandFirstName: string;
+  husbandMiddleName: string;
+  husbandLastName: string;
+  husbandDateOfBirthDay: string;
+  husbandDateOfBirthMonth: string;
+  husbandDateOfBirthYear: string;
+  husbandPlaceOfBirthCity: string;
+  wifeFirstName: string;
+  wifeMiddleName: string;
+  wifeLastName: string;
+  wifeDateOfBirthDay: string;
+  wifeDateOfBirthMonth: string;
+  wifeDateOfBirthYear: string;
+  wifePlaceOfBirthCity: string;
+  marriagePlaceCity: string;
+  marriageDateDay: string;
+  marriageDateMonth: string;
+  marriageDateYear: string;
+  marriageTimeOfMarriage: string;
+  remarks: string;
+  husbandSignature: string;
+  wifeSignature: string;
+  solemnizingOfficerName: string;
+}
+
+interface DeathCertificateData {
+  province: string;
+  registryNo: string;
+  cityMunicipality: string;
+  deceasedFirstName: string;
+  deceasedMiddleName: string;
+  deceasedLastName: string;
+  sex: string;
+  dateOfDeathDay: string;
+  dateOfDeathMonth: string;
+  dateOfDeathYear: string;
+  timeOfDeath: string;
+  ageYears: string;
+  ageMonths: string;
+  ageDays: string;
+  dateOfBirthDay: string;
+  dateOfBirthMonth: string;
+  dateOfBirthYear: string;
+  placeOfDeathName: string;
+  placeOfDeathCity: string;
+  placeOfDeathProvince: string;
+  civilStatus: string;
+  occupation: string;
+  residenceHouse: string;
+  residenceCity: string;
+  residenceProvince: string;
+  residenceCountry: string;
+  fatherFirstName: string;
+  fatherMiddleName: string;
+  fatherLastName: string;
+  motherFirstName: string;
+  motherMiddleName: string;
+  motherLastName: string;
+  spouseFirstName: string;
+  spouseMiddleName: string;
+  spouseLastName: string;
+  immediateCoD: string;
+  antecedentCoD: string;
+  underlyingCoD: string;
+  otherConditions: string;
+  mannerOfDeath: string;
+  attendantType: string;
+  attendantName: string;
+  certifierSignature: string;
+  certifierName: string;
+  certifierTitle: string;
+  remarks: string;
+}
+
 @Component({
   selector: 'app-request-management',
   templateUrl: './request-management.page.html',
@@ -29,6 +175,9 @@ export class RequestManagementPage implements OnInit {
   showDetailsModal = false;
   showCreateTemplateModal = false;
   showViewTemplateModal = false;
+  showBirthCertificateModal = false;
+  showMarriageCertificateModal = false;
+  showDeathCertificateModal = false;
 
   offices = [
     'Civil Registry',
@@ -59,6 +208,7 @@ export class RequestManagementPage implements OnInit {
   readyCount = 0;
 
   selectedDocumentType = '';
+  selectedStatus = '';
   selectedDepartment = '';
   selectedDate = '';
   searchId = '';
@@ -92,6 +242,15 @@ export class RequestManagementPage implements OnInit {
   footerText: string = '';
   secretaryName: string = '';
 
+  // Birth Certificate Data
+  birthCertData: BirthCertificateData = this.getEmptyBirthCertData();
+
+  // Marriage Certificate Data
+  marriageCertData: MarriageCertificateData = this.getEmptyMarriageCertData();
+
+  // Death Certificate Data
+  deathCertData: DeathCertificateData = this.getEmptyDeathCertData();
+
   // Template storage
   savedTemplates: { [key: string]: any } = {};
 
@@ -100,11 +259,80 @@ export class RequestManagementPage implements OnInit {
   ngOnInit() {
     this.loadRequests();
     this.updateCounts();
-    // Set up periodic refresh to catch new requests
     setInterval(() => {
       this.loadRequests();
       this.updateCounts();
-    }, 5000); // Refresh every 5 seconds
+    }, 5000);
+  }
+
+  getEmptyBirthCertData(): BirthCertificateData {
+    return {
+      registryNo: '',
+      province: '',
+      cityMunicipality: '',
+      childFirstName: '',
+      childMiddleName: '',
+      childLastName: '',
+      sex: '',
+      dateOfBirthDay: '',
+      dateOfBirthMonth: '',
+      dateOfBirthYear: '',
+      placeOfBirthName: '',
+      placeOfBirthCity: '',
+      placeOfBirthProvince: '',
+      typeOfBirth: '',
+      multipleChildInfo: '',
+      birthOrder: '',
+      weightAtBirth: '',
+      motherFirstName: '',
+      motherMiddleName: '',
+      motherLastName: '',
+      motherCitizenship: '',
+      motherReligion: '',
+      motherTotalChildren: '',
+      motherChildrenAlive: '',
+      motherChildrenDead: '',
+      motherOccupation: '',
+      motherAge: '',
+      motherResidenceHouse: '',
+      motherResidenceCity: '',
+      motherResidenceProvince: '',
+      motherResidenceCountry: '',
+      fatherFirstName: '',
+      fatherMiddleName: '',
+      fatherLastName: '',
+      fatherCitizenship: '',
+      fatherReligion: '',
+      fatherOccupation: '',
+      fatherAge: '',
+      fatherResidenceHouse: '',
+      fatherResidenceCity: '',
+      fatherResidenceProvince: '',
+      fatherResidenceCountry: '',
+      marriageDate: '',
+      marriagePlace: '',
+      marriageProvince: '',
+      marriageCountry: '',
+      attendantType: '',
+      attendantName: '',
+      attendantTitle: '',
+      attendantAddress: '',
+      attendantDate: '',
+      informantName: '',
+      informantRelationship: '',
+      informantAddress: '',
+      informantDate: '',
+      preparedByName: '',
+      preparedByTitle: '',
+      preparedByDate: '',
+      receivedByName: '',
+      receivedByTitle: '',
+      receivedByDate: '',
+      registeredByName: '',
+      registeredByTitle: '',
+      registeredByDate: '',
+      remarks: ''
+    };
   }
 
   loadRequests() {
@@ -136,17 +364,16 @@ export class RequestManagementPage implements OnInit {
     this.filteredRequests = [...this.requests];
   }
 
-
-getStatusDisplayText(status: string): string {
-  switch (status) {
-    case 'processing': return 'Approved';
-    case 'pending': return 'Pending';
-    case 'rejected': return 'Rejected';
-    case 'ready': return 'For Pick-up';
-    case 'completed': return 'Completed';
-    default: return status;
+  getStatusDisplayText(status: string): string {
+    switch (status) {
+      case 'processing': return 'Approved';
+      case 'pending': return 'Pending';
+      case 'rejected': return 'Rejected';
+      case 'ready': return 'For Pick-up';
+      case 'completed': return 'Completed';
+      default: return status;
+    }
   }
-}
 
   saveRequests() {
     try {
@@ -161,8 +388,6 @@ getStatusDisplayText(status: string): string {
         dateRequested: req.dateRequested
       }));
       localStorage.setItem('document_requests', JSON.stringify(requestsToSave));
-      
-      // Reload to ensure sync
       this.loadRequests();
     } catch (e) {
       console.error('Error saving requests:', e);
@@ -181,7 +406,7 @@ getStatusDisplayText(status: string): string {
   searchRequests() {
     const trimmedSearch = this.searchId?.trim() || '';
 
-    if (!trimmedSearch && !this.selectedDocumentType && !this.selectedDepartment && !this.selectedDate) {
+    if (!trimmedSearch && !this.selectedDocumentType && !this.selectedDepartment && !this.selectedDate && !this.selectedStatus) {
       this.filteredRequests = [...this.requests];
       return;
     }
@@ -204,7 +429,9 @@ getStatusDisplayText(status: string): string {
         matchesDate = req.date === formattedSearchDate;
       }
 
-      return matchesSearch && matchesType && matchesDept && matchesDate;
+      const matchesStatus = !this.selectedStatus || req.status === this.selectedStatus;
+
+      return matchesSearch && matchesType && matchesDept && matchesDate && matchesStatus;
     });
   }
 
@@ -213,6 +440,7 @@ getStatusDisplayText(status: string): string {
     this.selectedDocumentType = '';
     this.selectedDepartment = '';
     this.selectedDate = '';
+    this.selectedStatus = '';
     this.filteredRequests = [...this.requests];
   }
 
@@ -313,7 +541,25 @@ getStatusDisplayText(status: string): string {
   createNewCertificate(templateName: string) {
     console.log('Create new:', templateName);
 
-    if (templateName === 'Business Permit' ||
+    if (templateName === 'Birth Certificate') {
+      this.currentTemplateName = templateName;
+      this.birthCertData = this.getEmptyBirthCertData();
+      this.loadSavedBirthCertTemplate();
+      this.closeTemplateModal();
+      this.showBirthCertificateModal = true;
+    } else if (templateName === 'Marriage Certificate') {
+      this.currentTemplateName = templateName;
+      this.marriageCertData = this.getEmptyMarriageCertData();
+      this.loadSavedMarriageCertTemplate();
+      this.closeTemplateModal();
+      this.showMarriageCertificateModal = true;
+    } else if (templateName === 'Death Certificate') {
+      this.currentTemplateName = templateName;
+      this.deathCertData = this.getEmptyDeathCertData();
+      this.loadSavedDeathCertTemplate();
+      this.closeTemplateModal();
+      this.showDeathCertificateModal = true;
+    } else if (templateName === 'Business Permit' ||
       templateName === 'Tax Clearance Certificate' ||
       templateName === 'Health Certificate') {
       this.currentTemplateName = templateName;
@@ -323,6 +569,164 @@ getStatusDisplayText(status: string): string {
     } else {
       this.closeTemplateModal();
     }
+  }
+
+  loadSavedBirthCertTemplate() {
+    const saved = localStorage.getItem('birth_certificate_template');
+    if (saved) {
+      try {
+        this.birthCertData = JSON.parse(saved);
+      } catch (e) {
+        console.error('Error loading birth certificate template:', e);
+      }
+    }
+  }
+
+  loadSavedMarriageCertTemplate() {
+    const saved = localStorage.getItem('marriage_certificate_template');
+    if (saved) {
+      try {
+        this.marriageCertData = JSON.parse(saved);
+      } catch (e) {
+        console.error('Error loading marriage certificate template:', e);
+      }
+    }
+  }
+
+  saveBirthCertificateTemplate() {
+    localStorage.setItem('birth_certificate_template', JSON.stringify(this.birthCertData));
+    alert('Birth Certificate template saved successfully!');
+  }
+
+  saveMarriageCertificateTemplate() {
+    localStorage.setItem('marriage_certificate_template', JSON.stringify(this.marriageCertData));
+    alert('Marriage Certificate template saved successfully!');
+  }
+
+  loadSavedDeathCertTemplate() {
+    const saved = localStorage.getItem('death_certificate_template');
+    if (saved) {
+      try {
+        this.deathCertData = JSON.parse(saved);
+      } catch (e) {
+        console.error('Error loading death certificate template:', e);
+      }
+    }
+  }
+
+  saveDeathCertificateTemplate() {
+    localStorage.setItem('death_certificate_template', JSON.stringify(this.deathCertData));
+    alert('Death Certificate template saved successfully!');
+  }
+
+  closeBirthCertificateModal() {
+    this.showBirthCertificateModal = false;
+  }
+
+  closeMarriageCertificateModal() {
+    this.showMarriageCertificateModal = false;
+  }
+
+  closeDeathCertificateModal() {
+    this.showDeathCertificateModal = false;
+  }
+
+  downloadBirthCertificatePDF() {
+    alert('PDF download functionality will be implemented with a PDF library like jsPDF');
+  }
+
+  downloadMarriageCertificatePDF() {
+    alert('PDF download functionality will be implemented with a PDF library like jsPDF');
+  }
+
+  downloadDeathCertificatePDF() {
+    alert('PDF download functionality will be implemented with a PDF library like jsPDF');
+  }
+
+  printBirthCertificate() {
+    window.print();
+  }
+
+  getEmptyMarriageCertData(): MarriageCertificateData {
+    return {
+      registryNo: '',
+      province: '',
+      cityMunicipality: '',
+      husbandFirstName: '',
+      husbandMiddleName: '',
+      husbandLastName: '',
+      husbandDateOfBirthDay: '',
+      husbandDateOfBirthMonth: '',
+      husbandDateOfBirthYear: '',
+      husbandPlaceOfBirthCity: '',
+      wifeFirstName: '',
+      wifeMiddleName: '',
+      wifeLastName: '',
+      wifeDateOfBirthDay: '',
+      wifeDateOfBirthMonth: '',
+      wifeDateOfBirthYear: '',
+      wifePlaceOfBirthCity: '',
+      marriagePlaceCity: '',
+      marriageDateDay: '',
+      marriageDateMonth: '',
+      marriageDateYear: '',
+      marriageTimeOfMarriage: '',
+      remarks: '',
+      husbandSignature: '',
+      wifeSignature: '',
+      solemnizingOfficerName: ''
+    };
+  }
+
+  getEmptyDeathCertData(): DeathCertificateData {
+    return {
+      province: '',
+      registryNo: '',
+      cityMunicipality: '',
+      deceasedFirstName: '',
+      deceasedMiddleName: '',
+      deceasedLastName: '',
+      sex: '',
+      dateOfDeathDay: '',
+      dateOfDeathMonth: '',
+      dateOfDeathYear: '',
+      timeOfDeath: '',
+      ageYears: '',
+      ageMonths: '',
+      ageDays: '',
+      dateOfBirthDay: '',
+      dateOfBirthMonth: '',
+      dateOfBirthYear: '',
+      placeOfDeathName: '',
+      placeOfDeathCity: '',
+      placeOfDeathProvince: '',
+      civilStatus: '',
+      occupation: '',
+      residenceHouse: '',
+      residenceCity: '',
+      residenceProvince: '',
+      residenceCountry: '',
+      fatherFirstName: '',
+      fatherMiddleName: '',
+      fatherLastName: '',
+      motherFirstName: '',
+      motherMiddleName: '',
+      motherLastName: '',
+      spouseFirstName: '',
+      spouseMiddleName: '',
+      spouseLastName: '',
+      immediateCoD: '',
+      antecedentCoD: '',
+      underlyingCoD: '',
+      otherConditions: '',
+      mannerOfDeath: '',
+      attendantType: '',
+      attendantName: '',
+      certifierSignature: '',
+      certifierName: '',
+      certifierTitle: '',
+      remarks: ''
+    };
   }
 
   loadTemplateDefaults(templateName: string) {
@@ -458,10 +862,49 @@ PRC # _______`;
     this.secretaryName = '';
   }
 
+  hasSavedBirthCertTemplate(): boolean {
+    const saved = localStorage.getItem('birth_certificate_template');
+    return !!saved;
+  }
+
+  hasSavedMarriageCertTemplate(): boolean {
+    const saved = localStorage.getItem('marriage_certificate_template');
+    return !!saved;
+  }
+
+  hasSavedDeathCertTemplate(): boolean {
+    const saved = localStorage.getItem('death_certificate_template');
+    return !!saved;
+  }
+
   viewTemplate(templateName: string) {
     console.log('View template:', templateName);
 
-    if (templateName === 'Business Permit' ||
+    if (templateName === 'Birth Certificate') {
+      if (!this.hasSavedBirthCertTemplate()) {
+        alert('No saved Birth Certificate template found. Please create one first.');
+        return;
+      }
+      this.loadSavedBirthCertTemplate();
+      this.closeTemplateModal();
+      this.showBirthCertificateModal = true;
+    } else if (templateName === 'Marriage Certificate') {
+      if (!this.hasSavedMarriageCertTemplate()) {
+        alert('No saved Marriage Certificate template found. Please create one first.');
+        return;
+      }
+      this.loadSavedMarriageCertTemplate();
+      this.closeTemplateModal();
+      this.showMarriageCertificateModal = true;
+    } else if (templateName === 'Death Certificate') {
+      if (!this.hasSavedDeathCertTemplate()) {
+        alert('No saved Death Certificate template found. Please create one first.');
+        return;
+      }
+      this.loadSavedDeathCertTemplate();
+      this.closeTemplateModal();
+      this.showDeathCertificateModal = true;
+    } else if (templateName === 'Business Permit' ||
       templateName === 'Tax Clearance Certificate' ||
       templateName === 'Health Certificate') {
 

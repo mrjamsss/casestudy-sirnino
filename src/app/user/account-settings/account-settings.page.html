@@ -60,6 +60,66 @@
                         </ion-button>
                     </div>
                 </div>
+
+                <!-- Change Password Card -->
+                <div class="settings-card password-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Change Password</h2>
+                            <p class="card-subtitle">Update your account password</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <ion-icon name="lock-closed-outline" class="label-icon"></ion-icon>
+                            Current Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <ion-input [(ngModel)]="currentPassword" [type]="showCurrentPassword ? 'text' : 'password'"
+                                placeholder="Enter current password">
+                            </ion-input>
+                            <ion-icon [name]="showCurrentPassword ? 'eye-off-outline' : 'eye-outline'"
+                                class="password-toggle" (click)="toggleCurrentPasswordVisibility()">
+                            </ion-icon>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <ion-icon name="lock-closed-outline" class="label-icon"></ion-icon>
+                            New Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <ion-input [(ngModel)]="newPassword" [type]="showNewPassword ? 'text' : 'password'"
+                                placeholder="Enter new password (min. 8 characters)">
+                            </ion-input>
+                            <ion-icon [name]="showNewPassword ? 'eye-off-outline' : 'eye-outline'"
+                                class="password-toggle" (click)="toggleNewPasswordVisibility()">
+                            </ion-icon>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <ion-icon name="lock-closed-outline" class="label-icon"></ion-icon>
+                            Confirm New Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <ion-input [(ngModel)]="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+                                placeholder="Confirm new password">
+                            </ion-input>
+                            <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
+                                class="password-toggle" (click)="toggleConfirmPasswordVisibility()">
+                            </ion-icon>
+                        </div>
+                    </div>
+
+                    <ion-button expand="block" class="update-password-button" (click)="updatePassword()">
+                        <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
+                        Update Password
+                    </ion-button>
+                </div>
             </div>
 
             <!-- Right Column: City Logo, City Info, Vision/Mission, City Officials -->

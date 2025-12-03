@@ -16,14 +16,18 @@
       <div class="stat-value">{{ stat.value }}</div>
       <div class="stat-subtitle">{{ stat.subtitle }}</div>
     </div>
-  </div>
 
-  <div class="content-grid">
-    <!-- Recent Requests -->
-    <div class="section-card">
-      <div class="section-header">
-        <h2>Recent Requests</h2>
-        <p class="section-subtitle">Your latest document requests</p>
+    <div class="content-wrapper">
+      <!-- Statistics Cards -->
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats">
+          <div class="stat-header">
+            <span class="stat-title">{{ stat.title }}</span>
+            <ion-icon [name]="stat.icon" [style.color]="stat.color"></ion-icon>
+          </div>
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-subtitle">{{ stat.subtitle }}</div>
+        </div>
       </div>
 
       <div class="requests-list">
@@ -42,15 +46,13 @@
         <div class="empty-state" *ngIf="recentRequests.length === 0">
           <p>No requests yet. Start by requesting a new document!</p>
         </div>
-      </div>
-    </div>
 
-    <!-- Quick Actions -->
-    <div class="section-card">
-      <div class="section-header">
-        <h2>Quick Actions</h2>
-        <p class="section-subtitle">Common services and tasks</p>
-      </div>
+        <!-- Quick Actions -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2>Quick Actions</h2>
+            <p class="section-subtitle">Common services and tasks</p>
+          </div>
 
       <div class="actions-list">
         <div class="action-item" *ngFor="let action of quickActions" [routerLink]="[action.route]" tabindex="0">
@@ -60,4 +62,4 @@
       </div>
     </div>
   </div>
-</div>
+</ion-content>
