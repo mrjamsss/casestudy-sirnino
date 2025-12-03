@@ -7,7 +7,8 @@
 
   <!-- Statistics Cards -->
   <div class="stats-grid">
-    <div class="stat-card" *ngFor="let stat of stats">
+    <div class="stat-card" *ngFor="let stat of stats" (click)="onStatCardClick(stat)"
+      [style.cursor]="stat.title === 'Announcements' ? 'pointer' : 'default'">
       <div class="stat-header">
         <span class="stat-title">{{ stat.title }}</span>
         <ion-icon [name]="stat.icon" [style.color]="stat.color"></ion-icon>
@@ -28,13 +29,18 @@
       <div class="requests-list">
         <div class="request-item" *ngFor="let request of recentRequests">
           <div class="request-info">
-            <h3>{{ request.title }}</h3>
+            <h3>{{ request.documentType }}</h3>
             <p>{{ request.department }}</p>
           </div>
-          <span class="status-badge" [class]="request.statusClass">{{ request.status }}</span>
+          <span class="status-badge" [ngClass]="getStatusClass(request.status)">
+            {{ request.status }}
+          </span>
         </div>
-        <div class="view-all-btn">
-          <button>View All Requests</button>
+        <div class="view-all-btn" *ngIf="recentRequests.length > 0">
+          <button [routerLink]="['/user/transaction-logs']">View All Requests</button>
+        </div>
+        <div class="empty-state" *ngIf="recentRequests.length === 0">
+          <p>No requests yet. Start by requesting a new document!</p>
         </div>
       </div>
     </div>
@@ -47,7 +53,7 @@
       </div>
 
       <div class="actions-list">
-        <div class="action-item" *ngFor="let action of quickActions">
+        <div class="action-item" *ngFor="let action of quickActions" [routerLink]="[action.route]" tabindex="0">
           <ion-icon [name]="action.icon"></ion-icon>
           <span>{{ action.title }}</span>
         </div>

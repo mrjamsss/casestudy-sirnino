@@ -69,6 +69,22 @@ ion-modal.small-modal {
   --border-radius: 16px !important;
 }
 
+/* Official Modal - Custom sizing and white theme */
+ion-modal.official-modal {
+  --height: auto;
+  --max-height: 90vh;
+  --width: 500px;
+  --max-width: 90vw;
+  --border-radius: 16px;
+  --background: #ffffff;
+  --ion-background-color: #ffffff;
+  --ion-text-color: #1e293b;
+
+  &::part(content) {
+    border-radius: 16px;
+  }
+}
+
 ion-modal::part(backdrop) {
   background: rgba(0, 0, 0, 0.5);
 }

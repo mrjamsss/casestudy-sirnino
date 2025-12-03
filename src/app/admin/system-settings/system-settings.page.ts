@@ -45,6 +45,10 @@ export class SystemSettingsPage implements OnInit {
         private modalController: ModalController
     ) { }
 
+    get hasCityInfo(): boolean {
+        return !!this.barangayInfoForm.get('name')?.value;
+    }
+
     ngOnInit() {
         this.initializeForms();
         this.loadOfficials();
@@ -114,7 +118,8 @@ export class SystemSettingsPage implements OnInit {
 
     async addOfficial() {
         const modal = await this.modalController.create({
-            component: OfficialModalComponent
+            component: OfficialModalComponent,
+            cssClass: 'official-modal'
         });
 
         await modal.present();
@@ -140,7 +145,8 @@ export class SystemSettingsPage implements OnInit {
             component: OfficialModalComponent,
             componentProps: {
                 official: official
-            }
+            },
+            cssClass: 'official-modal'
         });
 
         await modal.present();
