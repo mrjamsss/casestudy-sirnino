@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarService } from '../../shared/services/sidebar.service';
+import { UserService } from '../../shared/services/user.service';
+import { RequestService } from '../../shared/services/request.service';
+import { Request } from '../../shared/models/request.model';
+import { Subscription, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface StatCard {
   title: string;
@@ -8,15 +13,6 @@ interface StatCard {
   subtitle: string;
   icon: string;
   color: string;
-}
-
-interface Request {
-  id: string;
-  user: string;
-  documentType: string;
-  department: string;
-  date: string;
-  status: 'processing' | 'completed' | 'pending';
 }
 
 interface Notification {
@@ -39,72 +35,12 @@ interface QuickAction {
   styleUrls: ['./dashboard.page.scss'],
   standalone: false
 })
-export class DashboardPage implements OnInit {
-  stats: StatCard[] = [
-    {
-      title: 'Total Users',
-      value: 2,
-      subtitle: 'Registered citizens',
-      icon: 'people-outline',
-      color: '#6c757d'
-    },
-    {
-      title: 'All Requests',
-      value: 3,
-      subtitle: 'Total submissions',
-      icon: 'document-text-outline',
-      color: '#6c757d'
-    },
-    {
-      title: 'Pending',
-      value: 1,
-      subtitle: 'Awaiting action',
-      icon: 'time-outline',
-      color: '#f5a623'
-    },
-    {
-      title: 'Completed',
-      value: 1,
-      subtitle: 'This month',
-      icon: 'checkmark-circle-outline',
-      color: '#28a745'
-    }
-  ];
-
-  recentRequests: Request[] = [
-    {
-      id: 'REQ001',
-      user: 'Juan dela Cruz',
-      documentType: 'Birth Certificate',
-      department: 'Civil Registry',
-      date: '2024-11-01',
-      status: 'processing'
-    },
-    {
-      id: 'REQ002',
-      user: 'Juan dela Cruz',
-      documentType: 'Business Permit',
-      department: 'Business Permits Office',
-      date: '2024-10-15',
-      status: 'completed'
-    },
-    {
-      id: 'REQ003',
-      user: 'Maria Santos',
-      documentType: 'Barangay Clearance',
-      department: 'Barangay Affairs',
-      date: '2024-11-10',
-      status: 'pending'
-    }
-  ];
+export class DashboardPage implements OnInit, OnDestroy {
+  stats: StatCard[] = [];
+  recentRequests: Request[] = [];
+  private subscriptions: Subscription = new Subscription();
 
   notifications: Notification[] = [
-    {
-      title: 'Pending Approvals',
-      message: '1 requests need review',
-      type: 'warning',
-      icon: 'alert-circle-outline'
-    },
     {
       title: 'System Update',
       message: 'All systems operational',
@@ -130,10 +66,89 @@ export class DashboardPage implements OnInit {
 
   constructor(
     private sidebarService: SidebarService,
-    private router: Router
+    private router: Router,
+    private userService: UserService,
+    private requestService: RequestService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.subscriptions.add(
+      combineLatest([
+        this.userService.getUsers(),
+        this.requestService.getRequests()
+      ]).subscribe(([users, requests]) => {
+        // Filter out pending users to match User Management logic
+        const activeUsersCount = users.filter(u => u.status !== 'pending').length;
+        this.updateStats(activeUsersCount, requests);
+        this.recentRequests = requests.slice(0, 5); // Show top 5 recent requests
+      })
+    );
+  }
+
+  ionViewWillEnter() {
+    this.userService.refresh();
+    this.requestService.refresh();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  private updateStats(totalUsers: number, requests: Request[]) {
+    const totalRequests = requests.length;
+    const pendingRequests = requests.filter(r => r.status === 'pending').length;
+    const completedRequests = requests.filter(r => r.status === 'completed' || r.status === 'ready').length;
+
+    this.stats = [
+      {
+        title: 'Total Users',
+        value: totalUsers,
+        subtitle: 'Registered citizens',
+        icon: 'people-outline',
+        color: '#6c757d'
+      },
+      {
+        title: 'All Requests',
+        value: totalRequests,
+        subtitle: 'Total submissions',
+        icon: 'document-text-outline',
+        color: '#6c757d'
+      },
+      {
+        title: 'Pending',
+        value: pendingRequests,
+        subtitle: 'Awaiting action',
+        icon: 'time-outline',
+        color: '#f5a623'
+      },
+      {
+        title: 'Completed',
+        value: completedRequests,
+        subtitle: 'This month',
+        icon: 'checkmark-circle-outline',
+        color: '#28a745'
+      }
+    ];
+
+    // Update notifications based on pending requests
+    this.notifications = [
+      {
+        title: 'System Update',
+        message: 'All systems operational',
+        type: 'info',
+        icon: 'information-circle-outline'
+      }
+    ];
+
+    if (pendingRequests > 0) {
+      this.notifications.unshift({
+        title: 'Pending Approvals',
+        message: `${pendingRequests} requests need review`,
+        type: 'warning',
+        icon: 'alert-circle-outline'
+      });
+    }
+  }
 
   getStatusClass(status: string): string {
     return `status-${status.toLowerCase()}`;
