@@ -44,6 +44,7 @@ export class AuthService {
 
   private readonly STORAGE_KEY = 'cbn_registered_users';
   private readonly CURRENT_USER_KEY = 'cbn_current_user';
+  private readonly ADMIN_PASSWORD_KEY = 'cbn_admin_password';
 
   idTypes = [
     "Philippine National ID (PhilSys ID)",
@@ -69,7 +70,9 @@ export class AuthService {
 
     // Check admin credentials
     if (credentials.role === 'admin') {
-      if (credentials.email === 'admin@city.gov' && credentials.password === '123456') {
+      const storedAdminPassword = localStorage.getItem(this.ADMIN_PASSWORD_KEY) || '123456';
+
+      if (credentials.email === 'admin@city.gov' && credentials.password === storedAdminPassword) {
         this.loadingSubject.next(false);
         console.log('Admin login successful');
         // Store admin user
@@ -81,8 +84,8 @@ export class AuthService {
           dateOfBirth: '',
           mobileNumber: '',
           email: credentials.email,
-          password: '',
-          confirmPassword: '',
+          password: storedAdminPassword,
+          confirmPassword: storedAdminPassword,
           role: 'admin',
           status: 'Active',
           dateRegistered: new Date().toISOString()
@@ -93,17 +96,17 @@ export class AuthService {
         this.loadingSubject.next(false);
         return {
           success: false,
-          message: 'Invalid admin credentials. Try: admin@city.gov / 123456'
+          message: 'Invalid admin credentials.'
         };
       }
     }
 
     // Check regular user credentials
     const users = this.getRegisteredUsers();
-    
+
     // First, find user by email and role only
-    const userByEmail = users.find(u => 
-      u.email === credentials.email && 
+    const userByEmail = users.find(u =>
+      u.email === credentials.email &&
       u.role === credentials.role
     );
 
@@ -113,26 +116,26 @@ export class AuthService {
     if (userByEmail) {
       // Check account status BEFORE validating password
       if (userByEmail.status === 'Pending') {
-        return { 
-          success: false, 
-          message: 'Your account is pending approval. Please wait for admin verification.' 
+        return {
+          success: false,
+          message: 'Your account is pending approval. Please wait for admin verification.'
         };
       }
-      
+
       if (userByEmail.status === 'Rejected') {
-        return { 
-          success: false, 
-          message: 'Your account has been rejected. Please contact the administrator.' 
+        return {
+          success: false,
+          message: 'Your account has been rejected. Please contact the administrator.'
         };
       }
-      
+
       if (userByEmail.status === 'Suspended') {
-        return { 
-          success: false, 
-          message: 'Your account has been suspended. Please contact the administrator.' 
+        return {
+          success: false,
+          message: 'Your account has been suspended. Please contact the administrator.'
         };
       }
-      
+
       // Now check password for Active users
       if (userByEmail.status === 'Active') {
         if (userByEmail.password === credentials.password) {
@@ -146,11 +149,11 @@ export class AuthService {
           };
         }
       }
-      
+
       // Fallback for any other status
-      return { 
-        success: false, 
-        message: `Your account status is ${userByEmail.status}. Please contact the administrator.` 
+      return {
+        success: false,
+        message: `Your account status is ${userByEmail.status}. Please contact the administrator.`
       };
     } else {
       // User not found with this email and role
@@ -193,9 +196,9 @@ export class AuthService {
 
     console.log('Registration successful:', newUser.email);
 
-    return { 
-      success: true, 
-      message: 'Registration successful! Your account is pending admin approval. You will be notified once approved.' 
+    return {
+      success: true,
+      message: 'Registration successful! Your account is pending admin approval. You will be notified once approved.'
     };
   }
 
@@ -278,5 +281,22 @@ export class AuthService {
   clearAllUsers(): void {
     localStorage.removeItem(this.STORAGE_KEY);
     console.log('All users cleared from storage');
+  }
+
+  // Admin Password Management
+  getAdminPassword(): string {
+    return localStorage.getItem(this.ADMIN_PASSWORD_KEY) || '123456';
+  }
+
+  updateAdminPassword(password: string): void {
+    localStorage.setItem(this.ADMIN_PASSWORD_KEY, password);
+
+    // Also update current user if logged in as admin
+    const currentUser = this.getCurrentUser();
+    if (currentUser && currentUser.role === 'admin') {
+      currentUser.password = password;
+      currentUser.confirmPassword = password;
+      this.setCurrentUser(currentUser);
+    }
   }
 }
