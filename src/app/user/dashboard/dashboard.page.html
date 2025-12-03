@@ -1,65 +1,74 @@
-<ion-content class="ion-no-padding">
-  <div class="dashboard-container">
-    <!-- Header -->
-    <div class="dashboard-header">
+<div class="page-wrapper">
+  <div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
       <h1>Welcome to City Hall Services</h1>
       <p class="subtitle">Manage your documents and track your requests</p>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-      <div class="stat-card" *ngFor="let stat of stats" (click)="onStatCardClick(stat)"
-        [style.cursor]="stat.title === 'Announcements' ? 'pointer' : 'default'">
-        <div class="stat-header">
-          <span class="stat-title">{{ stat.title }}</span>
-          <ion-icon [name]="stat.icon" [style.color]="stat.color"></ion-icon>
+    <!-- Main Content -->
+    <div class="content-wrapper">
+      <!-- Statistics Cards -->
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats" (click)="onStatCardClick(stat)"
+          [style.cursor]="stat.title === 'Announcements' ? 'pointer' : 'default'">
+          <div class="stat-header">
+            <span class="stat-title">{{ stat.title }}</span>
+            <ion-icon [name]="stat.icon"></ion-icon>
+          </div>
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-subtitle">{{ stat.subtitle }}</div>
         </div>
-        <div class="stat-value">{{ stat.value }}</div>
-        <div class="stat-subtitle">{{ stat.subtitle }}</div>
       </div>
-    </div>
 
-    <div class="content-grid">
-      <!-- Recent Requests -->
-      <div class="section-card">
-        <div class="section-header">
-          <h2>Recent Requests</h2>
-          <p class="section-subtitle">Track your latest submissions</p>
-        </div>
-
-        <div class="requests-list">
-          <div class="request-item" *ngFor="let request of recentRequests">
-            <div class="request-info">
-              <h3>{{ request.documentType }}</h3>
-              <p>{{ request.department }}</p>
+      <div class="content-grid">
+        <!-- Recent Requests -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="header-left">
+              <h2>Recent Requests</h2>
+              <p class="section-subtitle">Track your latest submissions</p>
             </div>
-            <span class="status-badge" [ngClass]="getStatusClass(request.status)">
-              {{ request.status }}
-            </span>
           </div>
-          <div class="view-all-btn" *ngIf="recentRequests.length > 0">
-            <button [routerLink]="['/user/transaction-logs']">View All Requests</button>
-          </div>
-          <div class="empty-state" *ngIf="recentRequests.length === 0">
-            <p>No requests yet. Start by requesting a new document!</p>
+
+          <div class="requests-list">
+            <div class="request-item" *ngFor="let request of recentRequests">
+              <div class="request-info">
+                <h3>{{ request.documentType }}</h3>
+                <p>{{ request.department }}</p>
+              </div>
+              <span class="status-badge" [ngClass]="getStatusClass(request.status)">
+                {{ request.status }}
+              </span>
+            </div>
+            <div class="view-all-btn" *ngIf="recentRequests.length > 0">
+              <ion-button expand="block" fill="outline" [routerLink]="['/citizen-portal/transaction-logs']">
+                View All Requests
+              </ion-button>
+            </div>
+            <div class="empty-state" *ngIf="recentRequests.length === 0">
+              <p>No requests yet. Start by requesting a new document!</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Quick Actions -->
-      <div class="section-card">
-        <div class="section-header">
-          <h2>Quick Actions</h2>
-          <p class="section-subtitle">Common services and tasks</p>
-        </div>
+        <!-- Quick Actions -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="header-left">
+              <h2>Quick Actions</h2>
+              <p class="section-subtitle">Common services and tasks</p>
+            </div>
+          </div>
 
-        <div class="actions-list">
-          <div class="action-item" *ngFor="let action of quickActions" [routerLink]="[action.route]" tabindex="0">
-            <ion-icon [name]="action.icon"></ion-icon>
-            <span>{{ action.title }}</span>
+          <div class="actions-list">
+            <div class="action-item" *ngFor="let action of quickActions" [routerLink]="[action.route]" tabindex="0">
+              <ion-icon [name]="action.icon"></ion-icon>
+              <span>{{ action.title }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</ion-content>
+</div>

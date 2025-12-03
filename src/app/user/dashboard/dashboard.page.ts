@@ -30,10 +30,9 @@ export class DashboardPage implements OnInit, OnDestroy {
   stats: StatCard[] = [];
   recentRequests: Request[] = [];
   quickActions: QuickAction[] = [
-    { title: 'Request New Document', icon: 'document-text-outline', route: '/user/request-document' },
-    { title: 'Calculate Permit Fees', icon: 'calculator-outline', route: '/user/fee-calculator' },
-    { title: 'View Requirements', icon: 'checkmark-circle-outline', route: '/user/service-requirements' },
-    { title: 'Community Programs', icon: 'information-circle-outline', route: '/user/announcements' }
+    { title: 'Request New Document', icon: 'document-text-outline', route: '/citizen-portal/request-document' },
+    { title: 'Calculate Permit Fees', icon: 'calculator-outline', route: '/citizen-portal/fee-calculator' },
+    { title: 'View Requirements', icon: 'checkmark-circle-outline', route: '/citizen-portal/service-requirements' }
   ];
 
   private subscription: Subscription = new Subscription();
@@ -123,7 +122,7 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   onStatCardClick(stat: StatCard): void {
     if (stat.title === 'Announcements') {
-      this.router.navigate(['/user/announcements']);
+      this.router.navigate(['/citizen-portal/announcements']);
     }
   }
 }
