@@ -1,86 +1,107 @@
-<ion-content>
-    <div class="announcements-container">
-        <!-- Search and Filter Section -->
-        <div class="search-filter-container">
-            <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilter()" placeholder="Search announcements..."
-                mode="ios" class="custom-searchbar"></ion-searchbar>
-
-            <ion-item class="filter-select" lines="none">
-                <ion-select [(ngModel)]="selectedFilter" (ionChange)="applyFilter()" interface="popover"
-                    placeholder="Filter Type">
-                    <ion-select-option value="all">All Types</ion-select-option>
-                    <ion-select-option *ngFor="let type of announcementTypes" [value]="type.value">
-                        {{ type.label }}
-                    </ion-select-option>
-                </ion-select>
-            </ion-item>
+<ion-content class="ion-no-padding">
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Announcements</h1>
+            <p class="subtitle">Stay updated with the latest news and announcements from Cabanatuan City Hall</p>
         </div>
 
-        <div class="stats-header" *ngIf="announcements.length > 0">
-            <div class="stat-card">
-                <ion-icon name="megaphone"></ion-icon>
-                <div class="stat-info">
-                    <span class="stat-value">{{ announcements.length }}</span>
-                    <span class="stat-label">Active Announcements</span>
+        <div class="content-wrapper">
+            <!-- Search and Filter Section -->
+            <div class="search-filter-section">
+                <div class="search-filter-container">
+                    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilter()"
+                        placeholder="Search announcements..." mode="ios" class="custom-searchbar"></ion-searchbar>
+
+                    <ion-item class="filter-select" lines="none">
+                        <ion-select [(ngModel)]="selectedFilter" (ionChange)="applyFilter()" interface="popover"
+                            placeholder="Filter Type">
+                            <ion-select-option value="all">All Types</ion-select-option>
+                            <ion-select-option *ngFor="let type of announcementTypes" [value]="type.value">
+                                {{ type.label }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
                 </div>
             </div>
-            <div class="stat-card">
-                <ion-icon name="filter"></ion-icon>
-                <div class="stat-info">
-                    <span class="stat-value">{{ filteredAnnouncements.length }}</span>
-                    <span class="stat-label">Showing</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="announcements-list" *ngIf="filteredAnnouncements.length > 0; else noAnnouncements">
-            <ion-card *ngFor="let announcement of filteredAnnouncements" class="announcement-card"
-                [class]="'type-' + announcement.type">
-                <div class="card-accent"
-                    [style.background]="'var(--ion-color-' + getTypeColor(announcement.type) + ')'"></div>
-
-                <ion-card-header>
-                    <div class="header-top">
-                        <ion-chip [color]="getTypeColor(announcement.type)">
-                            <ion-icon [name]="getTypeIcon(announcement.type)"></ion-icon>
-                            <ion-label>{{ getTypeLabel(announcement.type) }}</ion-label>
-                        </ion-chip>
-                        <span class="date-badge">
-                            <ion-icon name="time-outline"></ion-icon>
-                            {{ announcement.createdAt | date:'MMM d, y' }}
-                        </span>
+            <!-- Stats Header -->
+            <div class="stats-header" *ngIf="announcements.length > 0">
+                <div class="stat-card">
+                    <ion-icon name="megaphone"></ion-icon>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ announcements.length }}</span>
+                        <span class="stat-label">Active Announcements</span>
                     </div>
-                    <ion-card-title>{{ announcement.title }}</ion-card-title>
-                </ion-card-header>
+                </div>
+                <div class="stat-card">
+                    <ion-icon name="filter"></ion-icon>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ filteredAnnouncements.length }}</span>
+                        <span class="stat-label">Showing</span>
+                    </div>
+                </div>
+            </div>
 
-                <ion-card-content>
-                    <p class="announcement-description">{{ announcement.description }}</p>
-                    <div class="card-footer">
-                        <div class="author-info">
-                            <ion-icon name="person-circle-outline"></ion-icon>
-                            <span>Posted by {{ announcement.createdBy }}</span>
+            <!-- Announcements List -->
+            <div class="announcements-list" *ngIf="filteredAnnouncements.length > 0; else noAnnouncements">
+                <ion-card *ngFor="let announcement of filteredAnnouncements" class="announcement-card"
+                    [class]="'type-' + announcement.type">
+                    <div class="card-accent"
+                        [style.background]="'var(--ion-color-' + getTypeColor(announcement.type) + ')'"></div>
+
+                    <ion-card-header>
+                        <div class="header-top">
+                            <ion-chip [color]="getTypeColor(announcement.type)">
+                                <ion-icon [name]="getTypeIcon(announcement.type)"></ion-icon>
+                                <ion-label>{{ getTypeLabel(announcement.type) }}</ion-label>
+                            </ion-chip>
+                            <span class="date-badge">
+                                <ion-icon name="time-outline"></ion-icon>
+                                {{ announcement.createdAt | date:'MMM d, y' }}
+                            </span>
                         </div>
-                    </div>
-                </ion-card-content>
-            </ion-card>
-        </div>
+                        <ion-card-title>{{ announcement.title }}</ion-card-title>
+                    </ion-card-header>
 
-        <ng-template #noAnnouncements>
-            <div class="empty-state">
-                <ion-icon name="search-outline" *ngIf="searchQuery"></ion-icon>
-                <ion-icon name="notifications-off-outline" *ngIf="!searchQuery"></ion-icon>
-
-                <h3 *ngIf="searchQuery">No Matches Found</h3>
-                <h3 *ngIf="!searchQuery">No Announcements</h3>
-
-                <p *ngIf="searchQuery">No announcements match your search criteria.</p>
-                <p *ngIf="!searchQuery && selectedFilter === 'all'">There are no active announcements at this time.</p>
-                <p *ngIf="!searchQuery && selectedFilter !== 'all'">No announcements of this type found.</p>
-
-                <ion-button *ngIf="selectedFilter !== 'all' || searchQuery" fill="outline" (click)="clearFilters()">
-                    Clear Filters
-                </ion-button>
+                    <ion-card-content>
+                        <p class="announcement-description">{{ announcement.description }}</p>
+                        <div class="card-footer">
+                            <div class="author-info">
+                                <ion-icon name="person-circle-outline"></ion-icon>
+                                <span>Posted by {{ announcement.createdBy }}</span>
+                            </div>
+                        </div>
+                    </ion-card-content>
+                </ion-card>
             </div>
-        </ng-template>
+
+            <!-- Empty State -->
+            <ng-template #noAnnouncements>
+                <div class="empty-state">
+                    <ion-icon name="search-outline" *ngIf="searchQuery"></ion-icon>
+                    <ion-icon name="notifications-off-outline" *ngIf="!searchQuery"></ion-icon>
+
+                    <h3 *ngIf="searchQuery">No Matches Found</h3>
+                    <h3 *ngIf="!searchQuery">No Announcements</h3>
+
+                    <p *ngIf="searchQuery">No announcements match your search criteria.</p>
+                    <p *ngIf="!searchQuery && selectedFilter === 'all'">There are no active announcements at this time.
+                    </p>
+                    <p *ngIf="!searchQuery && selectedFilter !== 'all'">No announcements of this type found.</p>
+
+                    <ion-button *ngIf="selectedFilter !== 'all' || searchQuery" fill="outline" (click)="clearFilters()">
+                        Clear Filters
+                    </ion-button>
+                </div>
+            </ng-template>
+
+            <!-- Info Box -->
+            <div class="info-box" *ngIf="filteredAnnouncements.length > 0">
+                <h3>Stay Informed</h3>
+                <p>Check back regularly for the latest updates and important announcements from Cabanatuan City Hall.
+                </p>
+            </div>
+        </div>
     </div>
 </ion-content>

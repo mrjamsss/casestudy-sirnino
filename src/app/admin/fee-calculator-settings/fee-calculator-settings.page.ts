@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
+import { FeeService, FeeStructure } from '../../services/fee.service';
 
-interface FeeStructure {
-    id: string;
-    permitType: string;
-    category: string;
-    baseFee: number | null;
-    percentageRate: number;
-}
+
 
 @Component({
     selector: 'app-fee-calculator-settings',
@@ -16,36 +11,7 @@ interface FeeStructure {
     standalone: false,
 })
 export class FeeCalculatorSettingsPage implements OnInit {
-    feeStructures: FeeStructure[] = [
-        {
-            id: '1',
-            permitType: 'New Business Permit',
-            category: 'Business',
-            baseFee: 5000,
-            percentageRate: 1
-        },
-        {
-            id: '2',
-            permitType: 'Business Permit Renewal',
-            category: 'Business',
-            baseFee: 2500,
-            percentageRate: 0.5
-        },
-        {
-            id: '3',
-            permitType: 'Building Permit',
-            category: 'Construction',
-            baseFee: null,
-            percentageRate: 2
-        },
-        {
-            id: '4',
-            permitType: 'Sanitary Permit',
-            category: 'Health',
-            baseFee: 500,
-            percentageRate: 0
-        }
-    ];
+    feeStructures: FeeStructure[] = [];
 
     isEditing = false;
     editingFee: FeeStructure = this.getEmptyFee();
@@ -54,7 +20,8 @@ export class FeeCalculatorSettingsPage implements OnInit {
 
     constructor(
         private alertCtrl: AlertController,
-        private toastCtrl: ToastController
+        private toastCtrl: ToastController,
+        private feeService: FeeService
     ) { }
 
     ngOnInit() {
@@ -62,17 +29,16 @@ export class FeeCalculatorSettingsPage implements OnInit {
     }
 
     loadFeeStructures() {
-        const storedFees = localStorage.getItem('feeStructures');
-        if (storedFees) {
-            this.feeStructures = JSON.parse(storedFees);
-        } else {
-            this.saveToLocalStorage();
-        }
+        // Load fee structures from the service
+        this.feeStructures = this.feeService.getFeeStructures();
+
+        // Subscribe to changes in fee structures
+        this.feeService.feeStructures$.subscribe(fees => {
+            this.feeStructures = fees;
+        });
     }
 
-    saveToLocalStorage() {
-        localStorage.setItem('feeStructures', JSON.stringify(this.feeStructures));
-    }
+
 
     getEmptyFee(): FeeStructure {
         return {
@@ -106,8 +72,7 @@ export class FeeCalculatorSettingsPage implements OnInit {
             percentageRate: Number(this.newFee.percentageRate) || 0
         };
 
-        this.feeStructures.push(newFeeEntry);
-        this.saveToLocalStorage();
+        this.feeService.addFeeStructure(newFeeEntry);
         this.showToast('Fee structure added successfully', 'success');
         this.closeAddFeeModal();
     }
@@ -131,13 +96,9 @@ export class FeeCalculatorSettingsPage implements OnInit {
             return;
         }
 
-        const index = this.feeStructures.findIndex(f => f.id === this.editingFee.id);
-        if (index !== -1) {
-            this.feeStructures[index] = { ...this.editingFee };
-            this.saveToLocalStorage();
-            this.showToast('Fee structure updated successfully', 'success');
-            this.cancelEdit();
-        }
+        this.feeService.updateFeeStructure({ ...this.editingFee });
+        this.showToast('Fee structure updated successfully', 'success');
+        this.cancelEdit();
     }
 
     cancelEdit() {
@@ -158,8 +119,7 @@ export class FeeCalculatorSettingsPage implements OnInit {
                     text: 'Delete',
                     role: 'destructive',
                     handler: () => {
-                        this.feeStructures = this.feeStructures.filter(f => f.id !== fee.id);
-                        this.saveToLocalStorage();
+                        this.feeService.deleteFeeStructure(fee.id);
                         this.showToast('Fee structure deleted', 'success');
                     }
                 }

@@ -21,7 +21,8 @@ export interface FeeCalculation {
     providedIn: 'root'
 })
 export class FeeService {
-    private feeStructuresSubject = new BehaviorSubject<FeeStructure[]>([
+    private readonly STORAGE_KEY = 'feeStructures';
+    private defaultFeeStructures: FeeStructure[] = [
         {
             id: '1',
             permitType: 'New Business Permit',
@@ -50,11 +51,49 @@ export class FeeService {
             baseFee: 500,
             percentageRate: 0
         }
-    ]);
+    ];
+
+    private feeStructuresSubject = new BehaviorSubject<FeeStructure[]>([]);
 
     public feeStructures$: Observable<FeeStructure[]> = this.feeStructuresSubject.asObservable();
 
-    constructor() { }
+    constructor() {
+        this.loadFromLocalStorage();
+    }
+
+    /**
+     * Load fee structures from localStorage
+     */
+    private loadFromLocalStorage(): void {
+        const storedFees = localStorage.getItem(this.STORAGE_KEY);
+        if (storedFees) {
+            try {
+                const fees = JSON.parse(storedFees);
+                this.feeStructuresSubject.next(fees);
+            } catch (error) {
+                console.error('Error parsing fee structures from localStorage:', error);
+                this.initializeDefaults();
+            }
+        } else {
+            this.initializeDefaults();
+        }
+    }
+
+    /**
+     * Initialize with default fee structures and save to localStorage
+     */
+    private initializeDefaults(): void {
+        this.feeStructuresSubject.next(this.defaultFeeStructures);
+        this.saveToLocalStorage();
+    }
+
+    /**
+     * Save current fee structures to localStorage
+     */
+    private saveToLocalStorage(): void {
+        const currentFees = this.feeStructuresSubject.value;
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(currentFees));
+    }
 
     /**
      * Get all fee structures
@@ -100,6 +139,7 @@ export class FeeService {
     addFeeStructure(fee: FeeStructure): void {
         const currentFees = this.feeStructuresSubject.value;
         this.feeStructuresSubject.next([...currentFees, fee]);
+        this.saveToLocalStorage();
     }
 
     /**
@@ -111,6 +151,7 @@ export class FeeService {
         if (index !== -1) {
             currentFees[index] = updatedFee;
             this.feeStructuresSubject.next([...currentFees]);
+            this.saveToLocalStorage();
         }
     }
 
@@ -120,5 +161,6 @@ export class FeeService {
     deleteFeeStructure(id: string): void {
         const currentFees = this.feeStructuresSubject.value;
         this.feeStructuresSubject.next(currentFees.filter(f => f.id !== id));
+        this.saveToLocalStorage();
     }
 }
