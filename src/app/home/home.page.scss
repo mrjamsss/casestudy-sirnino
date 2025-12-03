@@ -1,10 +1,12 @@
 @use 'sass:color';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-// Custom Colors (unchanged)
+// Custom Colors
 $cbn-primary: #0F4C81;
 $cbn-secondary: #FFC300;
 $cbn-background: #F4F7F9;
+$cbn-text-dark: #0f172a;
+$cbn-text-light: #64748b;
 
 // Typography
 $font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -156,11 +158,11 @@ html {
 .hero-section {
   position: relative;
   background: linear-gradient(180deg, white 0%, $cbn-background 100%);
-  padding: 80px 0 100px;
+  padding: 40px 0 80px;
   overflow: hidden;
 
   @media (min-width: 1024px) {
-    padding: 100px 0 120px;
+    padding: 60px 0 100px;
   }
 }
 
@@ -314,49 +316,19 @@ html {
   }
 }
 
-// Phone mockup hover effects
-.phone-mockup {
+.phone-mockup-image {
   position: relative;
-  width: 260px;
-  height: 520px;
-  background: #1e293b;
-  border-radius: 40px;
-  padding: 12px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  width: 320px;
+  height: auto;
   z-index: 1;
-  transition: all 0.3s ease; // Add smooth transition
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
 
   &:hover {
-    transform: translateY(-10px) scale(1.02); // Move up and slightly scale
-    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    transform: translateY(-10px) scale(1.02);
+    filter: drop-shadow(0 35px 60px rgba(0, 0, 0, 0.4));
   }
 }
-
-// "Get Started" button hover effect
-.cta-primary {
-  --background: #{$cbn-primary};
-  --color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  --padding-start: 28px;
-  --padding-end: 28px;
-  height: 52px;
-  --box-shadow: 0 4px 14px rgba($cbn-primary, 0.35);
-  letter-spacing: -0.01em;
-  transition: all 0.2s ease;
-
-  &:hover {
-    --background: darken($cbn-primary, 5%);
-    --color: #{$cbn-secondary}; // Changes to yellow on hover
-    transform: translateY(-2px);
-    --box-shadow: 0 6px 20px rgba($cbn-primary, 0.4);
-  }
-
-  ion-icon {
-    margin-left: 4px;
-  }
-}
-
 
 .hero-image {
   width: 100%;
@@ -378,124 +350,11 @@ html {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 280px;
-  height: 280px;
+  width: 320px;
+  height: 320px;
   background: radial-gradient(circle, rgba($cbn-secondary, 0.3) 0%, transparent 70%);
   border-radius: 50%;
   z-index: 0;
-}
-
-.phone-mockup {
-  position: relative;
-  width: 260px;
-  height: 520px;
-  background: #1e293b;
-  border-radius: 40px;
-  padding: 12px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-  z-index: 1;
-}
-
-.phone-notch {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 28px;
-  background: #1e293b;
-  border-radius: 0 0 16px 16px;
-  z-index: 10;
-}
-
-.phone-screen {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, #f8fafc 0%, white 100%);
-  border-radius: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 48px 20px 20px;
-  overflow: hidden;
-}
-
-.screen-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.app-logo {
-  font-size: 24px;
-}
-
-.app-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: $cbn-primary;
-  letter-spacing: -0.01em;
-}
-
-.app-subtitle {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin: 0 0 16px;
-}
-
-.screen-image {
-  width: 100%;
-  max-width: 180px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.phone-indicator {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 4px;
-  background: $cbn-secondary;
-  border-radius: 100px;
-}
-
-// Features Section
-.features-section {
-  padding: 100px 0;
-  background: $cbn-background;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.section-badge {
-  display: inline-block;
-  background: rgba($cbn-primary, 0.1);
-  color: $cbn-primary;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 100px;
-  margin-bottom: 16px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.section-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 16px;
-  letter-spacing: -0.02em;
-
-  @media (min-width: 768px) {
-    font-size: 2.75rem;
-  }
 }
 
 .section-subtitle {
@@ -851,65 +710,6 @@ html {
 }
 
 .footer-section {
-  @media (max-width: 767px) {
-    text-align: center;
-  }
-}
-
-.footer-heading {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: $cbn-secondary;
-  margin: 0 0 20px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.footer-contact {
-  p {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.875rem;
-    color: #94a3b8;
-    margin: 0 0 12px;
-
-    @media (max-width: 767px) {
-      justify-content: center;
-    }
-
-    ion-icon {
-      font-size: 1rem;
-      color: $cbn-secondary;
-    }
-  }
-}
-
-.footer-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  @media (max-width: 767px) {
-    align-items: center;
-  }
-
-  a {
-    font-size: 0.875rem;
-    color: #94a3b8;
-    text-decoration: none;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: $cbn-secondary;
-    }
-  }
-}
-
-.footer-bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 16px;
   padding-top: 24px;
   border-top: 1px solid #1e293b;
@@ -966,22 +766,6 @@ html {
 @media (max-width: 768px) {
   .auth-modal {
     --max-width: 95%; // On mobile, use most of screen
-    --max-height: 95vh;
-  }
-}
-
-@media (max-width: 768px) {
-  .auth-modal {
-    --max-width: 90%;
-    --max-height: 85vh;
-  }
-}
-
-
-
-@media (max-width: 768px) {
-  .auth-modal {
-    --max-width: 95%;
     --max-height: 95vh;
   }
 }
