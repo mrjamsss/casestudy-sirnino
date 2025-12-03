@@ -1,11 +1,183 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Account Settings</ion-title>
-    </ion-toolbar>
-</ion-header>
-
 <ion-content>
-    <div class="ion-padding">
-        <h1>Account Settings</h1>
+    <div class="settings-container">
+        <div class="page-header">
+            <h1>Account Settings</h1>
+            <p class="subtitle">Manage your personal information</p>
+        </div>
+
+        <div class="settings-grid">
+            <!-- Left Column: Personal Information -->
+            <div class="left-column">
+                <div class="settings-card">
+                    <div class="card-header">
+                        <div class="header-content">
+                            <div>
+                                <h2>Personal Information</h2>
+                                <p class="card-subtitle">Your account details</p>
+                            </div>
+                            <ion-button *ngIf="!isEditMode" fill="outline" class="edit-button"
+                                (click)="toggleEditMode()">
+                                <ion-icon name="create-outline" slot="start"></ion-icon>
+                                Edit
+                            </ion-button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <ion-input [value]="fullName" readonly class="readonly-input">
+                        </ion-input>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <ion-input [value]="userData?.email" readonly class="readonly-input">
+                        </ion-input>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <ion-input [(ngModel)]="contactNumber" type="tel" placeholder="09171234567"
+                            [readonly]="!isEditMode" [class.readonly-input]="!isEditMode" maxlength="11"
+                            pattern="[0-9]*" inputmode="numeric" (ionInput)="onContactNumberInput($event)">
+                        </ion-input>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address</label>
+                        <ion-input [value]="fullAddress" readonly class="readonly-input">
+                        </ion-input>
+                    </div>
+
+                    <div *ngIf="isEditMode" class="button-group">
+                        <ion-button expand="block" class="save-button" (click)="saveChanges()">
+                            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+                            Save Changes
+                        </ion-button>
+                        <ion-button expand="block" fill="outline" class="cancel-button" (click)="cancelEdit()">
+                            <ion-icon name="close-outline" slot="start"></ion-icon>
+                            Cancel
+                        </ion-button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: City Logo, City Info, Vision/Mission, City Officials -->
+            <div class="right-column">
+                <!-- City Logo -->
+                <div class="settings-card logo-card">
+                    <div class="card-header">
+                        <h2>City Logo</h2>
+                    </div>
+
+                    <div class="logo-display">
+                        <img *ngIf="cityLogo" [src]="cityLogo" alt="City Logo" />
+                        <div *ngIf="!cityLogo" class="no-logo">
+                            <p class="not-available-text">Not available</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- City Information -->
+                <div class="settings-card info-card">
+                    <div class="card-header">
+                        <h2>City Information</h2>
+                    </div>
+
+                    <div class="info-row">
+                        <ion-icon name="location" class="info-icon"></ion-icon>
+                        <div class="info-content">
+                            <span class="info-label">City Name:</span>
+                            <span class="info-value" [class.not-available]="!cityInfo?.name">
+                                {{ cityInfo?.name || 'Not available' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <ion-icon name="person" class="info-icon"></ion-icon>
+                        <div class="info-content">
+                            <span class="info-label">City Mayor:</span>
+                            <span class="info-value" [class.not-available]="!cityInfo?.captain">
+                                {{ cityInfo?.captain || 'Not available' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <ion-icon name="location-outline" class="info-icon"></ion-icon>
+                        <div class="info-content">
+                            <span class="info-label">Address:</span>
+                            <span class="info-value" [class.not-available]="!cityInfo?.address">
+                                {{ cityInfo?.address || 'Not available' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <ion-icon name="call" class="info-icon"></ion-icon>
+                        <div class="info-content">
+                            <span class="info-label">Contact:</span>
+                            <span class="info-value" [class.not-available]="!cityInfo?.contact">
+                                {{ cityInfo?.contact || 'Not available' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vision & Mission -->
+                <div class="settings-card vision-card">
+                    <div class="card-header">
+                        <h2>Vision & Mission</h2>
+                    </div>
+
+                    <div class="vision-mission-content">
+                        <div class="vm-section">
+                            <div class="vm-header">
+                                <ion-icon name="telescope"></ion-icon>
+                                <h3>Vision</h3>
+                            </div>
+                            <p [class.not-available]="!visionMission?.vision">
+                                {{ visionMission?.vision || 'No vision available' }}
+                            </p>
+                        </div>
+
+                        <div class="vm-section">
+                            <div class="vm-header">
+                                <ion-icon name="flag"></ion-icon>
+                                <h3>Mission</h3>
+                            </div>
+                            <p [class.not-available]="!visionMission?.mission">
+                                {{ visionMission?.mission || 'No mission available' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- City Officials -->
+                <div class="settings-card officials-card">
+                    <div class="card-header">
+                        <h2>City Officials</h2>
+                    </div>
+
+                    <div class="officials-list" *ngIf="officials && officials.length > 0">
+                        <div class="official-item" *ngFor="let official of officials">
+                            <div class="official-avatar">
+                                <img *ngIf="official.picture" [src]="official.picture" [alt]="official.name" />
+                                <ion-icon *ngIf="!official.picture" name="person-circle"></ion-icon>
+                            </div>
+                            <div class="official-info">
+                                <h4>{{ official.name }}</h4>
+                                <p>{{ official.position }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!officials || officials.length === 0" class="no-data">
+                        <p class="not-available-text">Not available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </ion-content>
