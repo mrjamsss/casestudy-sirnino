@@ -595,6 +595,201 @@ $cbn-accent: #f5b300;
       font-weight: 600;
     }
 
+    font-size: 1.125rem;
+    color: $cbn-accent;
+  }
+
+  span {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: -0.01em;
+  }
+}
+
+.review-card-body {
+  padding: 10px 12px; // ✅ Reduced
+}
+
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 6px 0; // ✅ Reduced
+
+  &:not(:last-child) {
+    border-bottom: 1px dashed #e2e8f0;
+  }
+}
+
+.review-label {
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.review-value {
+  font-size: 0.8125rem;
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+  max-width: 60%;
+
+  &.address {
+    line-height: 1.5;
+  }
+}
+
+.role-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, $cbn-accent 0%, color.adjust($cbn-accent, $lightness: -8%) 100%);
+  color: #07203a;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px; // ✅ Reduced
+  background: rgba($cbn-primary, 0.05);
+  border-radius: 10px;
+  margin-top: 12px; // ✅ Reduced
+
+  ion-icon {
+    font-size: 1.125rem;
+    color: $cbn-primary;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  span {
+    font-size: 0.75rem;
+    color: #64748b;
+    line-height: 1.5;
+  }
+}
+
+// Navigation Buttons
+.nav-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px; // ✅ Reduced
+}
+
+.back-btn {
+  --border-color: #{$cbn-primary};
+  --color: #{$cbn-primary};
+  --border-radius: 12px;
+  --border-width: 2px;
+  height: 44px; // ✅ Reduced
+  font-weight: 600;
+  font-size: 0.9375rem;
+  flex: 0 0 auto;
+  min-width: 90px; // ✅ Reduced
+}
+
+.next-btn {
+  --background: #{$cbn-accent};
+  --background-hover: #{color.adjust($cbn-accent, $lightness: -8%)};
+  --background-activated: #{color.adjust($cbn-accent, $lightness: -12%)};
+  --color: #07203a;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 14px rgba($cbn-accent, 0.35);
+  height: 44px; // ✅ Reduced
+  font-weight: 700;
+  font-size: 0.9375rem;
+  flex: 1;
+  letter-spacing: -0.01em;
+
+  &.full-width {
+    flex: 1;
+  }
+}
+
+// Footer
+.modal-footer {
+  text-align: center;
+  padding: 12px; // ✅ Reduced
+  background: white;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  p {
+    font-size: 0.875rem; // ✅ Reduced
+    color: #64748b;
+    margin: 0;
+  }
+
+  a {
+    color: $cbn-accent;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: color.adjust($cbn-accent, $lightness: -10%);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .form-group.half {
+    width: 100%;
+  }
+
+  .role-options {
+    grid-template-columns: 1fr;
+  }
+
+  .review-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .review-value {
+    text-align: left;
+    max-width: 100%;
+  }
+}
+
+// Inline calendar - COMPLETE FIX
+.inline-calendar {
+  margin-top: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: visible; // ✅ Changed from hidden
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+
+  ion-datetime {
+    --background: white;
+    width: 100%;
+    height: auto;
+    min-height: 320px; // ✅ Give it height
+
+    // Force all text to be visible
+    color: #1f2937 !important;
+
+    // Calendar header (month/year)
+    .calendar-month-year {
+      color: #1f2937 !important;
+    }
+
+    // Day headers (SUN, MON, etc)
+    .calendar-day-of-week {
+      color: #6b7280 !important;
+      font-weight: 600;
+    }
+
     // All date numbers
     .calendar-day {
       color: #1f2937 !important;
@@ -605,5 +800,38 @@ $cbn-accent: #f5b300;
       color: #{$cbn-accent} !important;
       font-weight: 700;
     }
+  }
+}
+
+// Autocomplete Styles
+.relative-wrapper {
+  position: relative;
+}
+
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0 0 10px 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-top: 4px;
+}
+
+.autocomplete-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f3f4f6;
+    color: #0F4C81; // $cbn-primary
   }
 }
