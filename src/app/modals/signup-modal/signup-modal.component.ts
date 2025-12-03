@@ -43,6 +43,26 @@ export class SignUpModalComponent {
     dateRegistered: ''
   };
 
+  // Barangay Data
+  barangays = [
+    'Aduas Centro', 'Aduas Norte', 'Aduas Sur', 'Bagong Buhay', 'Bagong Sikat', 'Bakero', 'Bakod Bayan', 'Balite', 'Bangad',
+    'Bantug Bulalo', 'Bantug Norte', 'Barlis', 'Barrera District (Poblacion)', 'Bernardo District (Poblacion)', 'Bitas',
+    'Bonifacio District (Poblacion)', 'Buliran', 'Caalibangbangan', 'Cabu', 'Calawagan (Kalawagan)', 'Campo Tinio', 'Caridad',
+    'Caudillo', 'Cinco-Cinco', 'City Supermarket (Poblacion)', 'Communal', 'Cruz Roja', 'Daang Sarile', 'Dalampang',
+    'Dicarma (Poblacion)', 'Dimasalang (Poblacion)', 'Dionisio S. Garcia', 'Fatima (Poblacion)', 'General Luna (Poblacion)',
+    'Hermogenes C. Concepcion, Sr.', 'Ibabao Bana', 'Imelda District', 'Isla (Poblacion)', 'Kalikid Norte', 'Kalikid Sur',
+    'Kapitan Pepe (Poblacion)', 'Lagare', 'Lourdes (Matungal-tungal)', 'M. S. Garcia', 'Mabini Extension', 'Mabini Homesite',
+    'Macatbong', 'Magsaysay District', 'Magsaysay Norte', 'Magsaysay South', 'Maria Theresa', 'Matadero (Poblacion)',
+    'Mayapyap Norte', 'Mayapyap Sur', 'Melojavilla (Poblacion)', 'Nabao (Poblacion)', 'Obrero', 'Padre Burgos (Poblacion)',
+    'Padre Crisostomo', 'Pagas', 'Palagay', 'Pamaldan', 'Pangatian', 'Patalac', 'Polilio', 'Pula', 'Quezon District (Poblacion)',
+    'Rizdelis (Poblacion)', 'Samon', 'San Isidro', 'San Josef Norte', 'San Josef Sur', 'San Juan Pob. (Accfa)', 'San Roque Norte',
+    'San Roque Sur', 'Sanbermicristi (Poblacion)', 'Sangitan', 'Sangitan East', 'Sapang', 'Santa Arcadia', 'Santo Niño',
+    'Sumacab Este', 'Sumacab Norte', 'Sumacab South', 'Talipapa', 'Valdefuente', 'Valle Cruz', 'Vijandre District (Poblacion)',
+    'Villa Ofelia-Caridad', 'Zulueta District (Poblacion)'
+  ];
+  filteredBarangays: string[] = [];
+  showBarangayList = false;
+
   idTypes: string[] = [];
 
   constructor(
@@ -88,6 +108,45 @@ export class SignUpModalComponent {
     event.target.value = value;
   }
 
+  // Barangay Autocomplete
+  filterBarangays(event: any) {
+    const query = event.target.value.toLowerCase();
+    this.filteredBarangays = this.barangays.filter(b => b.toLowerCase().includes(query));
+  }
+
+  selectBarangay(barangay: string) {
+    this.formData.address.barangay = barangay;
+    this.showBarangayList = false;
+  }
+
+  isMouseOverBarangayList = false;
+
+  onBarangayFocus() {
+    this.showBarangayList = true;
+    // Reset filter if empty
+    if (!this.formData.address.barangay) {
+      this.filteredBarangays = [...this.barangays];
+    } else {
+      // Filter based on current value
+      this.filteredBarangays = this.barangays.filter(b => b.toLowerCase().includes(this.formData.address.barangay.toLowerCase()));
+    }
+  }
+
+  onBarangayBlur() {
+    // Delay hiding to allow click event to register
+    setTimeout(() => {
+      if (!this.isMouseOverBarangayList) {
+        this.showBarangayList = false;
+      }
+    }, 200);
+  }
+
+  onMouseEnterBarangayList() {
+    this.isMouseOverBarangayList = true;
+  }
+
+  onMouseLeaveBarangayList() {
+    this.isMouseOverBarangayList = false;
   // List of ID types that should only accept numbers
   numericIdTypes = [
     'Philippine National ID (PhilSys ID)',

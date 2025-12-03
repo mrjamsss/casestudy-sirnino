@@ -1,3 +1,15 @@
+@use 'sass:color';
+
+// Colors
+$cbn-primary: #0F4C81;
+$cbn-secondary: #FFC300;
+$cbn-accent: #f5b300;
+$text-dark: #0f172a;
+$text-light: #64748b;
+$bg-light: #fafbfc;
+$input-bg: #f8fafc;
+$border-color: #e2e8f0;
+
 // Modal Background
 ion-content {
     --background: white;
@@ -13,12 +25,12 @@ ion-header {
 
         ion-title {
             font-weight: 700;
-            font-size: 20px;
-            letter-spacing: 0.5px;
+            font-size: 1.125rem;
+            letter-spacing: -0.01em;
         }
 
-        ion-button {
-            --color: #64748b; // Gray for close button
+        ion-buttons ion-button {
+            --color: #07203a;
             font-weight: 600;
 
             &:hover {
@@ -36,6 +48,11 @@ ion-header {
     margin-top: 20px;
 
     .image-preview {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background-color: #{$input-bg};
+        border: 2px dashed #{$border-color};
         width: 120px;
         height: 120px;
         border-radius: 16px; // Changed from 50% to 16px
@@ -49,6 +66,7 @@ ion-header {
         margin-bottom: 15px;
         position: relative;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 
         img {
             width: 100%;
@@ -96,37 +114,37 @@ ion-header {
 }
 
 .input-item {
-    --background: #f8f9fa;
-    --color: #1e293b;
-    --placeholder-color: #94a3b8;
+    --background: #{$input-bg};
+    --color: #{$text-dark};
+    --placeholder-color: #{$text-light};
     --placeholder-opacity: 1;
-    --border-color: #e2e8f0;
-    --highlight-color-focused: #f59e0b; // Gold accent
+    --border-color: #{$border-color};
+    --highlight-color-focused: #{$cbn-accent};
     margin-bottom: 20px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    --padding-start: 15px;
-    transition: all 0.2s ease;
+    border-radius: 10px;
+    --padding-start: 12px;
+    border: 1px solid #{$border-color};
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
     &.item-has-focus {
-        border-color: #f59e0b;
+        border-color: #{$cbn-accent};
         --background: white;
-        box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2);
+        box-shadow: 0 0 0 3px rgba($cbn-accent, 0.12);
     }
 
     ion-label {
-        color: #0f3460 !important;
-        font-size: 13px;
-        margin-bottom: 8px;
+        color: #{$text-dark} !important;
+        font-size: 0.8125rem;
+        margin-bottom: 5px;
         font-weight: 600;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.01em;
     }
 
     ion-input {
-        font-size: 16px;
-        --padding-top: 12px;
-        --padding-bottom: 12px;
-        font-weight: 500;
+        font-size: 0.875rem;
+        --padding-top: 10px;
+        --padding-bottom: 10px;
+        --color: #{$text-dark};
     }
 }
 
@@ -156,17 +174,19 @@ ion-header {
 }
 
 .actions {
-    margin-top: 40px;
+    margin-top: 30px;
 
     ion-button {
-        --background: #f59e0b; // Gold background
-        --background-hover: #d97706;
-        --color: #0f3460; // Deep blue text
-        --border-radius: 8px;
+        --background: #{$cbn-accent};
+        --background-hover: #{color.adjust($cbn-accent, $lightness: -8%)};
+        --color: #07203a;
+        --border-radius: 12px;
         height: 50px;
         font-weight: 700;
-        letter-spacing: 1px;
+        letter-spacing: -0.01em;
         text-transform: uppercase;
+        box-shadow: 0 4px 14px rgba($cbn-accent, 0.35);
+        font-size: 0.9375rem;
         box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
         transition: transform 0.2s;
 
