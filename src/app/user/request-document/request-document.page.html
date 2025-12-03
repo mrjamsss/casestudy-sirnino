@@ -21,9 +21,8 @@
                     <div class="form-content">
                         <!-- Department Selection -->
                         <div class="form-group">
+                            <label class="form-label">Department <span class="required">*</span></label>
                             <ion-select 
-                                label="Department" 
-                                label-placement="floating" 
                                 fill="outline"
                                 [(ngModel)]="selectedDepartment"
                                 (ionChange)="onDepartmentChange()"
@@ -38,26 +37,41 @@
 
                         <!-- Document Type Selection -->
                         <div class="form-group">
+                            <label class="form-label">Document Type <span class="required">*</span></label>
                             <ion-select 
-                                label="Document Type" 
-                                label-placement="floating" 
                                 fill="outline"
                                 [(ngModel)]="selectedDocumentType"
+                                (ionChange)="onDocumentTypeChange()"
                                 class="custom-select"
                                 interface="popover"
                                 [disabled]="!selectedDepartment"
                                 placeholder="Select document type">
-                                <ion-select-option *ngFor="let service of availableServices" [value]="service.id">
-                                    {{ service.name }}
+                                <ion-select-option *ngFor="let doc of availableDocuments" [value]="doc.id">
+                                    {{ doc.name }}
+                                </ion-select-option>
+                            </ion-select>
+                        </div>
+
+                        <!-- Purpose Selection -->
+                        <div class="form-group">
+                            <label class="form-label">Purpose <span class="required">*</span></label>
+                            <ion-select 
+                                fill="outline"
+                                [(ngModel)]="selectedPurpose"
+                                class="custom-select"
+                                interface="popover"
+                                [disabled]="!selectedDocumentType"
+                                placeholder="Select purpose">
+                                <ion-select-option *ngFor="let purpose of availablePurposes" [value]="purpose">
+                                    {{ purpose }}
                                 </ion-select-option>
                             </ion-select>
                         </div>
 
                         <!-- Additional Notes -->
                         <div class="form-group">
+                            <label class="form-label">Additional Notes (Optional)</label>
                             <ion-textarea
-                                label="Additional Notes (Optional)"
-                                label-placement="floating"
                                 fill="outline"
                                 [(ngModel)]="additionalNotes"
                                 placeholder="Any special instructions or information..."
@@ -71,7 +85,7 @@
                             expand="block" 
                             class="submit-button"
                             (click)="submitRequest()"
-                            [disabled]="!selectedDepartment || !selectedDocumentType">
+                            [disabled]="!selectedDepartment || !selectedDocumentType || !selectedPurpose">
                             <ion-icon name="send-outline" slot="start"></ion-icon>
                             Submit Request
                         </ion-button>

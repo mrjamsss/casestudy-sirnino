@@ -371,6 +371,12 @@ ion-content {
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: capitalize;
+  white-space: nowrap;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  word-break: keep-all;
+  overflow-wrap: normal;
 
   &[data-status="pending"] {
     background: rgba(#f59e0b, 0.1);
@@ -773,7 +779,7 @@ ion-content {
     .action-buttons {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 8px;
       margin-top: 28px;
       padding-top: 24px;
       border-top: 2px solid $cbn-background;
@@ -1001,15 +1007,6 @@ ion-content {
         font-family: 'Courier New', monospace;
         line-height: 1.5;
       }
-    }
-
-    .action-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 28px;
-      padding-top: 24px;
-      border-top: 2px solid $cbn-background;
     }
 
     .action-button {
@@ -1292,6 +1289,55 @@ ion-content {
 
     .templates-grid {
       grid-template-columns: 1fr;
+    }
+  }
+}
+.action-button.pickup-btn {
+  &[disabled],
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #cccccc !important;
+    
+    ion-icon {
+      opacity: 0.5;
+    }
+  }
+}
+
+.action-button {
+  &[disabled],
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #cccccc !important;
+    
+    ion-icon {
+      opacity: 0.5;
+    }
+  }
+  
+  &.approve-btn[disabled] {
+    background-color: #a8a8a8 !important;
+  }
+  
+  &.pickup-btn[disabled] {
+    background-color: #a8a8a8 !important;
+  }
+}
+
+.action-button {
+  &[disabled],
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #a8a8a8 !important;
+    
+    ion-icon {
+      opacity: 0.5;
     }
   }
 }

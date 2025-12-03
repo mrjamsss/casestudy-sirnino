@@ -54,8 +54,8 @@ export class RequestManagementPage implements OnInit {
     ]
   };
 
-  pendingCount = 3;
-  approvedCount = 14;
+  pendingCount = 0;
+  approvedCount = 0;
   readyCount = 0;
 
   selectedDocumentType = '';
@@ -68,56 +68,19 @@ export class RequestManagementPage implements OnInit {
     'Marriage Certificate',
     'Death Certificate',
     'Business Permit',
-    'Barangay Clearance',
-    'Residency Certificate',
+    'Tax Clearance Certificate',
     'Health Certificate'
   ];
 
   departments = [
     'Civil Registry',
-    'Business Permits Office',
+    'Business Permits and Licensing Office',
     'Treasury Office',
-    'Health Office',
-    'Barangay Affairs'
+    'Health Office'
   ];
 
-  requests: DocumentRequest[] = [
-    {
-      id: 'REQ001',
-      user: 'Juan dela Cruz',
-      documentType: 'Birth Certificate',
-      department: 'Civil Registry',
-      date: '01/11/2024',
-      status: 'processing',
-      purpose: 'Employment',
-      details: 'Need for job application',
-      dateRequested: '11/16/2025, 1:56:32 AM'
-    },
-    {
-      id: 'REQ002',
-      user: 'Juan dela Cruz',
-      documentType: 'Business Permit',
-      department: 'Business Permits Office',
-      date: '15/10/2024',
-      status: 'completed',
-      purpose: 'Business Registration',
-      details: 'New business setup',
-      dateRequested: '10/15/2024, 10:30:00 AM'
-    },
-    {
-      id: 'REQ003',
-      user: 'Maria Santos',
-      documentType: 'Barangay Clearance',
-      department: 'Barangay Affairs',
-      date: '10/11/2024',
-      status: 'pending',
-      purpose: 'Local Employment',
-      details: 'Required for local job application',
-      dateRequested: '11/10/2024, 2:15:45 PM'
-    }
-  ];
-
-  filteredRequests: DocumentRequest[] = [...this.requests];
+  requests: DocumentRequest[] = [];
+  filteredRequests: DocumentRequest[] = [];
   selectedRequest: DocumentRequest | null = null;
 
   // Template creation variables
@@ -137,6 +100,11 @@ export class RequestManagementPage implements OnInit {
   ngOnInit() {
     this.loadRequests();
     this.updateCounts();
+    // Set up periodic refresh to catch new requests
+    setInterval(() => {
+      this.loadRequests();
+      this.updateCounts();
+    }, 5000); // Refresh every 5 seconds
   }
 
   loadRequests() {
@@ -144,23 +112,41 @@ export class RequestManagementPage implements OnInit {
     if (storedRequests) {
       try {
         const parsedRequests = JSON.parse(storedRequests);
-        this.requests = parsedRequests.map((req: any) => ({
-          id: 'REQ' + req.id.toString().padStart(3, '0'),
-          user: req.userName || 'Unknown User',
-          documentType: req.serviceName,
-          department: req.departmentName,
-          date: new Date(req.dateRequested).toLocaleDateString('en-GB'),
-          status: (req.status || 'pending').toLowerCase() as 'pending' | 'processing' | 'completed' | 'rejected' | 'ready',
-          purpose: req.notes || 'Not specified',
-          details: req.notes || 'No additional details provided',
-          dateRequested: new Date(req.dateRequested).toLocaleString()
-        }));
+        this.requests = parsedRequests.map((req: any) => {
+          const reqId = req.id.toString();
+          return {
+            id: 'REQ' + reqId.padStart(3, '0'),
+            user: req.userName || 'Unknown User',
+            documentType: req.serviceName || req.documentType,
+            department: req.departmentName || req.department,
+            date: req.dateRequested ? new Date(req.dateRequested).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB'),
+            status: (req.status || 'pending').toLowerCase() as 'pending' | 'processing' | 'completed' | 'rejected' | 'ready',
+            purpose: req.purpose || 'Not specified',
+            details: req.notes || req.details || 'No additional details provided',
+            dateRequested: req.dateRequested ? new Date(req.dateRequested).toLocaleString() : new Date().toLocaleString()
+          };
+        });
       } catch (e) {
         console.error('Error loading requests:', e);
+        this.requests = [];
       }
+    } else {
+      this.requests = [];
     }
     this.filteredRequests = [...this.requests];
   }
+
+
+getStatusDisplayText(status: string): string {
+  switch (status) {
+    case 'processing': return 'Approved';
+    case 'pending': return 'Pending';
+    case 'rejected': return 'Rejected';
+    case 'ready': return 'For Pick-up';
+    case 'completed': return 'Completed';
+    default: return status;
+  }
+}
 
   saveRequests() {
     try {
@@ -169,11 +155,15 @@ export class RequestManagementPage implements OnInit {
         userName: req.user,
         departmentName: req.department,
         serviceName: req.documentType,
-        notes: req.details || req.purpose,
+        purpose: req.purpose,
+        notes: req.details,
         status: req.status.charAt(0).toUpperCase() + req.status.slice(1),
         dateRequested: req.dateRequested
       }));
       localStorage.setItem('document_requests', JSON.stringify(requestsToSave));
+      
+      // Reload to ensure sync
+      this.loadRequests();
     } catch (e) {
       console.error('Error saving requests:', e);
     }
@@ -189,33 +179,26 @@ export class RequestManagementPage implements OnInit {
   }
 
   searchRequests() {
-    // Trim whitespace from search input
     const trimmedSearch = this.searchId?.trim() || '';
 
-    // If all filters are empty, show all requests
     if (!trimmedSearch && !this.selectedDocumentType && !this.selectedDepartment && !this.selectedDate) {
       this.filteredRequests = [...this.requests];
       return;
     }
 
     this.filteredRequests = this.requests.filter(req => {
-      // Search by ID or Name (only if search text exists)
       const matchesSearch = !trimmedSearch ||
         req.id.toLowerCase().includes(trimmedSearch.toLowerCase()) ||
         req.user.toLowerCase().includes(trimmedSearch.toLowerCase());
 
-      // Filter by document type
       const matchesType = !this.selectedDocumentType ||
         req.documentType === this.selectedDocumentType;
 
-      // Filter by department (status)
       const matchesDept = !this.selectedDepartment ||
         req.department === this.selectedDepartment;
 
-      // Filter by date
       let matchesDate = true;
       if (this.selectedDate) {
-        // Convert selectedDate (yyyy-mm-dd) to dd/mm/yyyy format for comparison
         const [year, month, day] = this.selectedDate.split('-');
         const formattedSearchDate = `${day}/${month}/${year}`;
         matchesDate = req.date === formattedSearchDate;
@@ -269,9 +252,9 @@ export class RequestManagementPage implements OnInit {
 
     this.updateCounts();
     this.saveRequests();
-    this.logTransaction('Approved', `Request ${this.selectedRequest.id} approved`);
+    this.logTransaction('Approved', `Request ${this.selectedRequest.id} approved and is now being processed`);
     this.closeDetailsModal();
-    alert('Request approved successfully!');
+    alert('Request approved successfully! Status changed to Processing.');
   }
 
   rejectRequest() {
@@ -330,7 +313,6 @@ export class RequestManagementPage implements OnInit {
   createNewCertificate(templateName: string) {
     console.log('Create new:', templateName);
 
-    // Only open modal for Business Permit, Tax Clearance, and Health Certificate
     if (templateName === 'Business Permit' ||
       templateName === 'Tax Clearance Certificate' ||
       templateName === 'Health Certificate') {
@@ -346,7 +328,6 @@ export class RequestManagementPage implements OnInit {
   loadTemplateDefaults(templateName: string) {
     this.templateName = templateName;
 
-    // Load saved template if exists
     if (this.savedTemplates[templateName]) {
       const saved = this.savedTemplates[templateName];
       this.headerText = saved.headerText;
@@ -356,7 +337,6 @@ export class RequestManagementPage implements OnInit {
       return;
     }
 
-    // Default templates
     switch (templateName) {
       case 'Business Permit':
         this.headerText = `Republic of the Philippines
@@ -481,7 +461,6 @@ PRC # _______`;
   viewTemplate(templateName: string) {
     console.log('View template:', templateName);
 
-    // Only open view modal for Business Permit, Tax Clearance, and Health Certificate
     if (templateName === 'Business Permit' ||
       templateName === 'Tax Clearance Certificate' ||
       templateName === 'Health Certificate') {
@@ -521,7 +500,7 @@ PRC # _______`;
     };
 
     const existingLogs = JSON.parse(localStorage.getItem('transaction_logs') || '[]');
-    existingLogs.unshift(newLog); // Add new log to the beginning
+    existingLogs.unshift(newLog);
     localStorage.setItem('transaction_logs', JSON.stringify(existingLogs));
   }
 

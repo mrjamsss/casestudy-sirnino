@@ -91,8 +91,7 @@
             <p class="section-subtitle">Select a row to manage</p>
           </div>
           <div class="header-actions">
-            <ion-button fill="clear" class="action-btn view-btn" [disabled]="!selectedRequest"
-              (click)="viewRequest()">
+            <ion-button fill="clear" class="action-btn view-btn" [disabled]="!selectedRequest" (click)="viewRequest()">
               <ion-icon name="eye-outline" slot="start"></ion-icon>
               View
             </ion-button>
@@ -117,8 +116,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="user-row" *ngFor="let request of filteredRequests"
-                (click)="selectRequest(request)"
+              <tr class="user-row" *ngFor="let request of filteredRequests" (click)="selectRequest(request)"
                 [class.selected]="selectedRequest === request">
                 <td class="request-id">{{ request.id }}</td>
                 <td>{{ request.user }}</td>
@@ -127,7 +125,7 @@
                 <td>{{ request.date }}</td>
                 <td>
                   <span class="status-badge" [attr.data-status]="request.status">
-                    {{ request.status }}
+                    {{ getStatusDisplayText(request.status) }}
                   </span>
                 </td>
               </tr>
@@ -240,15 +238,21 @@
       </div>
 
       <div class="action-buttons">
-        <button class="action-button approve-btn" (click)="approveRequest()">
+        <button class="action-button approve-btn" (click)="approveRequest()"
+          [disabled]="selectedRequest?.status !== 'pending'" [class.disabled]="selectedRequest?.status !== 'pending'">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
           Approve
         </button>
-        <button class="action-button reject-btn" (click)="rejectRequest()">
+
+        <button class="action-button reject-btn" (click)="rejectRequest()"
+          [disabled]="selectedRequest?.status !== 'pending'" [class.disabled]="selectedRequest?.status !== 'pending'">
           <ion-icon name="close-circle-outline"></ion-icon>
           Reject
         </button>
-        <button class="action-button pickup-btn" (click)="markForPickup()">
+
+        <button class="action-button pickup-btn" (click)="markForPickup()"
+          [disabled]="selectedRequest?.status !== 'processing'"
+          [class.disabled]="selectedRequest?.status !== 'processing'">
           <ion-icon name="cube-outline"></ion-icon>
           For Pickup
         </button>
